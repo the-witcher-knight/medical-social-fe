@@ -1,0 +1,53 @@
+{
+  "plugins": [],
+  "extends": [
+    "plugin:react/recommended",
+    "eslint:recommended",
+    "prettier",
+    "eslint-config-prettier"
+  ],
+  "parser": "@babel/eslint-parser",
+  "parserOptions": {
+    "ecmaVersion": 9, // ECMAScript 9
+    "sourceType": "module",
+    "allowImportExportEverywhere": true,
+    "requireConfigFile": false,
+    "ecmaFeatures": {
+      "jsx": true,
+      "modules": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "es6": true,
+    "commonjs": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "spaced-comment": ["warn", "always"],
+    "guard-for-in": "error",
+    "no-labels": "error",
+    "no-caller": "error",
+    "no-bitwise": "error",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-new-wrappers": "error",
+    "no-eval": "error",
+    "no-new": "error",
+    "no-var": "error",
+    "radix": "error",
+    "eqeqeq": ["error", "always", { "null": "ignore" }],
+    "prefer-const": "error",
+    "object-shorthand": ["error", "always", { "avoidExplicitReturnArrows": true }],
+    "default-case": "error",
+    "complexity": ["error", 40],
+    "no-invalid-this": "off",
+    "react/prop-types": "off",
+    "react/display-name": "off",
+    "no-unused-vars": ["warn", { "vars": "all", "args": "after-used", "ignoreRestSiblings": false }]
+  }
+}
