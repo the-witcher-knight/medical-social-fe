@@ -1,13 +1,12 @@
 import React, { Suspense } from 'react';
-import { BrowserRouter as Router, useRoutes } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import SpinnerBar from './shared/components/Spinner';
 import BrowerRouterProvider from './routes';
 
 const App = () => {
   return (
     <Router>
-      <Suspense fallback={<SpinnerBar />}>
+      <Suspense fallback={<p>Loading ...</p>}>
         <BrowerRouterProvider />
       </Suspense>
     </Router>
