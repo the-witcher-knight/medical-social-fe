@@ -8,6 +8,7 @@ import {
   faBell,
   faCartShopping,
   faDroplet,
+  faEnvelope,
   faEye,
   faHeart,
   faHouse,
@@ -19,6 +20,7 @@ import {
   faPlus,
   faRightToBracket,
   faSave,
+  faSearch,
   faSignInAlt,
   faSignOutAlt,
   faSort,
@@ -71,7 +73,9 @@ export const loadIcon = () => {
     faListCheck,
     faLanguage,
     faStar,
-    faStairs
+    faStairs,
+    faEnvelope,
+    faSearch
     // Add more icons here
   );
 };

@@ -1,12 +1,13 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import 'react-toastify/dist/ReactToastify.css';
 import BrowerRouterProvider from './routes';
+import AnimationProgress from './shared/components/Animation';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
   return (
     <Router>
-      <Suspense fallback={<p>Loading ...</p>}>
+      <Suspense fallback={<AnimationProgress />}>
         <BrowerRouterProvider />
       </Suspense>
     </Router>

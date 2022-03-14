@@ -3,7 +3,7 @@ import axios from 'axios';
 import { StorageAPI } from 'src/shared/util/storage-util';
 import { serializeAxiosError } from './reducer.utils';
 
-const AUTH_TOKEN_KEY = 'authToken';
+export const AUTH_TOKEN_KEY = 'authToken';
 // eslint-disable-next-line no-undef
 const API_URL = process.env.API_URL;
 
@@ -22,25 +22,10 @@ export const initialState = {
 
 // Actions
 
-export const getAccount = createAsyncThunk(
-  'authentication/get_account',
-  async () =>
-    axios.get(`${API_URL}/users/profile`, {
-      headers: {
-        Authorization: `Bearer ${
-          StorageAPI.local.get(AUTH_TOKEN_KEY) || StorageAPI.session.get(AUTH_TOKEN_KEY)
-        }`,
-      },
-    }),
-  {
-    serializeError: serializeAxiosError,
-  }
-);
-
 export const authenticate = createAsyncThunk(
   'authentication/signin',
   async ({ username, password, rememberMe }) =>
-    axios.post(`${API_URL}/login`, { username, password, rememberMe }),
+    axios.post(`${API_URL}/authenticate`, { username, password, rememberMe }),
   {
     serializeError: serializeAxiosError,
   }
@@ -132,28 +117,7 @@ export const AuthenticationSlice = createSlice({
         showModalLogin: false,
         loginSuccess: true,
       }))
-      .addCase(getAccount.rejected, (state, action) => ({
-        ...state,
-        loading: false,
-        isAuthenticated: false,
-        sessionHasBeenFetched: true,
-        showModalLogin: true,
-        errorMessage: action.error.message,
-      }))
-      .addCase(getAccount.fulfilled, (state, action) => {
-        const isAuthenticated = action.payload && action.payload.data._id;
-        return {
-          ...state,
-          isAuthenticated,
-          loading: false,
-          sessionHasBeenFetched: true,
-          account: action.payload.data,
-        };
-      })
       .addCase(authenticate.pending, state => {
-        state.loading = true;
-      })
-      .addCase(getAccount.pending, state => {
         state.loading = true;
       });
   },
