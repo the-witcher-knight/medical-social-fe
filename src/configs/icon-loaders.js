@@ -8,6 +8,7 @@ import {
   faBell,
   faCartShopping,
   faDroplet,
+  faEllipsisVertical,
   faEnvelope,
   faEye,
   faHeart,
@@ -75,7 +76,8 @@ export const loadIcon = () => {
     faStar,
     faStairs,
     faEnvelope,
-    faSearch
+    faSearch,
+    faEllipsisVertical
     // Add more icons here
   );
 };

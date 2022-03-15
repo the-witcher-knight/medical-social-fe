@@ -11,15 +11,26 @@ import {
   Link as MuiLink,
   Alert,
   AlertTitle,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+  FormControlLabel,
+  Select,
+  MenuItem,
   TextField,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm, Controller } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from 'src/configs/store';
 
 const theme = createTheme();
 
 const SignUpComponent = () => {
+  const dispatch = useAppDispatch();
+
+  const errorMessage = useAppSelector(state => state.authentication.errorMessage);
+
   const {
     handleSubmit,
     control,
@@ -30,6 +41,7 @@ const SignUpComponent = () => {
       lastname: '',
       username: '',
       password: '',
+      authority: '',
       confirmPassword: '',
     },
   });
@@ -57,12 +69,7 @@ const SignUpComponent = () => {
           <Typography component="h1" variant="h5">
             Sign up
           </Typography>
-          {/* {errorMessage && (
-            <Alert color="error">
-              <AlertTitle>Error</AlertTitle>
-              <p>{errorMessage}</p>
-            </Alert>
-          )} */}
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               <Grid item xs={6}>
@@ -97,6 +104,37 @@ const SignUpComponent = () => {
                       helperText={errors.lastname && 'Please enter your last name'}
                       {...field}
                     />
+                  )}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Controller
+                  control={control}
+                  name="authority"
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <FormControl fullWidth>
+                      <InputLabel id="authority-selection">Authority</InputLabel>
+                      <Select
+                        labelId="authority-selecton"
+                        id="authority-selection"
+                        value={value}
+                        onChange={onChange}
+                        label="Authority"
+                        error={!!errors.authority}
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={'ROLE_USER'}>User</MenuItem>
+                        <MenuItem value={'ROLE_DOCTOR'}>Doctor</MenuItem>
+                        <MenuItem value={'ROLE_PHARMACY'}>Pharmacy Manager</MenuItem>
+                        <MenuItem value={'ROLE_ADMIN'}>Admin</MenuItem>
+                      </Select>
+                      {errors.authority && (
+                        <FormHelperText error>Please choose your authority</FormHelperText>
+                      )}
+                    </FormControl>
                   )}
                 />
               </Grid>

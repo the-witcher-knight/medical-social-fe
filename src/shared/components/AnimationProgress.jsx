@@ -3,7 +3,7 @@ import React from 'react';
 
 const AnimationProgress = () => {
   return (
-    <Box fullWidth>
+    <Box sx={{ margin: '10px' }} fullWidth>
       <Skeleton />
       <Skeleton animation="wave" />
       <Skeleton animation="wave" />

@@ -40,7 +40,7 @@ const SignInComponent = () => {
     defaultValues: {
       username: '',
       password: '',
-      remember: false,
+      rememberMe: false,
     },
   });
 
@@ -86,7 +86,6 @@ const SignInComponent = () => {
                   label="Username"
                   error={!!errors.username}
                   helperText={errors.username && 'Please enter a username'}
-                  autoFocus
                   {...field}
                 />
               )}
@@ -103,14 +102,13 @@ const SignInComponent = () => {
                   label="Password"
                   error={!!errors.password}
                   helperText={errors.password && 'Please enter a password'}
-                  autoFocus
                   {...field}
                 />
               )}
             />
             <Controller
               control={control}
-              name="remember"
+              name="rememberMe"
               render={({ field: { value, onChange } }) => (
                 <FormControlLabel
                   control={<Checkbox checked={value} onChange={onChange} />}
