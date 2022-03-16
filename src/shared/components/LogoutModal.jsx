@@ -1,6 +1,8 @@
 import { Box, Button, Modal, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from 'src/configs/store';
+import { logout as logoutAction } from 'src/shared/reducers/authentication';
 
 const style = {
   position: 'absolute',
@@ -15,11 +17,17 @@ const style = {
 
 const LogoutModal = () => {
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [open, setOpen] = React.useState(true);
 
   const handleClose = () => {
     setOpen(false);
     navigate('/');
+  };
+
+  const logout = () => {
+    dispatch(logoutAction());
+    handleClose();
   };
 
   return (
@@ -29,11 +37,13 @@ const LogoutModal = () => {
           Are you sure you want to logout?
         </Typography>
         <Box mt={2}>
-          <Button variant="contained" color="error">
+          <Button variant="contained" color="error" onClick={logout}>
             Logout
           </Button>
           &nbsp;
-          <Button variant="text">Cancel</Button>
+          <Button variant="text" onClick={handleClose}>
+            Cancel
+          </Button>
         </Box>
       </Box>
     </Modal>

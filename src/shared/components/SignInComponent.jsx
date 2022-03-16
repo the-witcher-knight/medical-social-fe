@@ -51,8 +51,7 @@ const SignInComponent = () => {
   }, [loading, loginSuccess]);
 
   const onSubmit = values => {
-    console.log(values);
-    dispatch(signin(values));
+    dispatch(signin(values.username, values.password, values.rememberMe));
   };
 
   return (

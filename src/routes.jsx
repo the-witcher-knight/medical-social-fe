@@ -8,6 +8,16 @@ const SignIn = React.lazy(() => import('src/shared/components/SignInComponent'))
 const SignUp = React.lazy(() => import('src/shared/components/SignUpComponent'));
 const Logout = React.lazy(() => import('src/shared/components/LogoutModal'));
 
+// Inner page
+const Admin = React.lazy(() => import('src/pages/AdminModule/AdminPage'));
+const AdminDefault = React.lazy(() => import('src/pages/AdminModule/Default'));
+const DoctorManager = React.lazy(() =>
+  import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
+);
+
+// Demo page
+const DemoText = React.lazy(() => import('src/pages/TextPage'));
+
 export const ROUTES = [
   {
     path: '/',
@@ -16,6 +26,25 @@ export const ROUTES = [
       {
         path: '/logout',
         element: <Logout />,
+      },
+      {
+        path: '/admin',
+        element: <Admin />,
+        children: [
+          {
+            path: '',
+            element: <AdminDefault />,
+            index: true,
+          },
+          {
+            path: 'doctor-manager',
+            element: <DoctorManager />,
+          },
+        ],
+      },
+      {
+        path: '/demo-text',
+        element: <DemoText />,
       },
     ],
   },

@@ -30,7 +30,7 @@ const MainLayout = () => {
       <CssBaseline />
       <TopBar open={openSideBar} toggleSideBar={toggleSideBar} />
       <SideBar open={openSideBar} handleClose={toggleSideBar} />
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 2, p: 3 }}>
         <DrawerHeader />
         <Outlet />
         <Footer
