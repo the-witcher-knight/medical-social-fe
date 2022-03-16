@@ -36,7 +36,7 @@ export const signin =
   async dispatch => {
     const result = await dispatch(authenticate({ username, password, rememberMe }));
     const response = result.payload; // as AxiosResponse;
-    const bearerToken = response.data.token; // Bearer token from the server
+    const bearerToken = response.data.id_token; // Bearer token from the server
     if (bearerToken && bearerToken.slice(0, 7) === 'Bearer ') {
       const jwt = bearerToken.slice(7, bearerToken.length);
       if (rememberMe) {
