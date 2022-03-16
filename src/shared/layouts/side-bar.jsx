@@ -64,9 +64,9 @@ const SideBar = ({ open, handleClose }) => {
       <DrawerHeader>
         <IconButton onClick={handleClose}>
           {theme.direction === 'rtl' ? (
-            <FontAwesomeIcon icon="arrow-left" />
-          ) : (
             <FontAwesomeIcon icon="arrow-right" />
+          ) : (
+            <FontAwesomeIcon icon="arrow-left" />
           )}
         </IconButton>
       </DrawerHeader>
