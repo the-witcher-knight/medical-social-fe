@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { styled } from '@mui/material/styles';
 import { Box, CssBaseline } from '@mui/material';
 import TopBar, { DrawerHeader } from './top-bar';
 import SideBar from './side-bar';
@@ -26,11 +27,11 @@ const MainLayout = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box>
       <CssBaseline />
       <TopBar open={openSideBar} toggleSideBar={toggleSideBar} />
       <SideBar open={openSideBar} handleClose={toggleSideBar} />
-      <Box component="main" sx={{ flexGrow: 2, p: 3 }}>
+      <Box component="main" sx={{ maxWidth: '90vw', marginLeft: '5vw' }}>
         <DrawerHeader />
         <Outlet />
         <Footer

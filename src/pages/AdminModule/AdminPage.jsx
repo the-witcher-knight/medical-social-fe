@@ -1,13 +1,10 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 
 const AdminPage = () => {
   return (
-    <Box component="div">
-      <Typography paragraph variant="h4">
-        Admin Page
-      </Typography>
+    <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
       <Outlet />
     </Box>
   );

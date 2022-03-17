@@ -2,3 +2,4 @@ node_modules
 build
 img-example
 .env
+src/shared/mocks
