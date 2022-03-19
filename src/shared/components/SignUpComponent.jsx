@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {
   Container,
@@ -20,7 +20,7 @@ import {
   TextField,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useWatch } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 
@@ -35,18 +35,43 @@ const SignUpComponent = () => {
     handleSubmit,
     control,
     formState: { errors },
+    resetField,
   } = useForm({
     defaultValues: {
       firstname: '',
       lastname: '',
-      username: '',
+      login: '',
       password: '',
       authority: '',
       confirmPassword: '',
+      files: '', // for doctor degree
+      pharmacyName: '',
+      address: '', // form pharmacy
     },
   });
 
+  const watchAuthority = useWatch({ control, name: 'authority' });
+  const watchDegreePhoto = useWatch({ control, name: 'files' });
+
+  const onChangeAuthority = () => {
+    resetField('firstName');
+    resetField('lastName');
+    resetField('login');
+    resetField('password');
+    resetField('confirmPassword');
+    resetField('pharmacyName');
+    resetField('address');
+    resetField('files');
+  };
+
+  useEffect(() => {
+    if (watchAuthority) {
+      onChangeAuthority();
+    }
+  }, [watchAuthority]);
+
   const onSubmit = values => {
+    // TODO convert authority to ['authority']
     console.log(values);
   };
 
@@ -72,41 +97,6 @@ const SignUpComponent = () => {
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Controller
-                  control={control}
-                  name="firstname"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      fullWidth
-                      autoComplete="given-name"
-                      label="First Name"
-                      autoFocus
-                      error={!!errors.firstname}
-                      helperText={errors.firstname && 'Please enter your first name'}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <Controller
-                  control={control}
-                  name="lastname"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      fullWidth
-                      label="Last Name"
-                      autoComplete="family-name"
-                      error={!!errors.lastname}
-                      helperText={errors.lastname && 'Please enter your last name'}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
               <Grid item xs={12}>
                 <Controller
                   control={control}
@@ -138,17 +128,115 @@ const SignUpComponent = () => {
                   )}
                 />
               </Grid>
+              {watchAuthority === 'ROLE_PHARMACY' ? (
+                <>
+                  <Grid item xs={12}>
+                    <Controller
+                      control={control}
+                      name="pharmacyName"
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          label="Pharmacy Name"
+                          error={!!errors.pharmacyName}
+                          helperText={errors.pharmacyName && 'Please enter pharmacy name'}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Controller
+                      control={control}
+                      name="address"
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          label="Pharmacy Address"
+                          error={!!errors.address}
+                          helperText={errors.address && 'Please enter pharmacy address'}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              ) : (
+                <>
+                  <Grid item xs={6}>
+                    <Controller
+                      control={control}
+                      name="firstname"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          autoComplete="given-name"
+                          label="First Name"
+                          autoFocus
+                          error={!!errors.firstname}
+                          helperText={errors.firstname && 'Please enter your first name'}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Controller
+                      control={control}
+                      name="lastname"
+                      rules={{ required: true }}
+                      render={({ field }) => (
+                        <TextField
+                          fullWidth
+                          label="Last Name"
+                          autoComplete="family-name"
+                          error={!!errors.lastname}
+                          helperText={errors.lastname && 'Please enter your last name'}
+                          {...field}
+                        />
+                      )}
+                    />
+                  </Grid>
+                </>
+              )}
+
+              {watchAuthority === 'ROLE_DOCTOR' && (
+                <Grid item xs={12}>
+                  <Controller
+                    control={control}
+                    name="files"
+                    render={({ field }) => (
+                      <label htmlFor="contained-button-file">
+                        <input
+                          style={{ display: 'none' }}
+                          accept="image/*"
+                          id="contained-button-file"
+                          multiple
+                          type="file"
+                          {...field}
+                        />
+                        <Button variant="outlined" component="span">
+                          Upload Degree Photo
+                        </Button>
+                      </label>
+                    )}
+                  />
+                  &nbsp; {watchDegreePhoto}
+                </Grid>
+              )}
+
               <Grid item xs={12}>
                 <Controller
                   control={control}
-                  name="username"
+                  name="login"
                   rules={{ required: true }}
                   render={({ field }) => (
                     <TextField
                       fullWidth
                       label="Username"
-                      error={!!errors.username}
-                      helperText={errors.username && 'Please enter a username'}
+                      error={!!errors.login}
+                      helperText={errors.login && 'Please enter a username'}
                       {...field}
                     />
                   )}
