@@ -54,6 +54,22 @@ export const signin =
     // Set local lang key
   };
 
+export const signup = createAsyncThunk(
+  'authentication/register',
+  async user => {
+    const formData = new FormData();
+    Object.keys(user).forEach(k =>
+      k === 'files' ? formData.append(k, user[k][0]) : formData.append(k, user[k])
+    );
+    axios.post(API_URL + '/admin/users', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
 export const clearAuthToken = () => {
   if (StorageAPI.local.get(AUTH_TOKEN_KEY)) {
     StorageAPI.local.remove(AUTH_TOKEN_KEY);
@@ -119,6 +135,17 @@ export const AuthenticationSlice = createSlice({
       }))
       .addCase(authenticate.pending, state => {
         state.loading = true;
+      })
+      .addCase(signup.fulfilled, state => {
+        state.loading = false;
+      })
+      .addCase(signup.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Could not register';
+      })
+      .addCase(signup.pending, state => {
+        state.loading = true;
+        state.errorMessage = '';
       });
   },
 });

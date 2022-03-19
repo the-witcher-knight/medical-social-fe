@@ -10,29 +10,32 @@ import {
   Grid,
   Link as MuiLink,
   Alert,
-  AlertTitle,
   FormControl,
   InputLabel,
   FormHelperText,
-  FormControlLabel,
   Select,
   MenuItem,
   TextField,
+  InputBase,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm, Controller, useWatch } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
+import { toast } from 'react-toastify';
+import { signup } from '../reducers/authentication';
 
 const theme = createTheme();
 
 const SignUpComponent = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   const errorMessage = useAppSelector(state => state.authentication.errorMessage);
 
   const {
     handleSubmit,
+    register,
     control,
     formState: { errors },
     resetField,
@@ -51,7 +54,6 @@ const SignUpComponent = () => {
   });
 
   const watchAuthority = useWatch({ control, name: 'authority' });
-  const watchDegreePhoto = useWatch({ control, name: 'files' });
 
   const onChangeAuthority = () => {
     resetField('firstName');
@@ -71,8 +73,24 @@ const SignUpComponent = () => {
   }, [watchAuthority]);
 
   const onSubmit = values => {
+    if (values.password !== values.confirmPassword) {
+      toast.error('Password and confirm password are not the same');
+      return;
+    }
+    const newUser = { ...values, authorities: [values.authority] };
+    Object.keys(newUser).forEach(
+      k => (newUser[k] == null || newUser[k] === '' || k === 'authority') && delete newUser[k]
+    );
     // TODO convert authority to ['authority']
-    console.log(values);
+    console.log(newUser);
+    dispatch(signup(newUser)).then(() => {
+      if (errorMessage) {
+        toast.error(errorMessage);
+      } else {
+        toast.success('Sign up successfully');
+        navigate('/authorization/sign-in');
+      }
+    });
   };
 
   return (
@@ -203,26 +221,13 @@ const SignUpComponent = () => {
 
               {watchAuthority === 'ROLE_DOCTOR' && (
                 <Grid item xs={12}>
-                  <Controller
-                    control={control}
+                  <InputBase
+                    fullWidth
+                    label="Degree"
                     name="files"
-                    render={({ field }) => (
-                      <label htmlFor="contained-button-file">
-                        <input
-                          style={{ display: 'none' }}
-                          accept="image/*"
-                          id="contained-button-file"
-                          multiple
-                          type="file"
-                          {...field}
-                        />
-                        <Button variant="outlined" component="span">
-                          Upload Degree Photo
-                        </Button>
-                      </label>
-                    )}
+                    type="file"
+                    {...register('files')}
                   />
-                  &nbsp; {watchDegreePhoto}
                 </Grid>
               )}
 
