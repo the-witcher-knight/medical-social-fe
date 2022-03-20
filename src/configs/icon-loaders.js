@@ -16,6 +16,7 @@ import {
   faLanguage,
   faListCheck,
   faMinus,
+  faPaw,
   faPen,
   faPencilAlt,
   faPlay,
@@ -79,7 +80,8 @@ export const loadIcon = () => {
     faEnvelope,
     faSearch,
     faEllipsisVertical,
-    faPen
+    faPen,
+    faPaw
     // Add more icons here
   );
 };

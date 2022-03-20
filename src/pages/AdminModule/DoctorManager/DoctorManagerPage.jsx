@@ -1,26 +1,83 @@
-import React, { useState } from 'react';
-import { Chip, Typography } from '@mui/material';
-import { getMockDoctor } from 'src/shared/mocks/mock-doctor';
+import React, { useEffect, useState } from 'react';
+import { Chip, Typography, Divider, Tooltip, Button } from '@mui/material';
 import UserTableManager from 'src/shared/components/UserTableManager';
+import { useAppDispatch, useAppSelector } from 'src/configs/store';
+import { getDegreeDoctor, getDoctors, updateDoctor } from '../admin.reducer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
 
 const DoctorManagerPage = () => {
-  // const doctors = useAppSelector
-  const loading = false;
+  const dispatch = useAppDispatch();
 
-  const rows = getMockDoctor();
+  const isLoading = useAppSelector(state => state.admin.loading);
+  const updateSuccess = useAppSelector(state => state.admin.updateSuccess);
+  const errorMessage = useAppSelector(state => state.admin.errorMessage);
+  const rows = useAppSelector(state => state.admin.dataList);
 
-  const [pageSize, setPageSize] = useState(10);
+  const [pagination, setPagination] = useState({
+    page: 0,
+    size: 30,
+  });
+
+  useEffect(() => {
+    dispatch(getDoctors(pagination.page, pagination.size));
+  }, [pagination]);
+
+  useEffect(() => {
+    if (!isLoading && errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [isLoading, errorMessage]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      dispatch(getDoctors(pagination.page, pagination.size));
+      toast.success('Update success');
+    }
+  }, [updateSuccess]);
+
+  const nextPage = () => {
+    setPagination(prev => ({
+      ...prev,
+      page: prev.page + 1,
+    }));
+  };
 
   const onActivateOrInActivateDoctor = values => {
-    if (values) console.log('Activate or InActivate ', values);
+    if (values) {
+      const formData = new FormData();
+      Object.keys(values)
+        .filter(key => values[key] !== null && values[key] !== undefined)
+        .forEach(key => {
+          if (key === 'files') {
+            formData.append(key, values[key][0]);
+          }
+          if (key === 'activated') {
+            formData.append(key, !values[key]); // activated or inactivated
+          } else {
+            formData.append(key, values[key]);
+          }
+        });
+
+      dispatch(updateDoctor(formData));
+    }
   };
 
   const onDeleteDoctor = values => {
     if (values) console.log('Delete ', values);
   };
 
+  const onReviewDegree = values => {
+    if (values) {
+      dispatch(getDegreeDoctor(values.id)).then(res => {
+        window.open('http://localhost:8080/files/' + res.payload.data, '_blank');
+      });
+    }
+  };
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'login', headerName: 'Username', width: 150 },
     {
       field: 'firstName',
       headerName: 'First name',
@@ -41,12 +98,6 @@ const DoctorManagerPage = () => {
       width: 200,
     },
     {
-      field: 'degree',
-      headerName: 'Degree',
-      editable: false,
-      width: 400,
-    },
-    {
       field: 'activated',
       headerName: 'Activated',
       editable: false,
@@ -60,6 +111,52 @@ const DoctorManagerPage = () => {
     },
   ];
 
+  const reviewDegreeToolbarItems = ({ apiRef }) => (
+    <>
+      <Divider
+        orientation="vertical"
+        sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
+      />
+      <Tooltip title="Reviewer selected doctor">
+        <Button
+          color="secondary"
+          aria-label="active"
+          size="small"
+          onClick={() => onReviewDegree([...apiRef.getSelectedRows()][0][1])}
+        >
+          <FontAwesomeIcon icon="eye" />
+          &nbsp; Review Degree
+        </Button>
+      </Tooltip>
+      <Divider
+        orientation="vertical"
+        sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
+      />
+      <Tooltip title="Active selected row">
+        <Button
+          color="primary"
+          aria-label="active"
+          size="small"
+          onClick={() => onActivateOrInActivateDoctor([...apiRef.getSelectedRows()][0][1])} // coi chừng lỗi
+        >
+          <FontAwesomeIcon icon="pen" />
+          &nbsp; Activate
+        </Button>
+      </Tooltip>
+      <Tooltip title="Delete selected row">
+        <Button
+          color="error"
+          aria-label="delete"
+          size="small"
+          onClick={() => onDeleteDoctor([...apiRef.getSelectedRows()][0][1])}
+        >
+          <FontAwesomeIcon icon="trash" />
+          &nbsp; Delete
+        </Button>
+      </Tooltip>
+    </>
+  );
+
   return (
     <div style={{ height: 600, width: '90%' }}>
       <Typography variant="h5" gutterBottom>
@@ -68,9 +165,9 @@ const DoctorManagerPage = () => {
       <UserTableManager
         columns={columns}
         rows={rows}
-        loading={loading}
-        onActivateOrInActivate={onActivateOrInActivateDoctor}
-        onDelete={onDeleteDoctor}
+        loading={isLoading}
+        nextPage={nextPage}
+        otherToolbarItems={reviewDegreeToolbarItems}
       />
     </div>
   );

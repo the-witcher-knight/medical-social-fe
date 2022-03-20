@@ -5,6 +5,7 @@ import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import loggerMiddleware from './middlewares/logger-middleware';
 import notificationMiddleware from './middlewares/notification-middleware';
 import errorMiddleware from './middlewares/error-middleware';
+import { userApi } from 'src/pages/AdminModule/admin.reducer';
 
 const store = configureStore({
   reducer: rootReducers,
@@ -14,7 +15,7 @@ const store = configureStore({
         // Ignore these field paths in all actions
         ignoredActionPaths: ['payload.config', 'payload.request', 'error', 'meta.arg'],
       },
-    }).concat(notificationMiddleware, errorMiddleware, loggerMiddleware, loadingBarMiddleware()), // TODO: Add some middleware here (logger, notification, etc.)
+    }).concat(notificationMiddleware, errorMiddleware, loggerMiddleware, loadingBarMiddleware()),
 });
 
 const getStore = () => store;

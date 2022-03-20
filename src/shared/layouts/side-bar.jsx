@@ -6,6 +6,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItemIcon, ListItemButton, ListItemText } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -59,6 +60,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
 const SideBar = ({ open, handleClose }) => {
   const theme = useTheme();
 
+  const adminRoutes = [{ name: 'Admin', icon: 'user-shield', path: '/admin' }];
+
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
@@ -100,9 +103,11 @@ const SideBar = ({ open, handleClose }) => {
       </List>
       <Divider />
       <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
+        {adminRoutes.map((route, index) => (
           <ListItemButton
-            key={text}
+            key={index}
+            component={Link}
+            to={route.path}
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
@@ -116,13 +121,9 @@ const SideBar = ({ open, handleClose }) => {
                 justifyContent: 'center',
               }}
             >
-              {index % 2 === 0 ? (
-                <FontAwesomeIcon icon="store" />
-              ) : (
-                <FontAwesomeIcon icon="shopping-cart" />
-              )}
+              <FontAwesomeIcon icon={route.icon} />
             </ListItemIcon>
-            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary={route.name} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         ))}
       </List>

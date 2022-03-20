@@ -15,6 +15,8 @@ const DoctorManager = React.lazy(() =>
   import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
 );
 
+const ExamBooking = React.lazy(() => import('src/pages/ExaminationScheduleModule/ExamBookingPage'));
+
 // Demo page
 const DemoText = React.lazy(() => import('src/pages/TextPage'));
 
@@ -41,6 +43,10 @@ export const ROUTES = [
             element: <DoctorManager />,
           },
         ],
+      },
+      {
+        path: '/examination-schedule',
+        element: <ExamBooking />,
       },
       {
         path: '/demo-text',
