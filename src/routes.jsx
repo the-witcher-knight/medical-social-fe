@@ -9,13 +9,17 @@ const SignUp = React.lazy(() => import('src/shared/components/SignUpComponent'))
 const Logout = React.lazy(() => import('src/shared/components/LogoutModal'));
 
 // Inner page
+const Welcome = React.lazy(() => import('src/pages/WelcomePage'));
+
 const Admin = React.lazy(() => import('src/pages/AdminModule/AdminPage'));
 const AdminDefault = React.lazy(() => import('src/pages/AdminModule/Default'));
 const DoctorManager = React.lazy(() =>
   import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
 );
 
-const ExamBooking = React.lazy(() => import('src/pages/ExaminationScheduleModule/ExamBookingPage'));
+const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorBookingPage'));
+const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
+const BookingForm = React.lazy(() => import('src/pages/DoctorBookingModule/BookingFormModal'));
 
 // Demo page
 const DemoText = React.lazy(() => import('src/pages/TextPage'));
@@ -25,6 +29,10 @@ export const ROUTES = [
     path: '/',
     element: <Main />,
     children: [
+      {
+        index: true,
+        element: <Welcome />,
+      },
       {
         path: '/logout',
         element: <Logout />,
@@ -45,8 +53,18 @@ export const ROUTES = [
         ],
       },
       {
-        path: '/examination-schedule',
-        element: <ExamBooking />,
+        path: '/doctor-booking',
+        element: <DoctorBooking />,
+        children: [
+          {
+            index: true,
+            element: <DoctorList />,
+          },
+          {
+            path: ':doctorId',
+            element: <BookingForm />,
+          },
+        ],
       },
       {
         path: '/demo-text',
@@ -70,8 +88,8 @@ export const ROUTES = [
   },
 ];
 
-const BrowerRouterProvider = () => {
-  const routeElements = useRoutes(ROUTES);
+const BrowerRouterProvider = ({ location }) => {
+  const routeElements = useRoutes(ROUTES, location);
   return routeElements;
 };
 
