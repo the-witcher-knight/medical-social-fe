@@ -21,36 +21,48 @@ import { getDoctorScheduleOfDoctorAtCurrentDay, createDoctorSchedule } from './b
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { combineDateAndTime } from 'src/shared/util/time-ultil';
+import dayjs from 'dayjs';
 
 const BookingFormModal = () => {
+  const { doctorId } = useParams(); // get doctorId from url
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(true);
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, watch, control } = useForm({
     defaultValues: {
       date: Date.now(),
       startAt: new Date().setUTCHours(1, 0, 0, 0), // Giờ UTC còn render ra giờ VN
       endAt: new Date().setUTCHours(2, 30, 0, 0),
     },
   });
-  const { doctorId } = useParams();
 
   const scheduleList = useAppSelector(state => state.bookingDoctor.doctorScheduleList);
   const currentAccount = useAppSelector(state => state.authentication.account);
 
-  useEffect(() => {
-    dispatch(getDoctorScheduleOfDoctorAtCurrentDay(doctorId));
-  }, [doctorId]);
+  // const watchDate = watch('date');
+
+  // TODO: watch date change and get all schedule of doctor at that day
+  // useEffect(() => {
+  //   if (watchDate) {
+  //     console.log(dayjs(watchDate).format('YYYY-MM-DDTHH:mm:ss[Z]')); // [Z] is for server timezone (UTC)
+  //   }
+  // }, [watchDate]);
 
   const handleClose = () => {
     setOpen(false);
   };
 
   const onSubmit = values => {
-    if (values.startAt >= values.endAt) {
+    const { date, startAt, endAt } = values;
+
+    if (startAt >= endAt) {
       toast.error("Start time can't be greater than end time");
       return;
     }
-    const { date, startAt, endAt } = values;
+
+    if (startAt < Date.now()) {
+      toast.error("Start time can't be less than current time");
+      return;
+    }
 
     const schedule = {
       startAt: combineDateAndTime(date, startAt),
@@ -62,8 +74,8 @@ const BookingFormModal = () => {
         id: currentAccount.id,
       },
     };
-    console.log(schedule);
-    // dispatch(createDoctorSchedule(schedule));
+    // console.log(schedule);
+    dispatch(createDoctorSchedule(schedule));
   };
 
   return (
