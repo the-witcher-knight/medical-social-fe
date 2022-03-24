@@ -7,6 +7,9 @@ export const AUTH_TOKEN_KEY = 'authToken';
 // eslint-disable-next-line no-undef
 const API_URL = process.env.API_URL;
 
+const getToken = () =>
+  StorageAPI.local.get(AUTH_TOKEN_KEY) || StorageAPI.session.get(AUTH_TOKEN_KEY);
+
 export const initialState = {
   loading: false,
   isAuthenticated: false,
@@ -21,6 +24,21 @@ export const initialState = {
 };
 
 // Actions
+
+export const getAccount = createAsyncThunk(
+  'authentication/get_account',
+  async () => {
+    const res = await axios.get(`${API_URL}/users/current-login`, {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+    });
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
 
 export const authenticate = createAsyncThunk(
   'authentication/signin',
@@ -51,7 +69,8 @@ export const signin =
         StorageAPI.session.set(AUTH_TOKEN_KEY, bearerToken);
       }
     }
-    // Set local lang key
+    // Get account here
+    await dispatch(getAccount());
   };
 
 export const signup = createAsyncThunk(
@@ -144,6 +163,20 @@ export const AuthenticationSlice = createSlice({
         state.errorMessage = action.error.message || 'Could not register';
       })
       .addCase(signup.pending, state => {
+        state.loading = true;
+        state.errorMessage = '';
+      })
+      .addCase(getAccount.fulfilled, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+        state.account = action.payload;
+      })
+      .addCase(getAccount.rejected, (state, action) => {
+        state.loading = false;
+        state.isAuthenticated = false;
+        state.errorMessage = action.error.message || 'Could not get account';
+      })
+      .addCase(getAccount.pending, state => {
         state.loading = true;
         state.errorMessage = '';
       });
