@@ -60,6 +60,14 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
 const SideBar = ({ open, handleClose }) => {
   const theme = useTheme();
 
+  const routes = [
+    {
+      name: 'Doctor Booking',
+      path: '/doctor-booking',
+      icon: 'calendar-plus',
+    },
+  ];
+
   const adminRoutes = [{ name: 'Admin', icon: 'user-shield', path: '/admin' }];
 
   return (
@@ -75,9 +83,11 @@ const SideBar = ({ open, handleClose }) => {
       </DrawerHeader>
       <Divider />
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+        {routes.map(r => (
           <ListItemButton
-            key={text}
+            key={r.name}
+            component={Link}
+            to={r.path}
             sx={{
               minHeight: 48,
               justifyContent: open ? 'initial' : 'center',
@@ -91,13 +101,9 @@ const SideBar = ({ open, handleClose }) => {
                 justifyContent: 'center',
               }}
             >
-              {index % 2 === 0 ? (
-                <FontAwesomeIcon icon="store" />
-              ) : (
-                <FontAwesomeIcon icon="shopping-cart" />
-              )}
+              <FontAwesomeIcon icon={r.icon} />
             </ListItemIcon>
-            <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+            <ListItemText primary={r.name} sx={{ opacity: open ? 1 : 0 }} />
           </ListItemButton>
         ))}
       </List>

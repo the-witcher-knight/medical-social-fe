@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography, Divider, Tooltip, Button } from '@mui/material';
+import { Divider, Tooltip, Button } from '@mui/material';
 import UserTableManager from 'src/shared/components/UserTableManager';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { getDoctors, getDegreeDoctor } from '../AdminModule/admin.reducer';
+import { getDoctors, getDegreeDoctor } from './booking.reducer';
+import { useNavigate } from 'react-router-dom';
 
-const ExamBookingPage = () => {
+const DoctorListPage = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
-  const isLoading = useAppSelector(state => state.admin.loading);
-  const doctors = useAppSelector(state => state.admin.dataList);
+  const isLoading = useAppSelector(state => state.bookingDoctor.loading);
+  const doctors = useAppSelector(state => state.bookingDoctor.doctorList);
   const [pagination, setPagination] = useState({
     page: 0,
     size: 30,
@@ -31,9 +33,11 @@ const ExamBookingPage = () => {
     }
   };
 
-  const onBookExam = values => {
+  const onBookDoctor = values => {
     if (values) {
       // TODO: navigate to exam booking doctor with doctor id
+      // navigate('/doctor-booking/' + values.id, { state: { backgroundLocation: location } }); chưa support vụ này
+      navigate('/doctor-booking/' + values.id);
     }
   };
 
@@ -60,7 +64,7 @@ const ExamBookingPage = () => {
     },
   ];
 
-  const reviewDegreeToolbarItems = ({ apiRef }) => (
+  const DoctorListToolbarItems = ({ apiRef }) => (
     <>
       <Divider
         orientation="vertical"
@@ -82,7 +86,7 @@ const ExamBookingPage = () => {
           color="info"
           aria-label="active"
           size="small"
-          onClick={() => onBookExam([...apiRef.getSelectedRows()][0][1])}
+          onClick={() => onBookDoctor([...apiRef.getSelectedRows()][0][1])}
         >
           <FontAwesomeIcon icon="paw" />
           &nbsp; Book Examination
@@ -92,21 +96,14 @@ const ExamBookingPage = () => {
   );
 
   return (
-    <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
-      <div style={{ height: 600, width: '90%' }}>
-        <Typography variant="h5" gutterBottom>
-          Doctor Manager
-        </Typography>
-        <UserTableManager
-          columns={columns}
-          rows={doctors}
-          loading={isLoading}
-          nextPage={nextPage}
-          otherToolbarItems={reviewDegreeToolbarItems}
-        />
-      </div>
-    </Box>
+    <UserTableManager
+      columns={columns}
+      rows={doctors}
+      loading={isLoading}
+      nextPage={nextPage}
+      otherToolbarItems={DoctorListToolbarItems}
+    />
   );
 };
 
-export default ExamBookingPage;
+export default DoctorListPage;

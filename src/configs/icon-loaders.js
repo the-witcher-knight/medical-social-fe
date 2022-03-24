@@ -6,6 +6,7 @@ import {
   faBan,
   faBars,
   faBell,
+  faCalendarPlus,
   faCartShopping,
   faDroplet,
   faEllipsisVertical,
@@ -81,7 +82,8 @@ export const loadIcon = () => {
     faSearch,
     faEllipsisVertical,
     faPen,
-    faPaw
+    faPaw,
+    faCalendarPlus
     // Add more icons here
   );
 };
