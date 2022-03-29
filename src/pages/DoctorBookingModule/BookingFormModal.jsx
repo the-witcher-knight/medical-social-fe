@@ -8,6 +8,10 @@ import {
   AccordionDetails,
   TextField,
   Button,
+  List,
+  ListItem,
+  ListItemText,
+  Alert,
 } from '@mui/material';
 import AdapterDayJS from '@mui/lab/AdapterDayjs';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
@@ -16,51 +20,64 @@ import DatePicker from '@mui/lab/DatePicker';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useParams } from 'react-router-dom';
-import { getDoctorScheduleOfDoctorAtCurrentDay, createDoctorSchedule } from './booking.reducer';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getScheduleOfDoctorAtDate, createDoctorSchedule } from './booking.reducer';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
-import { combineDateAndTime } from 'src/shared/util/time-ultil';
+import { combineDateAndTime, extractTimeFromString } from 'src/shared/util/time-ultil';
 import dayjs from 'dayjs';
+import { parseJwt } from 'src/shared/util/auth-util';
+import { StorageAPI } from 'src/shared/util/storage-util';
 
 const BookingFormModal = () => {
   const { doctorId } = useParams(); // get doctorId from url
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [open, setOpen] = useState(true);
   const { handleSubmit, watch, control } = useForm({
     defaultValues: {
       date: Date.now(),
-      startAt: new Date().setUTCHours(1, 0, 0, 0), // Giờ UTC còn render ra giờ VN
-      endAt: new Date().setUTCHours(2, 30, 0, 0),
+      startAt: Date.now() + 3600000, // + 1 hour
+      endAt: Date.now() + 5400000, // + 1 hour 30 minus
     },
   });
 
+  const currentAccount = parseJwt(
+    StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken')
+  );
   const scheduleList = useAppSelector(state => state.bookingDoctor.doctorScheduleList);
-  const currentAccount = useAppSelector(state => state.authentication.account);
+  const errorMessage = useAppSelector(state => state.bookingDoctor.errorMessage);
 
-  // const watchDate = watch('date');
+  const watchDate = watch('date');
 
-  // TODO: watch date change and get all schedule of doctor at that day
-  // useEffect(() => {
-  //   if (watchDate) {
-  //     console.log(dayjs(watchDate).format('YYYY-MM-DDTHH:mm:ss[Z]')); // [Z] is for server timezone (UTC)
-  //   }
-  // }, [watchDate]);
+  useEffect(() => {
+    if (watchDate) {
+      const selectedDate = dayjs(watchDate).format('YYYY-MM-DDTHH:mm:ss[Z]');
+      dispatch(getScheduleOfDoctorAtDate({ doctorId, date: selectedDate }));
+    }
+  }, [watchDate]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
 
   const handleClose = () => {
     setOpen(false);
+    navigate(-1);
   };
 
   const onSubmit = values => {
-    const { date, startAt, endAt } = values;
+    const { date, startAt, endAt } = values; // not DayJS object
 
     if (startAt >= endAt) {
       toast.error("Start time can't be greater than end time");
       return;
     }
 
-    if (startAt < Date.now()) {
-      toast.error("Start time can't be less than current time");
+    if (startAt <= Date.now()) {
+      toast.error("Start time can't be equal or less than current time");
       return;
     }
 
@@ -71,11 +88,13 @@ const BookingFormModal = () => {
         id: doctorId,
       },
       user: {
-        id: currentAccount.id,
+        login: currentAccount.sub,
       },
     };
-    // console.log(schedule);
-    dispatch(createDoctorSchedule(schedule));
+    dispatch(createDoctorSchedule(schedule)).then(() => {
+      toast.success('Successfully create schedule');
+      navigate(-1); // go back to previous page
+    });
   };
 
   return (
@@ -108,6 +127,7 @@ const BookingFormModal = () => {
           <Controller
             control={control}
             name="date"
+            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => (
               <LocalizationProvider dateAdapter={AdapterDayJS}>
                 <DatePicker
@@ -125,6 +145,7 @@ const BookingFormModal = () => {
           <Controller
             control={control}
             name="startAt"
+            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => (
               <LocalizationProvider dateAdapter={AdapterDayJS}>
                 <TimePicker
@@ -147,6 +168,7 @@ const BookingFormModal = () => {
           <Controller
             control={control}
             name="endAt"
+            rules={{ required: true }}
             render={({ field: { onChange, onBlur, value, ref }, fieldState: { error } }) => (
               <LocalizationProvider dateAdapter={AdapterDayJS}>
                 <TimePicker
@@ -172,17 +194,32 @@ const BookingFormModal = () => {
           </Button>
         </Box>
         <Accordion>
-          <AccordionSummary expandIcon={<FontAwesomeIcon icon="eye" />}>
+          <AccordionSummary expandIcon={<FontAwesomeIcon icon="arrow-down" />}>
             The time doctor was busy ...
           </AccordionSummary>
           <AccordionDetails>
-            <ul>
-              {scheduleList.map(schedule => (
-                <li key={schedule.id}>
-                  {schedule.startAt} - {schedule.endAt}
-                </li>
-              ))}
-            </ul>
+            {!errorMessage && (
+              <List>
+                {scheduleList && scheduleList.length > 0 ? (
+                  scheduleList.map(schedule => (
+                    <ListItem
+                      key={schedule.id}
+                      sx={{ display: 'flex', justifyContent: 'space-between' }}
+                    >
+                      <Alert severity="info">
+                        {extractTimeFromString(schedule.startAt)}
+                        &nbsp;-&nbsp;
+                        {extractTimeFromString(schedule.endAt)}
+                      </Alert>
+                    </ListItem>
+                  ))
+                ) : (
+                  <ListItem key="no-schedule">
+                    <Typography variant="body1">Doctor not busy at that day</Typography>
+                  </ListItem>
+                )}
+              </List>
+            )}
           </AccordionDetails>
         </Accordion>
       </Box>

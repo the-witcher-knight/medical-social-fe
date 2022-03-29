@@ -8,6 +8,7 @@ const API_URL = process.env.API_URL;
 const initialState = {
   loading: false,
   errorMessage: null,
+  bookingCompleted: null,
   doctorList: [], // Active doctor list
   doctorScheduleList: [], // Schedule list of doctor {id}
 };
@@ -51,10 +52,20 @@ export const getDegreeDoctor = createAsyncThunk(
   }
 );
 
-export const getDoctorScheduleOfDoctorAtCurrentDay = createAsyncThunk(
-  'doctor_booking/fetch_doctor_schedule_of_doctor_at_current_day',
-  async doctorId => {
-    const res = await axios.get(`${API_URL}/examination-schedules/doctor/${doctorId}`);
+/**
+ * Get schedule of doctor at date
+ * @param {number} doctorId
+ * @param {string} date
+ */
+export const getScheduleOfDoctorAtDate = createAsyncThunk(
+  'doctor_booking/fetch_schedule_of_doctor_at_date',
+  // pass only one param here. Because of redux-thunk
+  async ({ doctorId, date }) => {
+    const res = await axios.get(`${API_URL}/examination-schedules/doctor/${doctorId}`, {
+      params: {
+        date,
+      },
+    });
     return res.data;
   },
   {
@@ -97,24 +108,26 @@ const doctorBookingSlice = createSlice({
         state.loading = true;
         state.errorMessage = null;
       })
-      .addCase(getDoctorScheduleOfDoctorAtCurrentDay.fulfilled, (state, action) => {
+      .addCase(getScheduleOfDoctorAtDate.fulfilled, (state, action) => {
         state.doctorScheduleList = action.payload;
         state.loading = false;
       })
-      .addCase(getDoctorScheduleOfDoctorAtCurrentDay.rejected, (state, action) => {
-        state.doctorScheduleList = action.error.message || 'Something went wrong';
+      .addCase(getScheduleOfDoctorAtDate.rejected, (state, action) => {
+        state.errorMessage = action.error.message || 'Something went wrong';
         state.loading = false;
       })
-      .addCase(getDoctorScheduleOfDoctorAtCurrentDay.pending, state => {
+      .addCase(getScheduleOfDoctorAtDate.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       })
       .addCase(createDoctorSchedule.fulfilled, (state, action) => {
         state.loading = false;
+        state.bookingCompleted = true;
       })
       .addCase(createDoctorSchedule.rejected, (state, action) => {
         state.errorMessage = action.error.message || 'Something went wrong';
         state.loading = false;
+        state.bookingCompleted = false;
       })
       .addCase(createDoctorSchedule.pending, state => {
         state.loading = true;
