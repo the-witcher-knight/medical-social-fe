@@ -11,3 +11,15 @@ export const combineDateAndTime = (date, time) => {
   const timePart = dayjs(time).format('HH:mm:ss');
   return `${datePart}T${timePart}Z`;
 };
+
+/**
+ * Get time from a string
+ * @param {string} str string of "YYYY-MM-DDTHH:mm:ssZ"
+ * @returns time part of str with format "HH:mm:ss"
+ */
+export const extractTimeFromString = str => {
+  const date = new Date(str);
+  return `${date.getUTCHours()}:${
+    date.getUTCMinutes() < 10 ? '0' + date.getUTCMinutes() : date.getUTCMinutes()
+  }:${date.getUTCSeconds()}`;
+};

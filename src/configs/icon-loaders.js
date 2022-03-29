@@ -1,6 +1,7 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faAddressCard,
+  faArrowDown,
   faArrowLeft,
   faArrowRight,
   faBan,
@@ -17,6 +18,7 @@ import {
   faLanguage,
   faListCheck,
   faMinus,
+  faPaperPlane,
   faPaw,
   faPen,
   faPencilAlt,
@@ -83,7 +85,9 @@ export const loadIcon = () => {
     faEllipsisVertical,
     faPen,
     faPaw,
-    faCalendarPlus
+    faCalendarPlus,
+    faPaperPlane,
+    faArrowDown
     // Add more icons here
   );
 };

@@ -36,13 +36,13 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader'],
       },
-      {
-        test: /\.(json)$/,
-        use: {
-          loader: 'file-loader',
-          options: { name: '[name].[ext]', outputPath: './' },
-        },
-      },
+      // {
+      //   test: /\.(json)$/,
+      //   use: {
+      //     loader: 'file-loader',
+      //     options: { name: '[name].[ext]', outputPath: './' },
+      //   },
+      // },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
         use: ['url-loader'],

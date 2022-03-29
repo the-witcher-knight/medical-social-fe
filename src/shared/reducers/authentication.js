@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { StorageAPI } from 'src/shared/util/storage-util';
+import { parseJwt } from '../util/auth-util';
 import { serializeAxiosError } from './reducer.utils';
 
 export const AUTH_TOKEN_KEY = 'authToken';
@@ -49,6 +50,13 @@ export const authenticate = createAsyncThunk(
   }
 );
 
+/**
+ * Sign in with account
+ * @param {string} username username of user
+ * @param {string} password password of user
+ * @param {boolean} rememberMe remember me
+ * @returns jwt token
+ */
 export const signin =
   (username, password, rememberMe = false) =>
   async dispatch => {
@@ -69,8 +77,6 @@ export const signin =
         StorageAPI.session.set(AUTH_TOKEN_KEY, bearerToken);
       }
     }
-    // Get account here
-    await dispatch(getAccount());
   };
 
 export const signup = createAsyncThunk(
