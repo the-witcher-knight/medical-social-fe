@@ -41,8 +41,8 @@ const SignUpComponent = () => {
     resetField,
   } = useForm({
     defaultValues: {
-      firstname: '',
-      lastname: '',
+      firstName: '',
+      lastName: '',
       login: '',
       password: '',
       authority: '',
@@ -184,7 +184,7 @@ const SignUpComponent = () => {
                   <Grid item xs={6}>
                     <Controller
                       control={control}
-                      name="firstname"
+                      name="firstName"
                       rules={{ required: true }}
                       render={({ field }) => (
                         <TextField
@@ -192,8 +192,8 @@ const SignUpComponent = () => {
                           autoComplete="given-name"
                           label="First Name"
                           autoFocus
-                          error={!!errors.firstname}
-                          helperText={errors.firstname && 'Please enter your first name'}
+                          error={!!errors.firstName}
+                          helperText={errors.firstName && 'Please enter your first name'}
                           {...field}
                         />
                       )}
@@ -202,15 +202,15 @@ const SignUpComponent = () => {
                   <Grid item xs={6}>
                     <Controller
                       control={control}
-                      name="lastname"
+                      name="lastName"
                       rules={{ required: true }}
                       render={({ field }) => (
                         <TextField
                           fullWidth
                           label="Last Name"
                           autoComplete="family-name"
-                          error={!!errors.lastname}
-                          helperText={errors.lastname && 'Please enter your last name'}
+                          error={!!errors.lastName}
+                          helperText={errors.lastName && 'Please enter your last name'}
                           {...field}
                         />
                       )}
