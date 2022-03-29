@@ -7,8 +7,10 @@ import {
   faBan,
   faBars,
   faBell,
+  faCalendarCheck,
   faCalendarPlus,
   faCartShopping,
+  faCheck,
   faDroplet,
   faEllipsisVertical,
   faEnvelope,
@@ -87,7 +89,9 @@ export const loadIcon = () => {
     faPaw,
     faCalendarPlus,
     faPaperPlane,
-    faArrowDown
+    faArrowDown,
+    faCheck,
+    faCalendarCheck
     // Add more icons here
   );
 };

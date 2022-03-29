@@ -71,6 +71,11 @@ const SideBar = ({ open, handleClose }) => {
       path: '/doctor-booking',
       icon: 'calendar-plus',
     },
+    {
+      name: 'Booking Manager',
+      path: '/booking-manager',
+      icon: 'calendar-check',
+    },
   ];
 
   const adminRoutes = [{ name: 'Admin', icon: 'user-shield', path: '/admin' }];
