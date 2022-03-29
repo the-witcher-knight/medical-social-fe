@@ -62,6 +62,11 @@ const SideBar = ({ open, handleClose }) => {
 
   const routes = [
     {
+      name: 'Home',
+      path: '/',
+      icon: 'home',
+    },
+    {
       name: 'Doctor Booking',
       path: '/doctor-booking',
       icon: 'calendar-plus',

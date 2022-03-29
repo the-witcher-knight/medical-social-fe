@@ -92,6 +92,17 @@ const DoctorListPage = () => {
           &nbsp; Book Examination
         </Button>
       </Tooltip>
+      <Tooltip title="Inbox with Doctor">
+        <Button
+          color="warning"
+          aria-label="active"
+          size="small"
+          onClick={() => onBookDoctor([...apiRef.getSelectedRows()][0][1])}
+        >
+          <FontAwesomeIcon icon="envelope" />
+          &nbsp; Inbox
+        </Button>
+      </Tooltip>
     </>
   );
 

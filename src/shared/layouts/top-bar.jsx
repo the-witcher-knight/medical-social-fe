@@ -9,7 +9,7 @@ import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -122,15 +122,15 @@ const TopBar = ({ open, toggleSideBar }) => {
             <FontAwesomeIcon icon="bell" />
           </Badge>
         </IconButton>
-        <p>Messages</p>
+        <p>Notifications</p>
       </MenuItem>
-      <MenuItem>
+      <MenuItem component={Link} to="/message">
         <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
           <Badge badgeContent={17} color="error">
             <FontAwesomeIcon icon="envelope" />
           </Badge>
         </IconButton>
-        <p>Notifications</p>
+        <p>message</p>
       </MenuItem>
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
@@ -176,7 +176,13 @@ const TopBar = ({ open, toggleSideBar }) => {
                 <FontAwesomeIcon icon="bell" />
               </Badge>
             </IconButton>
-            <IconButton size="large" aria-label="show 17 new notifications" color="inherit">
+            <IconButton
+              LinkComponent={Link}
+              to="/message"
+              size="large"
+              aria-label="show 17 new notifications"
+              color="inherit"
+            >
               <Badge badgeContent={17} color="error">
                 <FontAwesomeIcon icon="envelope" />
               </Badge>
