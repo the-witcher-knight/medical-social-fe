@@ -21,6 +21,8 @@ const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/Doc
 const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
 const BookingForm = React.lazy(() => import('src/pages/DoctorBookingModule/BookingFormModal'));
 
+const Chat = React.lazy(() => import('src/pages/MessageModule/MessagePage'));
+
 // Demo page
 const DemoText = React.lazy(() => import('src/pages/TextPage'));
 
@@ -66,6 +68,11 @@ export const ROUTES = [
           },
         ],
       },
+      {
+        path: '/message',
+        element: <Chat />,
+      },
+      // Add more routes here
       {
         path: '/demo-text',
         element: <DemoText />,
