@@ -13,6 +13,15 @@ export const combineDateAndTime = (date, time) => {
 };
 
 /**
+ * Convert date to string.
+ * @param {Date} date the js Date.
+ * @returns string date.
+ */
+export const dateToString = date => {
+  return dayjs(date).format('YYYY-MM-DDTHH:mm:ss[Z]');
+};
+
+/**
  * Get time from a string
  * @param {string} str string of "YYYY-MM-DDTHH:mm:ssZ"
  * @returns time part of str with format "HH:mm:ss"

@@ -1,3 +1,5 @@
+import { StorageAPI } from './storage-util';
+
 /**
  * read date from token
  * @param {string} token string token
@@ -18,3 +20,12 @@ export function parseJwt(token) {
 
   return JSON.parse(jsonPayload);
 }
+
+/**
+ * extract user data from jwt token.
+ * @returns {sub: string, auth: string, exp: number}
+ */
+export const getUserAuthentication = () => {
+  const token = StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken');
+  return parseJwt(token);
+};
