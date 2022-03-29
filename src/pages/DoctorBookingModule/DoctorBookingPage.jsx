@@ -6,7 +6,7 @@ const DoctorBookingPage = () => {
   return (
     <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
       <div style={{ height: 600, width: '90%' }}>
-        <Typography variant="h5" gutterBottom sx={{ textAlign: 'center' }}>
+        <Typography variant="h5" component="h1" align="center" gutterBottom>
           Active Doctor List
         </Typography>
         {/* Show Doctor List or Booking Form here */}

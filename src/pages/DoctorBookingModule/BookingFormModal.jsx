@@ -10,7 +10,6 @@ import {
   Button,
   List,
   ListItem,
-  ListItemText,
   Alert,
 } from '@mui/material';
 import AdapterDayJS from '@mui/lab/AdapterDayjs';
@@ -21,12 +20,16 @@ import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getScheduleOfDoctorAtDate, createDoctorSchedule } from './booking.reducer';
+import {
+  getScheduleOfDoctorAtDate,
+  createDoctorSchedule,
+  resetBookingCompleted,
+} from './booking.reducer';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { combineDateAndTime, extractTimeFromString } from 'src/shared/util/time-ultil';
 import dayjs from 'dayjs';
-import { parseJwt } from 'src/shared/util/auth-util';
+import { getUserAuthentication, parseJwt } from 'src/shared/util/auth-util';
 import { StorageAPI } from 'src/shared/util/storage-util';
 
 const BookingFormModal = () => {
@@ -42,10 +45,10 @@ const BookingFormModal = () => {
     },
   });
 
-  const currentAccount = parseJwt(
-    StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken')
-  );
+  const currentAccount = getUserAuthentication();
+  const loading = useAppSelector(state => state.bookingDoctor.loading);
   const scheduleList = useAppSelector(state => state.bookingDoctor.doctorScheduleList);
+  const bookingCompleted = useAppSelector(state => state.bookingDoctor.bookingCompleted);
   const errorMessage = useAppSelector(state => state.bookingDoctor.errorMessage);
 
   const watchDate = watch('date');
@@ -62,6 +65,14 @@ const BookingFormModal = () => {
       toast.error(errorMessage);
     }
   }, [errorMessage]);
+
+  useEffect(() => {
+    if (bookingCompleted && !loading) {
+      toast.success('Booking completed');
+      dispatch(resetBookingCompleted()); // for next booking
+      navigate(-1);
+    }
+  }, [loading, bookingCompleted]);
 
   const handleClose = () => {
     setOpen(false);
@@ -91,10 +102,7 @@ const BookingFormModal = () => {
         login: currentAccount.sub,
       },
     };
-    dispatch(createDoctorSchedule(schedule)).then(() => {
-      toast.success('Successfully create schedule');
-      navigate(-1); // go back to previous page
-    });
+    dispatch(createDoctorSchedule(schedule));
   };
 
   return (

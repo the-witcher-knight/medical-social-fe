@@ -93,6 +93,9 @@ const doctorBookingSlice = createSlice({
     reset() {
       return initialState;
     },
+    resetBookingCompleted(state) {
+      state.bookingCompleted = null;
+    },
   },
   extraReducers(builder) {
     builder
@@ -132,10 +135,11 @@ const doctorBookingSlice = createSlice({
       .addCase(createDoctorSchedule.pending, state => {
         state.loading = true;
         state.errorMessage = null;
+        state.bookingCompleted = null;
       });
   },
 });
 
-export const { reset } = doctorBookingSlice.actions;
+export const { reset, resetBookingCompleted } = doctorBookingSlice.actions;
 
 export default doctorBookingSlice.reducer;
