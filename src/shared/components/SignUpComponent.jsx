@@ -17,6 +17,7 @@ import {
   MenuItem,
   TextField,
   InputBase,
+  TextareaAutosize,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm, Controller, useWatch } from 'react-hook-form';
@@ -45,6 +46,7 @@ const SignUpComponent = () => {
       lastName: '',
       login: '',
       password: '',
+      medicalRecord: '',
       authority: '',
       confirmPassword: '',
       files: '', // for doctor degree
@@ -64,6 +66,7 @@ const SignUpComponent = () => {
     resetField('pharmacyName');
     resetField('address');
     resetField('files');
+    resetField('medicalRecord');
   };
 
   useEffect(() => {
@@ -227,6 +230,26 @@ const SignUpComponent = () => {
                     name="files"
                     type="file"
                     {...register('files')}
+                  />
+                </Grid>
+              )}
+
+              {watchAuthority === 'ROLE_USER' && (
+                <Grid item xs={12}>
+                  <Controller
+                    control={control}
+                    name="medicalRecord"
+                    render={({ field }) => (
+                      <TextField
+                        fullWidth
+                        label="Medical Record"
+                        multiline
+                        maxRows={10}
+                        error={!!errors.medicalRecord}
+                        helperText={errors.medicalRecord && 'Please enter your medical record'}
+                        {...field}
+                      />
+                    )}
                   />
                 </Grid>
               )}
