@@ -31,15 +31,19 @@ const DoctorBookingPage = () => {
   });
 
   useEffect(() => {
+    dispatch(getDoctors(pagination.page, pagination.size));
+  }, [pagination]);
+
+  useEffect(() => {
+    dispatch(getAllChatRoom());
+  }, []);
+
+  useEffect(() => {
     if (!isLoading && createdChatRoom) {
       dispatch(getAllChatRoom());
       dispatch(resetCreatedChatRoom()); // update new chat room list
     }
   }, [createdChatRoom]);
-
-  useEffect(() => {
-    dispatch(getDoctors(pagination.page, pagination.size));
-  }, [pagination]);
 
   const nextPage = () => {
     console.log('nextPage');
@@ -74,12 +78,15 @@ const DoctorBookingPage = () => {
       const doctorId = values.id;
       if (chatRoomList && chatRoomList.length > 0) {
         const hadRoom = chatRoomList.find(room => room.users.find(user => user.id === doctorId));
-        if (!hadRoom) {
-          dispatch(createChatRoom(doctorId));
+        if (hadRoom) {
+          // TODO: with current room
+          navigate('/message');
+          return;
         }
-        // TODO: with current room
       }
-      navigate('/message');
+      dispatch(createChatRoom(doctorId)).then(() => {
+        navigate('/message');
+      });
     }
   };
 
