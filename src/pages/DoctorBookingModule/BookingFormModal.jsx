@@ -78,7 +78,6 @@ const BookingFormModal = () => {
 
   const handleClose = () => {
     dispatch(closeBookingForm());
-    navigate(-1);
   };
 
   const onSubmit = values => {

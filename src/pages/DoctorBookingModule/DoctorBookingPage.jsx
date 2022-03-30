@@ -46,7 +46,7 @@ const DoctorBookingPage = () => {
   };
 
   const onClickAction = (values, action) => {
-    if (values) {
+    if (values && values.length > 0) {
       action(values[0][1]);
     } else {
       toast.warning('Please select a doctor');
