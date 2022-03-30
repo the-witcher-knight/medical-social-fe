@@ -16,26 +16,45 @@ import { useForm, Controller } from 'react-hook-form';
 import * as SockJS from 'sockjs-client';
 import { over } from 'stompjs';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
+import { getAccount } from 'src/shared/reducers/authentication';
+import { toast } from 'react-toastify';
+import { getMessageList } from './message.reducer';
 
 const ChatArea = () => {
   const dispatch = useAppDispatch();
+
   const user = useAppSelector(state => state.authentication.account);
   const selectedChatRoom = useAppSelector(state => state.message.selectedChatRoom);
+  const messageList = useAppSelector(state => state.message.messageList);
 
   const [stompClient, setStompClient] = useState(null);
 
   const [messages, setMessages] = React.useState([]);
 
-  const { handleSubmit, control } = useForm({
+  const { handleSubmit, control, reset } = useForm({
     defaultValues: {
       content: '',
     },
   });
 
   useEffect(() => {
+    dispatch(getAccount());
     connect();
   }, []);
 
+  useEffect(() => {
+    if (selectedChatRoom) {
+      dispatch(getMessageList(selectedChatRoom.id));
+    }
+  }, [selectedChatRoom]);
+
+  useEffect(() => {
+    if (messageList.length > 0) {
+      setMessages(messageList);
+    }
+  }, [messageList]);
+
+  // ! lát xóa
   useEffect(() => {
     if (messages !== []) {
       console.log(messages);
@@ -46,7 +65,7 @@ const ChatArea = () => {
     if (selectedChatRoom !== null && stompClient !== null) {
       stompClient.subscribe(`/topic/${selectedChatRoom.id}`, payload => {
         console.log(payload.body);
-        setMessages(messages => [...messages, JSON.parse(payload.body)]);
+        setMessages(messages => [JSON.parse(payload.body), ...messages]);
       });
     }
   }, [selectedChatRoom, stompClient]);
@@ -65,6 +84,11 @@ const ChatArea = () => {
   };
 
   const onSubmit = values => {
+    if (!user) {
+      toast.warning('User data error please reload page or sign in again');
+      return;
+    }
+
     const message = {
       content: values.content,
       room: {
@@ -75,6 +99,7 @@ const ChatArea = () => {
       },
     };
     stompClient.send('/app/chat.sendMessage', {}, JSON.stringify(message));
+    reset();
   };
 
   const loadMore = () => {
@@ -132,7 +157,23 @@ const ChatArea = () => {
                 </ListItem>
               ))
             ) : (
-              <LinearProgress />
+              <ListItem key="no-content">
+                <ListItemText align="left">
+                  <Typography
+                    variant="body1"
+                    component={Paper}
+                    p={1}
+                    sx={{
+                      color: 'white',
+                      backgroundColor: '#757575',
+                      width: 'max-content',
+                      maxWidth: '25rem',
+                    }}
+                  >
+                    Let&apos;s start the chat
+                  </Typography>
+                </ListItemText>
+              </ListItem>
             )}
           </InfiniteScroll>
         ) : (

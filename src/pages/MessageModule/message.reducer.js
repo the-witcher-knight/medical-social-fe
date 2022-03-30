@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { serializeAxiosError } from 'src/shared/reducers/reducer.utils';
 import { getAuthToken } from 'src/shared/util/auth-util';
 
 const API_URL = process.env.API_URL;
@@ -20,6 +21,21 @@ export const getAllChatRoom = createAsyncThunk('message/get_all_chat_room', asyn
   });
   return res.data;
 });
+
+export const getMessageList = createAsyncThunk(
+  'message/fetch_all_message_by_room',
+  async roomId => {
+    const res = await axios.get(`${API_URL}/messages/room/${roomId}`, {
+      params: {
+        sort: 'timestamp,desc',
+      },
+    });
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
 
 // Slice
 
@@ -45,6 +61,18 @@ const messageSlice = createSlice({
         state.errorMessage = action.error.message || 'Internal Server Error';
       })
       .addCase(getAllChatRoom.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+      })
+      .addCase(getMessageList.fulfilled, (state, action) => {
+        state.loading = false;
+        state.messageList = action.payload;
+      })
+      .addCase(getMessageList.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal Server Error';
+      })
+      .addCase(getMessageList.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       });

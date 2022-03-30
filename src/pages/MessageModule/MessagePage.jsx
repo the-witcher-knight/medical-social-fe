@@ -1,6 +1,5 @@
 import {
   Grid,
-  Box,
   Button,
   List,
   ListItem,
@@ -8,16 +7,19 @@ import {
   ListItemAvatar,
   Avatar,
   Paper,
+  LinearProgress,
 } from '@mui/material';
 import React, { useEffect } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { getAllChatRoom, setSelectedChatRoom } from './message.reducer';
 import ChatArea from './ChatArea';
+import { getUserAuthentication } from 'src/shared/util/auth-util';
 
 const MessagePage = () => {
   const dispatch = useAppDispatch();
 
+  const userData = getUserAuthentication();
   const rooms = useAppSelector(state => state.message.chatRoomList);
 
   useEffect(() => {
@@ -53,14 +55,19 @@ const MessagePage = () => {
             height={'43rem'}
             style={{ display: 'flex', flexDirection: 'column' }}
             hasMore={true}
-            loader={<h4>Loading...</h4>}
+            loader={<LinearProgress />}
           >
             {rooms.map(item => (
               <ListItem key={item.id} component={Button} onClick={() => onClickRoom(item)}>
                 <ListItemAvatar>
                   <Avatar />
                 </ListItemAvatar>
-                <ListItemText primary={item.id} />
+                <ListItemText
+                  // Only for 2 users
+                  primary={item.users
+                    .filter(user => user.login !== userData.sub)
+                    .map(user => user.login)}
+                />
               </ListItem>
             ))}
           </InfiniteScroll>
