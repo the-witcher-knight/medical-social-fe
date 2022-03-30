@@ -23,9 +23,6 @@ const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/B
 
 const Chat = React.lazy(() => import('src/pages/MessageModule/MessagePage'));
 
-// Demo page
-const DemoText = React.lazy(() => import('src/pages/TextPage'));
-
 export const ROUTES = [
   {
     path: '/',
@@ -67,10 +64,6 @@ export const ROUTES = [
         element: <BookingManager />,
       },
       // Add more routes here
-      {
-        path: '/demo-text',
-        element: <DemoText />,
-      },
     ],
   },
   {
