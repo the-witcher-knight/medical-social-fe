@@ -7,6 +7,7 @@ import IconButton from '@mui/material/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItemIcon, ListItemButton, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { getUserAuthentication, isAdmin, isDoctor, isPharmacy } from 'src/shared/util/auth-util';
 
 const drawerWidth = 240;
 
@@ -59,8 +60,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: prop => prop !== 'open' })
 
 const SideBar = ({ open, handleClose }) => {
   const theme = useTheme();
+  const user = getUserAuthentication();
 
-  const routes = [
+  const defaultRoutes = [
     {
       name: 'Home',
       path: '/',
@@ -71,6 +73,9 @@ const SideBar = ({ open, handleClose }) => {
       path: '/doctor-booking',
       icon: 'calendar-plus',
     },
+  ];
+
+  const doctorRoutes = [
     {
       name: 'Booking Manager',
       path: '/booking-manager',
@@ -78,7 +83,21 @@ const SideBar = ({ open, handleClose }) => {
     },
   ];
 
-  const adminRoutes = [{ name: 'Admin', icon: 'user-shield', path: '/admin' }];
+  const adminRoutes = [
+    {
+      name: 'Doctor Manager',
+      path: '/doctor-manager',
+      icon: 'user-doctor',
+    },
+  ];
+
+  const pharmacyRoutes = [
+    {
+      name: 'Medicine Manager',
+      path: '/medicine-manager',
+      icon: 'capsules',
+    },
+  ];
 
   return (
     <Drawer variant="permanent" open={open}>
@@ -91,9 +110,8 @@ const SideBar = ({ open, handleClose }) => {
           )}
         </IconButton>
       </DrawerHeader>
-      <Divider />
       <List>
-        {routes.map(r => (
+        {defaultRoutes.map(r => (
           <ListItemButton
             key={r.name}
             component={Link}
@@ -117,32 +135,96 @@ const SideBar = ({ open, handleClose }) => {
           </ListItemButton>
         ))}
       </List>
-      <Divider />
-      <List>
-        {adminRoutes.map((route, index) => (
-          <ListItemButton
-            key={index}
-            component={Link}
-            to={route.path}
-            sx={{
-              minHeight: 48,
-              justifyContent: open ? 'initial' : 'center',
-              px: 2.5,
-            }}
-          >
-            <ListItemIcon
-              sx={{
-                minWidth: 0,
-                mr: open ? 3 : 'auto',
-                justifyContent: 'center',
-              }}
-            >
-              <FontAwesomeIcon icon={route.icon} />
-            </ListItemIcon>
-            <ListItemText primary={route.name} sx={{ opacity: open ? 1 : 0 }} />
-          </ListItemButton>
-        ))}
-      </List>
+      {isDoctor(user) && (
+        <>
+          <Divider />
+          <List>
+            {doctorRoutes.map(r => (
+              <ListItemButton
+                key={r.name}
+                component={Link}
+                to={r.path}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <FontAwesomeIcon icon={r.icon} />
+                </ListItemIcon>
+                <ListItemText primary={r.name} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            ))}
+          </List>
+        </>
+      )}
+      {isPharmacy(user) && (
+        <>
+          <Divider />
+          <List>
+            {pharmacyRoutes.map(r => (
+              <ListItemButton
+                key={r.name}
+                component={Link}
+                to={r.path}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <FontAwesomeIcon icon={r.icon} />
+                </ListItemIcon>
+                <ListItemText primary={r.name} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            ))}
+          </List>
+        </>
+      )}
+      {isAdmin(user) && (
+        <>
+          <Divider />
+          <List>
+            {adminRoutes.map(r => (
+              <ListItemButton
+                key={r.name}
+                component={Link}
+                to={r.path}
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <FontAwesomeIcon icon={r.icon} />
+                </ListItemIcon>
+                <ListItemText primary={r.name} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            ))}
+          </List>
+        </>
+      )}
     </Drawer>
   );
 };

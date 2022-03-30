@@ -1,4 +1,5 @@
 import { StorageAPI } from './storage-util';
+import { AuthorityConstant } from 'src/shared/authority-constant';
 
 /**
  * read date from token
@@ -6,6 +7,9 @@ import { StorageAPI } from './storage-util';
  * @returns {object}
  */
 export function parseJwt(token) {
+  if (token === null || token === undefined) {
+    return null;
+  }
   const base64Url = token.split('.')[1];
   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
   const jsonPayload = decodeURIComponent(
@@ -28,4 +32,37 @@ export function parseJwt(token) {
 export const getUserAuthentication = () => {
   const token = StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken');
   return parseJwt(token);
+};
+
+/**
+ * is user has doctor role
+ * @param {sub: string, auth: string, exp: number} user
+ * @returns {boolean} user is doctor or not
+ */
+export const isDoctor = user => {
+  if (user === null || user === undefined) {
+    return false;
+  }
+  return user.auth === AuthorityConstant.DOCTOR;
+};
+
+export const isAdmin = user => {
+  if (user === null || user === undefined) {
+    return false;
+  }
+  return user.auth === AuthorityConstant.ADMIN;
+};
+
+export const isUser = user => {
+  if (user === null || user === undefined) {
+    return false;
+  }
+  return user.auth === AuthorityConstant.USER;
+};
+
+export const isPharmacy = user => {
+  if (user === null || user === undefined) {
+    return false;
+  }
+  return user.auth === AuthorityConstant.PHARMACY;
 };

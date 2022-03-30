@@ -40,6 +40,7 @@ import {
   faTasks,
   faTrash,
   faUser,
+  faUserDoctor,
   faUserShield,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
@@ -91,7 +92,8 @@ export const loadIcon = () => {
     faPaperPlane,
     faArrowDown,
     faCheck,
-    faCalendarCheck
+    faCalendarCheck,
+    faUserDoctor
     // Add more icons here
   );
 };
