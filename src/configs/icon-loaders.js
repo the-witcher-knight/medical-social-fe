@@ -11,12 +11,14 @@ import {
   faCalendarPlus,
   faCartShopping,
   faCheck,
+  faClipboardUser,
   faDroplet,
   faEllipsisVertical,
   faEnvelope,
   faEye,
   faHeart,
   faHouse,
+  faHouseMedical,
   faLanguage,
   faListCheck,
   faMinus,
@@ -41,10 +43,10 @@ import {
   faTrash,
   faUser,
   faUserDoctor,
+  faUsers,
   faUserShield,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
-import { faProductHunt, faGoogle } from '@fortawesome/free-brands-svg-icons';
 
 export const loadIcon = () => {
   library.add(
@@ -70,10 +72,7 @@ export const loadIcon = () => {
     faRightToBracket,
     faCartShopping,
     faHeart,
-    faProductHunt,
     faSort,
-    faHeart,
-    faGoogle,
     faSync,
     faEye,
     faPencilAlt,
@@ -88,12 +87,15 @@ export const loadIcon = () => {
     faEllipsisVertical,
     faPen,
     faPaw,
-    faCalendarPlus,
     faPaperPlane,
     faArrowDown,
     faCheck,
     faCalendarCheck,
-    faUserDoctor
+    faUserDoctor,
+    faClipboardUser,
+    faCalendarPlus,
+    faHouseMedical,
+    faUsers
     // Add more icons here
   );
 };

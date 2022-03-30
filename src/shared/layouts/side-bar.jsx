@@ -79,15 +79,25 @@ const SideBar = ({ open, handleClose }) => {
     {
       name: 'Booking Manager',
       path: '/booking-manager',
-      icon: 'calendar-check',
+      icon: 'clipboard-user',
     },
   ];
 
   const adminRoutes = [
     {
+      name: 'User Manager',
+      path: '/admin/user-manager',
+      icon: 'users',
+    },
+    {
       name: 'Doctor Manager',
-      path: '/doctor-manager',
+      path: '/admin/doctor-manager',
       icon: 'user-doctor',
+    },
+    {
+      name: 'Pharmacy Manager',
+      path: '/admin/pharmacy-manager',
+      icon: 'house-medical',
     },
   ];
 
