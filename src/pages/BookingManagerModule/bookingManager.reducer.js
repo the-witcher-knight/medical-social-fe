@@ -7,6 +7,7 @@ const API_URL = process.env.API_URL;
 const initialState = {
   loading: false,
   scheduleList: [],
+  patient: null,
   errorMessage: null,
   selectedSchedule: null,
   dialogData: null, // { action: 'delete'||'confirm', title: ''}
@@ -43,6 +44,17 @@ export const partialUpdateSchedule = createAsyncThunk(
   'booking_manager/confirm_schedule',
   async schedule => {
     const res = await axios.patch(`${API_URL}/examination-schedules/${schedule.id}`, schedule);
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+export const getPaientById = createAsyncThunk(
+  'booking_manager/fetch_patient_by_id',
+  async id => {
+    const res = await axios.get(`${API_URL}/admin/users/id/${id}`);
     return res.data;
   },
   {
@@ -96,6 +108,18 @@ const doctorBookingSlice = createSlice({
         state.errorMessage = action.error.message || 'Internal server error';
       })
       .addCase(partialUpdateSchedule.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+      })
+      .addCase(getPaientById.fulfilled, (state, action) => {
+        state.loading = false;
+        state.patient = action.payload;
+      })
+      .addCase(getPaientById.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+      })
+      .addCase(getPaientById.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       });

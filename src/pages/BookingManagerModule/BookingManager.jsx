@@ -15,6 +15,7 @@ import { DIALOG_ACTION } from './constant';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDayJS from '@mui/lab/AdapterDayjs';
 import DatePicker from '@mui/lab/DatePicker';
+import { toast } from 'react-toastify';
 
 const BookingManager = () => {
   const dispatch = useAppDispatch();
@@ -67,8 +68,15 @@ const BookingManager = () => {
     console.log('next page');
   };
 
+  const onActionClick = (values, action) => {
+    if (values && values.length > 0) {
+      action(values[0][1]);
+    } else {
+      toast.warning('Please select a schedule');
+    }
+  };
+
   const onConfirmSchedule = values => {
-    console.log('confirm schedule ', values);
     dispatch(setSelectedSchedule(values));
     dispatch(
       openModal({
@@ -79,12 +87,21 @@ const BookingManager = () => {
   };
 
   const onDeleteSchedule = values => {
-    console.log('onDeleteSchedule', values);
     dispatch(setSelectedSchedule(values));
     dispatch(
       openModal({
         title: `Are you sure delete this schedule with id ${values.id}?`,
         action: DIALOG_ACTION.DELETE,
+      })
+    );
+  };
+
+  const onReviewMedicalRecord = values => {
+    dispatch(setSelectedSchedule(values));
+    dispatch(
+      openModal({
+        title: `This is medical record of schedule with id ${values.id}?`,
+        action: DIALOG_ACTION.REVIEW,
       })
     );
   };
@@ -100,21 +117,32 @@ const BookingManager = () => {
           color="info"
           aria-label="confirm"
           size="small"
-          onClick={() => onConfirmSchedule([...apiRef.getSelectedRows()][0][1])}
+          onClick={() => onActionClick([...apiRef.getSelectedRows()], onConfirmSchedule)}
         >
           <FontAwesomeIcon icon="check" />
           &nbsp; Confirm
         </Button>
       </Tooltip>
-      <Tooltip title="delete schedule">
+      <Tooltip title="Delete schedule">
         <Button
           color="error"
           aria-label="delete"
           size="small"
-          onClick={() => onDeleteSchedule([...apiRef.getSelectedRows()][0][1])}
+          onClick={() => onActionClick([...apiRef.getSelectedRows()], onDeleteSchedule)}
         >
           <FontAwesomeIcon icon="trash" />
           &nbsp; Delete
+        </Button>
+      </Tooltip>
+      <Tooltip title="Review medical record">
+        <Button
+          color="secondary"
+          aria-label="delete"
+          size="small"
+          onClick={() => onActionClick([...apiRef.getSelectedRows()], onReviewMedicalRecord)}
+        >
+          <FontAwesomeIcon icon="eye" />
+          &nbsp; Review
         </Button>
       </Tooltip>
       <Box component="div">
