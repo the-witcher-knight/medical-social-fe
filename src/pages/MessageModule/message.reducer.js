@@ -1,9 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { StorageAPI } from 'src/shared/util/storage-util';
+import { getAuthToken } from 'src/shared/util/auth-util';
 
 const API_URL = process.env.API_URL;
-const getAuthToken = () => StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken');
 
 const initialState = {
   loading: false,

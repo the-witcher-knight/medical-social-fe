@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography } from '@mui/material';
+import { Box, Button, Paper, Typography, Link as MuiLink } from '@mui/material';
 import React from 'react';
 import { parseJwt } from 'src/shared/util/auth-util';
 import { StorageAPI } from 'src/shared/util/storage-util';
@@ -10,20 +10,24 @@ const WelcomePage = () => {
   );
 
   return (
-    <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
-      {account ? (
-        <Typography variant="h4">Welcome to the app, {account.sub}</Typography>
-      ) : (
-        <>
-          <Typography variant="h4">Welcome to the app</Typography>
-          <Paper>
-            <Typography variant="h6">You are not logged in!</Typography>
-            <Button component={Link} to="/authorization/sign-in">
-              Sign in
-            </Button>
-          </Paper>
-        </>
-      )}
+    <Box component="div" mt={5} display="flex" flexDirection="column" justifyContent="center">
+      <Paper elevation={3}>
+        <Box component="div" p={2} height="60vh">
+          <Typography variant="h5" align="center" component="h1">
+            Welcome to Medical Social Application
+          </Typography>
+          {account && account.sub ? (
+            <Typography variant="body1">Greeting {account.sub}</Typography>
+          ) : (
+            <Typography>
+              You seem to be not logged in, please &nbsp;
+              <MuiLink component={Link} to="/authorization/sign-in" variant="body2">
+                login
+              </MuiLink>
+            </Typography>
+          )}
+        </Box>
+      </Paper>
     </Box>
   );
 };

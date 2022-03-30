@@ -35,6 +35,13 @@ export const getUserAuthentication = () => {
 };
 
 /**
+ * get jwt token
+ * @returns jwt token
+ */
+export const getAuthToken = () =>
+  StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken');
+
+/**
  * is user has doctor role
  * @param {sub: string, auth: string, exp: number} user
  * @returns {boolean} user is doctor or not

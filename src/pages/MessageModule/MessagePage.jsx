@@ -18,7 +18,6 @@ import ChatArea from './ChatArea';
 const MessagePage = () => {
   const dispatch = useAppDispatch();
 
-  const user = useAppSelector(state => state.authentication.account);
   const rooms = useAppSelector(state => state.message.chatRoomList);
 
   useEffect(() => {

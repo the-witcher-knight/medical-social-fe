@@ -78,11 +78,11 @@ export const ROUTES = [
     element: <Authorization />,
     children: [
       {
-        path: '/authorization/sign-in',
+        path: 'sign-in',
         element: <SignIn />,
       },
       {
-        path: '/authorization/sign-up',
+        path: 'sign-up',
         element: <SignUp />,
       },
     ],

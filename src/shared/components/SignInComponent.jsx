@@ -120,7 +120,7 @@ const SignInComponent = () => {
             </Button>
             <Grid container>
               <Grid item xs>
-                <MuiLink component={Link} to="/authorization/forgot-password" variant="body2">
+                <MuiLink component={Link} to="/forgot-password" variant="body2">
                   Forgot password?
                 </MuiLink>
               </Grid>
