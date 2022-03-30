@@ -18,8 +18,6 @@ const DoctorManager = React.lazy(() =>
 );
 
 const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorBookingPage'));
-const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
-const BookingForm = React.lazy(() => import('src/pages/DoctorBookingModule/BookingFormModal'));
 
 const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/BookingManager'));
 
@@ -59,16 +57,6 @@ export const ROUTES = [
       {
         path: '/doctor-booking',
         element: <DoctorBooking />,
-        children: [
-          {
-            index: true,
-            element: <DoctorList />,
-          },
-          {
-            path: ':doctorId',
-            element: <BookingForm />,
-          },
-        ],
       },
       {
         path: '/message',

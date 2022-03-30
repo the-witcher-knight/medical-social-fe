@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { AuthorityConstant } from 'src/shared/authority-constant';
 import { serializeAxiosError } from 'src/shared/reducers/reducer.utils';
+import { getAuthToken } from 'src/shared/util/auth-util';
 
 const API_URL = process.env.API_URL;
 
@@ -11,6 +12,10 @@ const initialState = {
   bookingCompleted: null,
   doctorList: [], // Active doctor list
   doctorScheduleList: [], // Schedule list of doctor {id}
+  chatRoomList: [],
+  createdChatRoom: null,
+  openBookingForm: false,
+  selectedDoctor: null,
 };
 
 // Actions
@@ -46,6 +51,36 @@ export const getDegreeDoctor = createAsyncThunk(
   async doctorId => {
     const res = await axios.get(`${API_URL}/admin/users/degree/${doctorId}`);
     return res;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+export const getAllChatRoom = createAsyncThunk(
+  'doctor_booking/fetch_all_chat_room',
+  async () => {
+    const res = await axios.get(`${API_URL}/admin/chatroom`, {
+      headers: { Authorization: `Bearer ${getAuthToken()}` },
+    });
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+export const createChatRoom = createAsyncThunk(
+  'doctor_booking/create_chat_room',
+  async doctorId => {
+    const res = await axios.post(
+      `${API_URL}/chat-rooms/doctor/${doctorId}`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${getAuthToken()}` },
+      }
+    );
+    return res.data;
   },
   {
     serializeError: serializeAxiosError,
@@ -93,8 +128,20 @@ const doctorBookingSlice = createSlice({
     reset() {
       return initialState;
     },
+    setSelectedDoctor(state, action) {
+      state.selectedDoctor = action.payload;
+    },
+    openBookingForm(state) {
+      state.openBookingForm = true;
+    },
+    closeBookingForm(state) {
+      state.openBookingForm = false;
+    },
     resetBookingCompleted(state) {
       state.bookingCompleted = null;
+    },
+    resetCreatedChatRoom(state) {
+      state.createdChatRoom = null;
     },
   },
   extraReducers(builder) {
@@ -136,10 +183,41 @@ const doctorBookingSlice = createSlice({
         state.loading = true;
         state.errorMessage = null;
         state.bookingCompleted = null;
+      })
+      .addCase(getAllChatRoom.fulfilled, (state, action) => {
+        state.loading = false;
+        state.chatRoomList = action.payload;
+      })
+      .addCase(getAllChatRoom.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+      })
+      .addCase(getAllChatRoom.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+      })
+      .addCase(createChatRoom.fulfilled, (state, action) => {
+        state.loading = false;
+        state.createdChatRoom = action.payload;
+      })
+      .addCase(createChatRoom.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+      })
+      .addCase(createChatRoom.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
       });
   },
 });
 
-export const { reset, resetBookingCompleted } = doctorBookingSlice.actions;
+export const {
+  reset,
+  setSelectedDoctor,
+  openBookingForm,
+  closeBookingForm,
+  resetBookingCompleted,
+  resetCreatedChatRoom,
+} = doctorBookingSlice.actions;
 
 export default doctorBookingSlice.reducer;
