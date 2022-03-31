@@ -21,6 +21,10 @@ export const dateToString = date => {
   return dayjs(date).format('YYYY-MM-DDTHH:mm:ss[Z]');
 };
 
+export const dateToViewString = date => {
+  return dayjs(date).format('DD/MM/YYYY');
+};
+
 /**
  * Get time from a string
  * @param {string} str string of "YYYY-MM-DDTHH:mm:ssZ"

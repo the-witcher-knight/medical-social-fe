@@ -49,7 +49,7 @@ const BookingFormModal = () => {
 
   const currentAccount = getUserAuthentication();
   const loading = useAppSelector(state => state.bookingDoctor.loading);
-  const scheduleList = useAppSelector(state => state.bookingDoctor.doctorScheduleList);
+  const scheduleList = useAppSelector(state => state.bookingDoctor.scheduleList);
   const bookingCompleted = useAppSelector(state => state.bookingDoctor.bookingCompleted);
   const errorMessage = useAppSelector(state => state.bookingDoctor.errorMessage);
 
