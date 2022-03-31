@@ -4,95 +4,86 @@ import {
   Container,
   CssBaseline,
   Box,
+  Alert,
   Avatar,
   Typography,
   Button,
   Grid,
-  Link as MuiLink,
-  Alert,
-  FormControl,
-  InputLabel,
-  FormHelperText,
-  Select,
-  MenuItem,
   TextField,
   InputBase,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useForm, Controller, useWatch } from 'react-hook-form';
-import { Link, useNavigate } from 'react-router-dom';
+import { useForm, Controller } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { toast } from 'react-toastify';
-import { signup } from '../reducers/authentication';
+import { getUserAuthentication } from '../util/auth-util';
+import { editProfile, getAccount, resetUpdateSuccess } from '../reducers/authentication';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
-const SignUpComponent = () => {
+const ProfileEdit = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const errorMessage = useAppSelector(state => state.authentication.errorMessage);
+  const loading = useAppSelector(state => state.authentication.loading);
+  const updateSuccess = useAppSelector(state => state.authentication.updateSuccess);
+
+  const userData = getUserAuthentication();
+  const userAccount = useAppSelector(state => state.authentication.account);
 
   const {
     handleSubmit,
     register,
     control,
     formState: { errors },
-    resetField,
   } = useForm({
     defaultValues: {
       firstName: '',
       lastName: '',
-      login: '',
-      password: '',
+      login: userData.sub,
       medicalRecord: '',
-      authority: '',
-      confirmPassword: '',
+      authority: userData.auth,
       files: '', // for doctor degree
       pharmacyName: '',
       address: '', // form pharmacy
     },
   });
 
-  const watchAuthority = useWatch({ control, name: 'authority' });
-
-  const onChangeAuthority = () => {
-    resetField('firstName');
-    resetField('lastName');
-    resetField('login');
-    resetField('password');
-    resetField('confirmPassword');
-    resetField('pharmacyName');
-    resetField('address');
-    resetField('files');
-    resetField('medicalRecord');
-  };
+  useEffect(() => {
+    dispatch(getAccount());
+  }, []);
 
   useEffect(() => {
-    if (watchAuthority) {
-      onChangeAuthority();
+    if (errorMessage && errorMessage !== '') {
+      toast.error(errorMessage);
     }
-  }, [watchAuthority]);
+  }, [errorMessage]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      toast.success('Update profile successfully');
+      dispatch(resetUpdateSuccess());
+      navigate('/');
+    }
+  }, [updateSuccess]);
 
   const onSubmit = values => {
-    if (values.password !== values.confirmPassword) {
-      toast.error('Password and confirm password are not the same');
+    if (!userAccount || userAccount.id === null || userAccount.id === undefined) {
+      toast.warning('User account is not found, please reload page or logout and login again');
       return;
     }
-    const newUser = { ...values, authorities: [values.authority] };
+
+    const newUser = { ...values, authorities: [values.authority], id: userAccount.id }; // get user data from form
+
+    // Remove properties that are not needed or null
     Object.keys(newUser).forEach(
       k => (newUser[k] == null || newUser[k] === '' || k === 'authority') && delete newUser[k]
     );
-    // TODO convert authority to ['authority']
-    console.log(newUser);
-    dispatch(signup(newUser)).then(() => {
-      if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.success('Sign up successfully');
-        navigate('/authorization/sign-in');
-      }
-    });
+
+    // TODO: dispatch update user
+    dispatch(editProfile(newUser));
   };
 
   return (
@@ -112,43 +103,12 @@ const SignUpComponent = () => {
             <FontAwesomeIcon icon="user-shield" />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            Profile Edit
           </Typography>
           {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Controller
-                  control={control}
-                  name="authority"
-                  rules={{ required: true }}
-                  render={({ field: { value, onChange } }) => (
-                    <FormControl fullWidth>
-                      <InputLabel id="authority-selection">Authority</InputLabel>
-                      <Select
-                        labelId="authority-selecton"
-                        id="authority-selection"
-                        value={value}
-                        onChange={onChange}
-                        label="Authority"
-                        error={!!errors.authority}
-                      >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
-                        <MenuItem value={'ROLE_USER'}>User</MenuItem>
-                        <MenuItem value={'ROLE_DOCTOR'}>Doctor</MenuItem>
-                        <MenuItem value={'ROLE_PHARMACY'}>Pharmacy Manager</MenuItem>
-                        <MenuItem value={'ROLE_ADMIN'}>Admin</MenuItem>
-                      </Select>
-                      {errors.authority && (
-                        <FormHelperText error>Please choose your authority</FormHelperText>
-                      )}
-                    </FormControl>
-                  )}
-                />
-              </Grid>
-              {watchAuthority === 'ROLE_PHARMACY' ? (
+              {userData.auth === 'ROLE_PHARMACY' ? (
                 <>
                   <Grid item xs={12}>
                     <Controller
@@ -221,7 +181,7 @@ const SignUpComponent = () => {
                 </>
               )}
 
-              {watchAuthority === 'ROLE_DOCTOR' && (
+              {userData.auth === 'ROLE_DOCTOR' && (
                 <Grid item xs={12}>
                   <InputBase
                     fullWidth
@@ -233,7 +193,7 @@ const SignUpComponent = () => {
                 </Grid>
               )}
 
-              {watchAuthority === 'ROLE_USER' && (
+              {userData.auth === 'ROLE_USER' && (
                 <Grid item xs={12}>
                   <Controller
                     control={control}
@@ -264,40 +224,7 @@ const SignUpComponent = () => {
                       label="Username"
                       error={!!errors.login}
                       helperText={errors.login && 'Please enter a username'}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  control={control}
-                  name="password"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      type="password"
-                      fullWidth
-                      label="Password"
-                      error={!!errors.password}
-                      helperText={errors.password && 'Please enter a password'}
-                      {...field}
-                    />
-                  )}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Controller
-                  control={control}
-                  name="confirmPassword"
-                  rules={{ required: true }}
-                  render={({ field }) => (
-                    <TextField
-                      type="password"
-                      fullWidth
-                      label="Confirm Password"
-                      error={!!errors.confirmPassword}
-                      helperText={errors.confirmPassword && 'Please enter a current password'}
+                      disabled
                       {...field}
                     />
                   )}
@@ -305,15 +232,8 @@ const SignUpComponent = () => {
               </Grid>
             </Grid>
             <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-              Sign Up
+              Submit
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <MuiLink component={Link} to="/authorization/sign-in" variant="body2">
-                  Already have an account? Sign in
-                </MuiLink>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
@@ -321,4 +241,4 @@ const SignUpComponent = () => {
   );
 };
 
-export default SignUpComponent;
+export default ProfileEdit;

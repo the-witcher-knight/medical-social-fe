@@ -64,7 +64,7 @@ const TopBar = ({ open, toggleSideBar }) => {
   const handleClickProfile = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-    navigate('/profile');
+    navigate('/authorization/profile-edit');
   };
 
   const handleClickLogout = () => {

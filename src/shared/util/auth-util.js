@@ -27,7 +27,7 @@ export function parseJwt(token) {
 
 /**
  * extract user data from jwt token.
- * @returns {sub: string, auth: string, exp: number}
+ * @returns {{sub: string, auth: string, exp: number}} user data
  */
 export const getUserAuthentication = () => {
   const token = StorageAPI.local.get('authToken') || StorageAPI.session.get('authToken');
@@ -43,7 +43,7 @@ export const getAuthToken = () =>
 
 /**
  * is user has doctor role
- * @param {sub: string, auth: string, exp: number} user
+ * @param {{sub: string, auth: string, exp: number}} user data
  * @returns {boolean} user is doctor or not
  */
 export const isDoctor = user => {

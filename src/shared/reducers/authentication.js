@@ -1,15 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { StorageAPI } from 'src/shared/util/storage-util';
-import { parseJwt } from '../util/auth-util';
+import { getAuthToken } from '../util/auth-util';
 import { serializeAxiosError } from './reducer.utils';
 
 export const AUTH_TOKEN_KEY = 'authToken';
 // eslint-disable-next-line no-undef
 const API_URL = process.env.API_URL;
-
-const getToken = () =>
-  StorageAPI.local.get(AUTH_TOKEN_KEY) || StorageAPI.session.get(AUTH_TOKEN_KEY);
 
 export const initialState = {
   loading: false,
@@ -18,6 +15,7 @@ export const initialState = {
   loginError: false, // Errors returned from the server
   showModalLogin: false,
   account: {}, // User account
+  updateSuccess: null,
   errorMessage: null,
   redirectMessage: null,
   sessionHasBeenFetched: false,
@@ -31,7 +29,7 @@ export const getAccount = createAsyncThunk(
   async () => {
     const res = await axios.get(`${API_URL}/users/current-login`, {
       headers: {
-        Authorization: `Bearer ${getToken()}`,
+        Authorization: `Bearer ${getAuthToken()}`,
       },
     });
     return res.data;
@@ -95,6 +93,26 @@ export const signup = createAsyncThunk(
   }
 );
 
+/**
+ * Edit user profile.
+ * @param {object} user data.
+ */
+export const editProfile = createAsyncThunk(
+  'authentication/edit_profile',
+  async user => {
+    const formData = new FormData();
+    Object.keys(user).forEach(k =>
+      k === 'files' ? formData.append(k, user[k][0]) : formData.append(k, user[k])
+    );
+    axios.put(API_URL + '/admin/users', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
 export const clearAuthToken = () => {
   if (StorageAPI.local.get(AUTH_TOKEN_KEY)) {
     StorageAPI.local.remove(AUTH_TOKEN_KEY);
@@ -142,6 +160,9 @@ export const AuthenticationSlice = createSlice({
         isAuthenticated: false,
       };
     },
+    resetUpdateSuccess(state) {
+      state.updateSuccess = null;
+    },
   },
   extraReducers(builder) {
     builder
@@ -185,11 +206,26 @@ export const AuthenticationSlice = createSlice({
       .addCase(getAccount.pending, state => {
         state.loading = true;
         state.errorMessage = '';
+      })
+      .addCase(editProfile.fulfilled, (state, action) => {
+        state.loading = false;
+        state.account = action.payload;
+        state.updateSuccess = true;
+      })
+      .addCase(editProfile.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+      })
+      .addCase(editProfile.pending, state => {
+        state.loading = true;
+        state.errorMessage = '';
+        state.updateSuccess = null;
       });
   },
 });
 
-export const { logoutSession, authError, clearAuth } = AuthenticationSlice.actions;
+export const { logoutSession, authError, clearAuth, resetUpdateSuccess } =
+  AuthenticationSlice.actions;
 
 // Reducer
 export default AuthenticationSlice.reducer;

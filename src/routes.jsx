@@ -6,6 +6,7 @@ const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 const Authorization = React.lazy(() => import('src/pages/AuthorizationPage'));
 const SignIn = React.lazy(() => import('src/shared/components/SignInComponent'));
 const SignUp = React.lazy(() => import('src/shared/components/SignUpComponent'));
+const ProfileEdit = React.lazy(() => import('src/shared/components/ProfileEdit'));
 const Logout = React.lazy(() => import('src/shared/components/LogoutModal'));
 
 // Inner page
@@ -77,6 +78,10 @@ export const ROUTES = [
       {
         path: 'sign-up',
         element: <SignUp />,
+      },
+      {
+        path: 'profile-edit',
+        element: <ProfileEdit />,
       },
     ],
   },
