@@ -24,6 +24,11 @@ const UserBookedList = React.lazy(() => import('src/pages/DoctorBookingModule/Us
 
 const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/BookingManager'));
 
+const MedicineManager = React.lazy(() => import('src/pages/MedicineModule/MedicineManagerPage'));
+const MedicineList = React.lazy(() => import('src/pages/MedicineModule/MedicineList'));
+const MedicineUpdate = React.lazy(() => import('src/pages/MedicineModule/MedicineUpdate'));
+const MedicineDetail = React.lazy(() => import('src/pages/MedicineModule/MedicineDetail'));
+
 const Chat = React.lazy(() => import('src/pages/MessageModule/MessagePage'));
 
 export const ROUTES = [
@@ -75,6 +80,28 @@ export const ROUTES = [
       {
         path: '/booking-manager',
         element: <BookingManager />,
+      },
+      {
+        path: '/medicine-manager',
+        element: <MedicineManager />,
+        children: [
+          {
+            index: true,
+            element: <MedicineList />,
+          },
+          {
+            path: 'new',
+            element: <MedicineUpdate />,
+          },
+          {
+            path: ':pharmacyMedicineId/edit',
+            element: <MedicineUpdate />,
+          },
+          {
+            path: ':pharmacyMedicineId/detail',
+            element: <MedicineDetail />,
+          },
+        ],
       },
       // Add more routes here
     ],

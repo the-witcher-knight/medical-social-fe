@@ -9,6 +9,7 @@ import {
   faBell,
   faCalendarCheck,
   faCalendarPlus,
+  faCapsules,
   faCartShopping,
   faCheck,
   faClipboardUser,
@@ -45,6 +46,7 @@ import {
   faUserDoctor,
   faUsers,
   faUserShield,
+  faWrench,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
 
@@ -95,7 +97,9 @@ export const loadIcon = () => {
     faClipboardUser,
     faCalendarPlus,
     faHouseMedical,
-    faUsers
+    faUsers,
+    faWrench,
+    faCapsules
     // Add more icons here
   );
 };
