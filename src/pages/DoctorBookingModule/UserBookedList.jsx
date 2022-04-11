@@ -61,7 +61,7 @@ const UserBookedList = () => {
                     Start <Button color="info">{extractTimeFromString(item.startAt)}</Button> - End
                     <Button color="info">{extractTimeFromString(item.endAt)}</Button> with
                     doctor&nbsp;
-                    <Link variant="body2">{item.doctor.id}</Link>
+                    <Link variant="body2">{`${item.doctor.lastName} ${item.doctor.firstName}`}</Link>
                   </Typography>
                 </ListItem>
               ))

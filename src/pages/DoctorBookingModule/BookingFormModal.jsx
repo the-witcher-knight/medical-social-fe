@@ -72,7 +72,7 @@ const BookingFormModal = () => {
     if (bookingCompleted && !loading) {
       toast.success('Booking completed');
       dispatch(resetBookingCompleted()); // for next booking
-      navigate(-1);
+      dispatch(closeBookingForm());
     }
   }, [loading, bookingCompleted]);
 
