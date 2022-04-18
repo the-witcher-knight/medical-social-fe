@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography, Divider, Tooltip, Button } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import {
   getAllChatRoom,
@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 
 const DoctorList = () => {
   const dispatch = useAppDispatch();
+  const location = useLocation();
   const navigate = useNavigate();
 
   const isLoading = useAppSelector(state => state.bookingDoctor.loading);
@@ -59,17 +60,16 @@ const DoctorList = () => {
 
   const onReviewDegree = values => {
     if (values) {
-      dispatch(getDegreeDoctor(values.id)).then(res => {
-        window.open('http://localhost:8080/files/' + res.payload.data, '_blank');
-      });
+      // dispatch(getDegreeDoctor(values.id)).then(res => {
+      //   window.open('http://localhost:8080/files/' + res.payload.data, '_blank');
+      // });
+      navigate('degree/' + values.id, { state: { backgroundLocation: location } });
     }
   };
 
   const onBookDoctor = values => {
     if (values) {
-      console.log(values);
-      dispatch(setSelectedDoctor(values));
-      dispatch(openBookingForm());
+      navigate('book/' + values.id, { state: { backgroundLocation: location } });
     }
   };
 
@@ -179,7 +179,6 @@ const DoctorList = () => {
         nextPage={nextPage}
         otherToolbarItems={DoctorListToolbarItems}
       />
-      <BookingFormModal />
     </div>
   );
 };

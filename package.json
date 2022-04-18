@@ -42,7 +42,7 @@
     "@hot-loader/react-dom": "^17.0.2",
     "@mui/lab": "^5.0.0-alpha.74",
     "@mui/material": "^5.5.0",
-    "@mui/x-data-grid": "^5.6.1",
+    "@mui/x-data-grid": "^5.9.0",
     "@reduxjs/toolkit": "^1.7.2",
     "assert": "^2.0.0",
     "axios": "^0.25.0",

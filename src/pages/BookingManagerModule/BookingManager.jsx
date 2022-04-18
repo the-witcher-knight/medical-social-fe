@@ -1,4 +1,3 @@
-import ActionModal from './ActionModal';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { dateToString, extractTimeFromString } from 'src/shared/util/time-ultil';
 import { Box, Typography, Button, Divider, Tooltip, TextField, Chip } from '@mui/material';
@@ -6,22 +5,19 @@ import React, { useEffect, useState } from 'react';
 import UserTableManager from 'src/shared/components/UserTableManager';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import {
-  openModal,
-  setSelectedSchedule,
-  getScheduleByDoctorLoginAtDate,
-} from './bookingManager.reducer';
-import { DIALOG_ACTION } from './constant';
+import { setSelectedSchedule, getScheduleByDoctorLoginAtDate } from './bookingManager.reducer';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import AdapterDayJS from '@mui/lab/AdapterDayjs';
 import DatePicker from '@mui/lab/DatePicker';
 import { toast } from 'react-toastify';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const BookingManager = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const user = getUserAuthentication();
-  const dialogOpen = useAppSelector(state => state.bookingManager.dialogOpen);
   const isLoading = useAppSelector(state => state.bookingManager.loading);
 
   const columns = [
@@ -77,33 +73,23 @@ const BookingManager = () => {
   };
 
   const onConfirmSchedule = values => {
-    dispatch(setSelectedSchedule(values));
-    dispatch(
-      openModal({
-        title: `Are you sure confirm this schedule with id ${values.id}?`,
-        action: DIALOG_ACTION.CONFIRM,
-      })
-    );
+    navigate(`${values.id}/confirm`, { state: { backgroundLocation: location } });
   };
 
   const onDeleteSchedule = values => {
-    dispatch(setSelectedSchedule(values));
-    dispatch(
-      openModal({
-        title: `Are you sure delete this schedule with id ${values.id}?`,
-        action: DIALOG_ACTION.DELETE,
-      })
-    );
+    navigate(`${values.id}/delete`, { state: { backgroundLocation: location } });
   };
 
   const onReviewMedicalRecord = values => {
-    dispatch(setSelectedSchedule(values));
-    dispatch(
-      openModal({
-        title: `This is medical record of schedule with id ${values.id}?`,
-        action: DIALOG_ACTION.REVIEW,
-      })
-    );
+    navigate(`patient/${values.user.id}/medical-record-review`, {
+      state: { backgroundLocation: location },
+    });
+  };
+
+  const onPrescription = values => {
+    navigate(`patient/${values.user.id}/prescription`, {
+      state: { backgroundLocation: location },
+    });
   };
 
   const toolBarItems = ({ apiRef }) => (
@@ -137,12 +123,23 @@ const BookingManager = () => {
       <Tooltip title="Review medical record">
         <Button
           color="secondary"
-          aria-label="delete"
+          aria-label="review-medical-record"
           size="small"
           onClick={() => onActionClick([...apiRef.getSelectedRows()], onReviewMedicalRecord)}
         >
           <FontAwesomeIcon icon="eye" />
           &nbsp; Review
+        </Button>
+      </Tooltip>
+      <Tooltip title="Prescription">
+        <Button
+          color="primary"
+          aria-label="prescription"
+          size="small"
+          onClick={() => onActionClick([...apiRef.getSelectedRows()], onPrescription)}
+        >
+          <FontAwesomeIcon icon="file-medical" />
+          &nbsp; Prescription
         </Button>
       </Tooltip>
       <Box component="div">
@@ -172,7 +169,6 @@ const BookingManager = () => {
           loading={isLoading}
           otherToolbarItems={toolBarItems}
         />
-        {dialogOpen && <ActionModal />}
       </div>
     </Box>
   );

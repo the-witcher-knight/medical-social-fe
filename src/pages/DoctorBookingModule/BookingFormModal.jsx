@@ -19,12 +19,11 @@ import DatePicker from '@mui/lab/DatePicker';
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   getScheduleOfDoctorAtDate,
   createDoctorSchedule,
   resetBookingCompleted,
-  closeBookingForm,
 } from './booking.reducer';
 import { Controller, useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
@@ -33,11 +32,11 @@ import dayjs from 'dayjs';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 
 const BookingFormModal = () => {
+  const { doctorId } = useParams();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const open = useAppSelector(state => state.bookingDoctor.openBookingForm);
-  const selectedDoctor = useAppSelector(state => state.bookingDoctor.selectedDoctor);
+  const [open, setOpen] = useState(true);
 
   const { handleSubmit, watch, control } = useForm({
     defaultValues: {
@@ -58,7 +57,7 @@ const BookingFormModal = () => {
   useEffect(() => {
     if (watchDate && open) {
       const selectedDate = dayjs(watchDate).format('YYYY-MM-DDTHH:mm:ss[Z]');
-      dispatch(getScheduleOfDoctorAtDate({ doctorId: selectedDoctor.id, date: selectedDate }));
+      dispatch(getScheduleOfDoctorAtDate({ doctorId, date: selectedDate }));
     }
   }, [watchDate, open]);
 
@@ -72,12 +71,13 @@ const BookingFormModal = () => {
     if (bookingCompleted && !loading) {
       toast.success('Booking completed');
       dispatch(resetBookingCompleted()); // for next booking
-      dispatch(closeBookingForm());
+      handleClose();
     }
   }, [loading, bookingCompleted]);
 
   const handleClose = () => {
-    dispatch(closeBookingForm());
+    setOpen(false);
+    navigate('/doctor-booking');
   };
 
   const onSubmit = values => {
@@ -97,7 +97,7 @@ const BookingFormModal = () => {
       startAt: combineDateAndTime(date, startAt),
       endAt: combineDateAndTime(date, endAt),
       doctor: {
-        id: selectedDoctor.id,
+        id: doctorId,
       },
       user: {
         login: currentAccount.sub,
@@ -131,9 +131,7 @@ const BookingFormModal = () => {
         <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
           <FontAwesomeIcon icon="calendar-plus" />
         </Avatar>
-        <Typography variant="h5">
-          You want to book doctor {selectedDoctor && selectedDoctor.id} ?
-        </Typography>
+        <Typography variant="h5">You want to book doctor {doctorId} ?</Typography>
         <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 2 }}>
           <Controller
             control={control}

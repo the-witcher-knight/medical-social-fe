@@ -1,5 +1,15 @@
 import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { useRoutes, useLocation, Routes, Route } from 'react-router-dom';
+
+import {
+  router as DoctorBookingRouter,
+  modalRouter as DoctorBookingModalRouter,
+} from 'src/pages/DoctorBookingModule/router';
+
+import {
+  router as BookingManagerRouter,
+  modalRouter as BookingManagerModalRouter,
+} from 'src/pages/BookingManagerModule/router';
 
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
@@ -18,11 +28,11 @@ const DoctorManager = React.lazy(() =>
   import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
 );
 
-const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorBookingPage'));
-const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
-const UserBookedList = React.lazy(() => import('src/pages/DoctorBookingModule/UserBookedList'));
+// const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorBookingPage'));
+// const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
+// const UserBookedList = React.lazy(() => import('src/pages/DoctorBookingModule/UserBookedList'));
 
-const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/BookingManager'));
+// const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/BookingManager'));
 
 const MedicineManager = React.lazy(() => import('src/pages/MedicineModule/MedicineManagerPage'));
 const MedicineList = React.lazy(() => import('src/pages/MedicineModule/MedicineList'));
@@ -31,7 +41,7 @@ const MedicineDetail = React.lazy(() => import('src/pages/MedicineModule/Medicin
 
 const Chat = React.lazy(() => import('src/pages/MessageModule/MessagePage'));
 
-export const ROUTES = [
+export const routes = [
   {
     path: '/',
     element: <Main />,
@@ -60,27 +70,33 @@ export const ROUTES = [
         ],
       },
       {
-        path: '/doctor-booking',
-        element: <DoctorBooking />,
-        children: [
-          {
-            index: true,
-            element: <DoctorList />,
-          },
-          {
-            path: 'booked-list',
-            element: <UserBookedList />,
-          },
-        ],
+        ...DoctorBookingRouter,
       },
+      // {
+      //   path: '/doctor-booking',
+      //   element: <DoctorBooking />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <DoctorList />,
+      //     },
+      //     {
+      //       path: 'booked-list',
+      //       element: <UserBookedList />,
+      //     },
+      //   ],
+      // },
       {
         path: '/message',
         element: <Chat />,
       },
       {
-        path: '/booking-manager',
-        element: <BookingManager />,
+        ...BookingManagerRouter,
       },
+      // {
+      //   path: '/booking-manager',
+      //   element: <BookingManager />,
+      // },
       {
         path: '/medicine-manager',
         element: <MedicineManager />,
@@ -126,9 +142,30 @@ export const ROUTES = [
   },
 ];
 
-const BrowerRouterProvider = ({ location }) => {
-  const routeElements = useRoutes(ROUTES, location);
-  return routeElements;
-};
+export const modalRoutes = [...DoctorBookingModalRouter, ...BookingManagerModalRouter];
 
-export default BrowerRouterProvider;
+// const BrowerRouterProvider = ({ location }) => {
+//   const routeElements = useRoutes(ROUTES, location);
+//   return routeElements;
+// };
+
+export default function RouterProvider() {
+  const location = useLocation();
+
+  const elm = useRoutes(routes, location.state?.backgroundLocation || location);
+
+  return (
+    <>
+      {elm}
+
+      {/* Show the modal when a `backgroundLocation` is set */}
+      {location.state?.backgroundLocation && (
+        <Routes>
+          {modalRoutes &&
+            modalRoutes.length > 0 &&
+            modalRoutes.map(r => <Route key={r.path} path={r.path} element={r.element} />)}
+        </Routes>
+      )}
+    </>
+  );
+}

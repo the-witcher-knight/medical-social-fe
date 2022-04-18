@@ -1,15 +1,19 @@
-import React, { Suspense } from 'react';
-import BrowerRouterProvider from './routes';
+import React, { Suspense, useEffect } from 'react';
+import RouterProvider from './routes';
 import AnimationProgress from './shared/components/AnimationProgress';
-import { useLocation } from 'react-router-dom';
 import './app.css';
+import { useLocation } from 'react-router-dom';
 
 const App = () => {
   const location = useLocation();
-  const state = location.state;
+
+  useEffect(() => {
+    console.log(location);
+  }, [location]);
+
   return (
     <Suspense fallback={<AnimationProgress />}>
-      <BrowerRouterProvider location={state?.backgroundLocation || location} />
+      <RouterProvider />
     </Suspense>
   );
 };

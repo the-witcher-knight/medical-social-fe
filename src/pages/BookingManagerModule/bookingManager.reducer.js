@@ -7,6 +7,7 @@ const API_URL = process.env.API_URL;
 const initialState = {
   loading: false,
   scheduleList: [],
+  schedule: null, // Or schedule data
   patient: null,
   errorMessage: null,
   selectedSchedule: null,
@@ -51,7 +52,7 @@ export const partialUpdateSchedule = createAsyncThunk(
   }
 );
 
-export const getPaientById = createAsyncThunk(
+export const getPatientById = createAsyncThunk(
   'booking_manager/fetch_patient_by_id',
   async id => {
     const res = await axios.get(`${API_URL}/admin/users/id/${id}`);
@@ -111,15 +112,15 @@ const doctorBookingSlice = createSlice({
         state.loading = true;
         state.errorMessage = null;
       })
-      .addCase(getPaientById.fulfilled, (state, action) => {
+      .addCase(getPatientById.fulfilled, (state, action) => {
         state.loading = false;
         state.patient = action.payload;
       })
-      .addCase(getPaientById.rejected, (state, action) => {
+      .addCase(getPatientById.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
       })
-      .addCase(getPaientById.pending, state => {
+      .addCase(getPatientById.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       });

@@ -14,8 +14,6 @@ const initialState = {
   scheduleList: [], // Schedule list of doctor {id}
   chatRoomList: [],
   createdChatRoom: null,
-  openBookingForm: false,
-  selectedDoctor: null,
 };
 
 // Actions
@@ -143,15 +141,6 @@ const doctorBookingSlice = createSlice({
     reset() {
       return initialState;
     },
-    setSelectedDoctor(state, action) {
-      state.selectedDoctor = action.payload;
-    },
-    openBookingForm(state) {
-      state.openBookingForm = true;
-    },
-    closeBookingForm(state) {
-      state.openBookingForm = false;
-    },
     resetBookingCompleted(state) {
       state.bookingCompleted = null;
     },
@@ -185,7 +174,7 @@ const doctorBookingSlice = createSlice({
         state.loading = true;
         state.errorMessage = null;
       })
-      .addCase(createDoctorSchedule.fulfilled, (state, action) => {
+      .addCase(createDoctorSchedule.fulfilled, state => {
         state.loading = false;
         state.bookingCompleted = true;
       })
@@ -238,13 +227,6 @@ const doctorBookingSlice = createSlice({
   },
 });
 
-export const {
-  reset,
-  setSelectedDoctor,
-  openBookingForm,
-  closeBookingForm,
-  resetBookingCompleted,
-  resetCreatedChatRoom,
-} = doctorBookingSlice.actions;
+export const { reset, resetBookingCompleted, resetCreatedChatRoom } = doctorBookingSlice.actions;
 
 export default doctorBookingSlice.reducer;
