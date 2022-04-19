@@ -11,6 +11,8 @@ import {
   modalRouter as BookingManagerModalRouter,
 } from 'src/pages/BookingManagerModule/router';
 
+import { router as VideoCallRouter } from 'src/pages/VideoCallModule/router';
+
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
 const Authorization = React.lazy(() => import('src/pages/AuthorizationPage'));
@@ -27,12 +29,6 @@ const AdminDefault = React.lazy(() => import('src/pages/AdminModule/Default'));
 const DoctorManager = React.lazy(() =>
   import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
 );
-
-// const DoctorBooking = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorBookingPage'));
-// const DoctorList = React.lazy(() => import('src/pages/DoctorBookingModule/DoctorList'));
-// const UserBookedList = React.lazy(() => import('src/pages/DoctorBookingModule/UserBookedList'));
-
-// const BookingManager = React.lazy(() => import('src/pages/BookingManagerModule/BookingManager'));
 
 const MedicineManager = React.lazy(() => import('src/pages/MedicineModule/MedicineManagerPage'));
 const MedicineList = React.lazy(() => import('src/pages/MedicineModule/MedicineList'));
@@ -72,31 +68,16 @@ export const routes = [
       {
         ...DoctorBookingRouter,
       },
-      // {
-      //   path: '/doctor-booking',
-      //   element: <DoctorBooking />,
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <DoctorList />,
-      //     },
-      //     {
-      //       path: 'booked-list',
-      //       element: <UserBookedList />,
-      //     },
-      //   ],
-      // },
       {
         path: '/message',
         element: <Chat />,
       },
       {
+        ...VideoCallRouter,
+      },
+      {
         ...BookingManagerRouter,
       },
-      // {
-      //   path: '/booking-manager',
-      //   element: <BookingManager />,
-      // },
       {
         path: '/medicine-manager',
         element: <MedicineManager />,
