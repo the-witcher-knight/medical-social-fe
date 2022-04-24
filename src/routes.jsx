@@ -11,7 +11,10 @@ import {
   modalRouter as BookingManagerModalRouter,
 } from 'src/pages/BookingManagerModule/router';
 
-import { router as VideoCallRouter } from 'src/pages/VideoCallModule/router';
+import {
+  router as MessageRouter,
+  modalRouter as MessageModalRouter,
+} from 'src/pages/MessageModule/router';
 
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
@@ -34,8 +37,6 @@ const MedicineManager = React.lazy(() => import('src/pages/MedicineModule/Medici
 const MedicineList = React.lazy(() => import('src/pages/MedicineModule/MedicineList'));
 const MedicineUpdate = React.lazy(() => import('src/pages/MedicineModule/MedicineUpdate'));
 const MedicineDetail = React.lazy(() => import('src/pages/MedicineModule/MedicineDetail'));
-
-const Chat = React.lazy(() => import('src/pages/MessageModule/MessagePage'));
 
 export const routes = [
   {
@@ -65,19 +66,9 @@ export const routes = [
           },
         ],
       },
-      {
-        ...DoctorBookingRouter,
-      },
-      {
-        path: '/message',
-        element: <Chat />,
-      },
-      {
-        ...VideoCallRouter,
-      },
-      {
-        ...BookingManagerRouter,
-      },
+      ...DoctorBookingRouter,
+      ...MessageRouter,
+      ...BookingManagerRouter,
       {
         path: '/medicine-manager',
         element: <MedicineManager />,
@@ -123,7 +114,11 @@ export const routes = [
   },
 ];
 
-export const modalRoutes = [...DoctorBookingModalRouter, ...BookingManagerModalRouter];
+export const modalRoutes = [
+  ...DoctorBookingModalRouter,
+  ...BookingManagerModalRouter,
+  ...MessageModalRouter,
+];
 
 // const BrowerRouterProvider = ({ location }) => {
 //   const routeElements = useRoutes(ROUTES, location);

@@ -11,6 +11,8 @@ const initialState = {
   messageList: [],
   chatRoomList: [],
   selectedChatRoom: null,
+  offerSignal: null,
+  connectionStatus: null,
 };
 
 // Actions
@@ -46,6 +48,12 @@ const messageSlice = createSlice({
     setSelectedChatRoom(state, action) {
       state.selectedChatRoom = action.payload;
     },
+    setConnectionStatus(state, action) {
+      state.connectionStatus = action.payload;
+    },
+    setOfferSignal(state, action) {
+      state.offerSignal = action.payload;
+    },
     reset() {
       return initialState;
     },
@@ -79,6 +87,7 @@ const messageSlice = createSlice({
   },
 });
 
-export const { setSelectedChatRoom, reset } = messageSlice.actions;
+export const { setSelectedChatRoom, setConnectionStatus, setOfferSignal, reset } =
+  messageSlice.actions;
 
 export default messageSlice.reducer;

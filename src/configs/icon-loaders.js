@@ -47,6 +47,7 @@ import {
   faUserDoctor,
   faUsers,
   faUserShield,
+  faVideo,
   faWrench,
   faX,
 } from '@fortawesome/free-solid-svg-icons';
@@ -101,7 +102,8 @@ export const loadIcon = () => {
     faUsers,
     faWrench,
     faCapsules,
-    faFileMedical
+    faFileMedical,
+    faVideo
     // Add more icons here
   );
 };
