@@ -6,14 +6,10 @@ import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import {
   getAllChatRoom,
   getDoctors,
-  getDegreeDoctor,
   createChatRoom,
   resetCreatedChatRoom,
-  openBookingForm,
-  setSelectedDoctor,
 } from './booking.reducer';
 import UserTableManager from 'src/shared/components/UserTableManager';
-import BookingFormModal from './BookingFormModal';
 import { toast } from 'react-toastify';
 
 const DoctorList = () => {
