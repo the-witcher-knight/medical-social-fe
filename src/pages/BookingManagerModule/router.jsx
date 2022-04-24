@@ -6,10 +6,12 @@ const DeleteModal = React.lazy(() => import('./Dialogs/DeleteModal'));
 const RecordReviewModal = React.lazy(() => import('./Dialogs/RecordReviewModal'));
 const PrescriptionModal = React.lazy(() => import('./Dialogs/PrescriptionModal'));
 
-export const router = {
-  path: '/booking-manager',
-  element: <BookingManager />,
-};
+export const router = [
+  {
+    path: '/booking-manager',
+    element: <BookingManager />,
+  },
+];
 
 export const modalRouter = [
   {

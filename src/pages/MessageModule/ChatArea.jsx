@@ -9,6 +9,7 @@ import {
   TextField,
   Button,
   LinearProgress,
+  Divider,
 } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -54,17 +55,9 @@ const ChatArea = () => {
     }
   }, [messageList]);
 
-  // ! lát xóa
-  useEffect(() => {
-    if (messages !== []) {
-      console.log(messages);
-    }
-  }, [messages]);
-
   useEffect(() => {
     if (selectedChatRoom !== null && stompClient !== null) {
       stompClient.subscribe(`/topic/${selectedChatRoom.id}`, payload => {
-        console.log(payload.body);
         setMessages(messages => [JSON.parse(payload.body), ...messages]);
       });
     }
@@ -107,13 +100,13 @@ const ChatArea = () => {
   };
 
   return (
-    <>
-      <List>
-        {selectedChatRoom ? (
+    <Box component="div" display="flex" flexDirection="column" sx={{ paddingX: 2 }}>
+      {selectedChatRoom ? (
+        <List>
           <InfiniteScroll
             dataLength={messages.length}
             next={loadMore}
-            height={'70vh'}
+            height="500px"
             style={{ display: 'flex', flexDirection: 'column-reverse' }}
             hasMore={true}
             loader={<LinearProgress />}
@@ -158,36 +151,28 @@ const ChatArea = () => {
               ))
             ) : (
               <ListItem key="no-content">
-                <ListItemText align="left">
-                  <Typography
-                    variant="body1"
-                    component={Paper}
-                    p={1}
-                    sx={{
-                      color: 'white',
-                      backgroundColor: '#757575',
-                      width: 'max-content',
-                      maxWidth: '25rem',
-                    }}
-                  >
-                    Let&apos;s start the chat
-                  </Typography>
+                <ListItemText>
+                  <Divider textAlign="center">Let&lsquo;s start chatting</Divider>
                 </ListItemText>
               </ListItem>
             )}
           </InfiniteScroll>
-        ) : (
-          <ListItem sx={{ height: '70vh' }}>
-            <ListItemText>
-              <Typography variant="body1">Please select a chat room</Typography>
-            </ListItemText>
-          </ListItem>
-        )}
-      </List>
+        </List>
+      ) : (
+        <Box
+          component="div"
+          height="500px"
+          display="flex"
+          flexDirection="column"
+          justifyContent="end"
+        >
+          <Divider textAlign="center">Please choose a room</Divider>
+        </Box>
+      )}
       <Box
         margin="normal"
         mt={2}
-        mr={2}
+        mb={2}
         component="form"
         display="flex"
         onSubmit={handleSubmit(onSubmit)}
@@ -209,7 +194,7 @@ const ChatArea = () => {
           <FontAwesomeIcon icon="paper-plane" />
         </Button>
       </Box>
-    </>
+    </Box>
   );
 };
 export default ChatArea;

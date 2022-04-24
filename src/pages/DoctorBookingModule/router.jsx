@@ -6,20 +6,23 @@ const UserBookedList = React.lazy(() => import('./UserBookedList'));
 const DegreeViewerModal = React.lazy(() => import('./DegreeViewerModal'));
 const BookingFormModal = React.lazy(() => import('./BookingFormModal'));
 
-export const router = {
-  path: '/doctor-booking',
-  element: <DoctorBooking />,
-  children: [
-    {
-      index: true,
-      element: <DoctorList />,
-    },
-    {
-      path: 'booked-list',
-      element: <UserBookedList />,
-    },
-  ],
-};
+export const router = [
+  {
+    path: '/doctor-booking',
+    element: <DoctorBooking />,
+    children: [
+      {
+        index: true,
+        element: <DoctorList />,
+      },
+      {
+        path: 'booked-list',
+        element: <UserBookedList />,
+      },
+    ],
+  },
+];
+
 export const modalRouter = [
   {
     path: '/doctor-booking/book/:doctorId',
