@@ -55,28 +55,15 @@ module.exports = {
         ],
         exclude: /\.module\.css$/,
       },
-      // {
-      //   test: /\.css$/,
-      //   use: [
-      //     'style-loader',
-      //     'css-modules-typescript-loader',
-      //     {
-      //       loader: 'css-loader',
-      //       options: {
-      //         importLoaders: 1,
-      //         modules: {
-      //           localIdentName: '[local]-[hash:base64:10]',
-      //         },
-      //       },
-      //     },
-      //     'postcss-loader',
-      //   ],
-      //   include: /\.module\.css$/,
-      // },
       {
         test: /\.js$/,
         enforce: 'pre',
         use: ['source-map-loader'],
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader'],
       },
     ],
   },

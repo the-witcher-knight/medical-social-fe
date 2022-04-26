@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
   entry: ['react-hot-loader/patch', './src/index.js'],
   resolve: {
-    extensions: ['.js', '.jsx'],
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
       src: path.resolve('./src'),
       'react-dom': '@hot-loader/react-dom',
@@ -19,7 +19,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js(x)?$/,
+        test: /\.(js|jsx|ts|tsx)?$/,
         use: [
           {
             loader: 'babel-loader',
@@ -36,13 +36,6 @@ module.exports = {
         test: /\.(png|svg|jpg|gif)$/,
         use: ['file-loader'],
       },
-      // {
-      //   test: /\.(json)$/,
-      //   use: {
-      //     loader: 'file-loader',
-      //     options: { name: '[name].[ext]', outputPath: './' },
-      //   },
-      // },
       {
         test: /\.woff($|\?)|\.woff2($|\?)|\.ttf($|\?)|\.eot($|\?)|\.svg($|\?)/,
         use: ['url-loader'],
