@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch } from 'src/configs/store';
 import { getDegreeDoctor } from './make-appointment.reducer';
 import { Modal, Box, Typography, LinearProgress, Button } from '@mui/material';
+import Zoom from 'react-img-zoom';
 
 export default function ReviewDegreeDialog() {
   const { doctorId } = useParams();
@@ -18,7 +19,7 @@ export default function ReviewDegreeDialog() {
 
   const handleClose = () => {
     setOpen(false);
-    navigate('/doctor-booking');
+    navigate(-1);
   };
 
   return (
@@ -44,9 +45,11 @@ export default function ReviewDegreeDialog() {
         }}
       >
         {degreeUrl && degreeUrl !== '' ? (
-          <img
-            style={{ width: '80vh', height: '80vh' }}
-            src={'http://localhost:8080/files/' + degreeUrl}
+          <Zoom
+            img={'http://localhost:8080/files/' + degreeUrl}
+            zoomScale={3}
+            width={600}
+            height={600}
             loading="lazy"
           />
         ) : (
