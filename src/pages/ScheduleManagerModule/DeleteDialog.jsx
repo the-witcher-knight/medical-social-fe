@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { Modal, Box, Button, Typography, LinearProgress, Grid } from '@mui/material';
-import { getSchedule, partialUpdateSchedule } from './schedule-manager.reducer';
+import { deleteSchedule, getSchedule, partialUpdateSchedule } from './schedule-manager.reducer';
 import { extractTimeFromString } from 'src/shared/util/time-ultil';
 
-export default function ConfirmDialog() {
+export default function DeleteDialog() {
   const { scheduleId } = useParams();
   const dispatch = useAppDispatch();
   const location = useLocation();
@@ -25,8 +25,8 @@ export default function ConfirmDialog() {
     navigate(location.state.backgroundLocation);
   };
 
-  const handleConfirm = () => {
-    dispatch(partialUpdateSchedule({ id: scheduleId, status: 'CONFIRMED' }));
+  const handleDelete = () => {
+    dispatch(deleteSchedule(scheduleId));
     handleClose();
   };
 
@@ -45,7 +45,7 @@ export default function ConfirmDialog() {
         }}
       >
         <Typography id="modal-title" variant="h6" component="h2">
-          Are you sure you want to <b>confirm</b> this schedule?
+          Are you sure you want to <b>delete</b> this schedule?
         </Typography>
         {loading && <LinearProgress />}
         {schedule && (
@@ -73,8 +73,8 @@ export default function ConfirmDialog() {
           </Grid>
         )}
         <Box mt={2}>
-          <Button variant="contained" color="primary" onClick={handleConfirm} disabled={loading}>
-            Confirm
+          <Button variant="contained" color="error" onClick={handleDelete} disabled={loading}>
+            Delete
           </Button>
           &nbsp;
           <Button variant="text" onClick={handleClose}>

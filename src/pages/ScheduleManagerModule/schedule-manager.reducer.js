@@ -39,9 +39,24 @@ export const getSchedule = createAsyncThunk(
  * @param schedule {id: number, status: string}}
  */
 export const partialUpdateSchedule = createAsyncThunk(
-  'booking_manager/confirm_schedule',
+  'schedule_manager/confirm_schedule',
   async schedule => {
     const res = await axios.patch(`${API_URL}/examination-schedules/${schedule.id}`, schedule);
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+/**
+ * Delete schedule by id.
+ * @param id {number} - schedule id
+ */
+export const deleteSchedule = createAsyncThunk(
+  'schedule_manager/delete_schedule',
+  async id => {
+    const res = await axios.delete(`${API_URL}/examination-schedules/${id}`);
     return res.data;
   },
   {
@@ -89,6 +104,20 @@ const scheduleManageSlice = createSlice({
         state.updateSuccess = null;
       })
       .addCase(partialUpdateSchedule.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+        state.updateSuccess = false;
+      })
+      .addCase(deleteSchedule.fulfilled, (state, action) => {
+        state.loading = false;
+        state.updateSuccess = true;
+      })
+      .addCase(deleteSchedule.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+        state.updateSuccess = null;
+      })
+      .addCase(deleteSchedule.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = false;

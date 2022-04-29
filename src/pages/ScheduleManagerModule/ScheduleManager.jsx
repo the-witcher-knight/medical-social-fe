@@ -87,6 +87,7 @@ export default function ScheduleManager() {
   React.useEffect(() => {
     if (updateSuccess) {
       toast.success('Update schedule successfully');
+      dispatch(getDoctorSchedules(userData.sub));
     }
   }, [updateSuccess]);
 

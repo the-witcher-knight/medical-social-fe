@@ -12,11 +12,9 @@ import {
   MenuItem,
   FormHelperText,
 } from '@mui/material';
-import DatePicker from '@mui/lab/DatePicker';
 import DateTimePicker from '@mui/lab/DateTimePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { AppointmentForm } from '@devexpress/dx-react-scheduler-material-ui';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useForm, Controller } from 'react-hook-form';
 import AdapterDayjs from '@mui/lab/AdapterDayJs';
 
@@ -190,7 +188,13 @@ export default function EditForm({
               </LocalizationProvider>
             )}
           />
-          <Button type="button" variant="contained" color="secondary" onClick={cancelChanges}>
+          <Button
+            type="button"
+            variant="outlined"
+            fullWidth
+            color="secondary"
+            onClick={cancelChanges}
+          >
             Close
           </Button>
         </Box>
