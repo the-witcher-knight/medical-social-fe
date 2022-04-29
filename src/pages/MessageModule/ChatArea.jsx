@@ -114,39 +114,23 @@ const ChatArea = () => {
             {messages && messages.length > 0 ? (
               messages.map((item, index) => (
                 <ListItem key={index}>
-                  {item.from.id === user.id ? (
-                    <ListItemText align="right">
-                      <Typography
-                        variant="body1"
-                        component={Paper}
-                        p={1}
-                        sx={{
-                          color: 'white',
-                          backgroundColor: '#3d5afe',
-                          width: 'max-content',
-                          maxWidth: '25rem',
-                        }}
-                      >
-                        {item.content}
-                      </Typography>
-                    </ListItemText>
-                  ) : (
-                    <ListItemText align="left">
-                      <Typography
-                        variant="body1"
-                        component={Paper}
-                        p={1}
-                        sx={{
-                          color: 'white',
-                          backgroundColor: '#757575',
-                          width: 'max-content',
-                          maxWidth: '25rem',
-                        }}
-                      >
-                        {item.content}
-                      </Typography>
-                    </ListItemText>
-                  )}
+                  <ListItemText align={item.from.id === user.id ? 'right' : 'left'}>
+                    <Typography
+                      variant="body1"
+                      component={Paper}
+                      p={1}
+                      sx={{
+                        color: 'white',
+                        backgroundColor: '#3d5afe',
+                        width: 'max-content',
+                        maxWidth: '25rem',
+                        padding: '.2rem .5rem',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {item.content}
+                    </Typography>
+                  </ListItemText>
                 </ListItem>
               ))
             ) : (
