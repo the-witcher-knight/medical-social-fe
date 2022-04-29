@@ -12,7 +12,9 @@ import {
   faCapsules,
   faCartShopping,
   faCheck,
+  faCircle,
   faClipboardUser,
+  faClock,
   faDroplet,
   faEllipsisVertical,
   faEnvelope,
@@ -103,7 +105,9 @@ export const loadIcon = () => {
     faWrench,
     faCapsules,
     faFileMedical,
-    faVideo
+    faVideo,
+    faClock,
+    faCircle
     // Add more icons here
   );
 };

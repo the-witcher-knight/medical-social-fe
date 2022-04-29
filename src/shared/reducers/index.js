@@ -5,6 +5,7 @@ import bookingDoctor from 'src/pages/DoctorBookingModule/booking.reducer';
 import message from 'src/pages/MessageModule/message.reducer';
 import bookingManager from 'src/pages/BookingManagerModule/bookingManager.reducer';
 import pharmacyMedicine from 'src/pages/MedicineModule/pharmacy-medicine.reducer';
+import scheduleManager from 'src/pages/ScheduleManagerModule/schedule-manager.reducer';
 
 const rootReducer = {
   loadingBar,
@@ -14,6 +15,7 @@ const rootReducer = {
   message,
   bookingManager,
   pharmacyMedicine,
+  scheduleManager,
 };
 
 export default rootReducer;
