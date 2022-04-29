@@ -164,9 +164,6 @@ const DoctorList = () => {
 
   return (
     <div style={{ height: 600, width: '90%' }}>
-      <Typography variant="h5" component="h1" align="center" gutterBottom>
-        Active Doctor List
-      </Typography>
       {/* Show Doctor List or Booking Form here */}
       <UserTableManager
         columns={columns}

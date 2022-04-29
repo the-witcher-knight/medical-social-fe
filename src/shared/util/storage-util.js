@@ -72,3 +72,5 @@ export const StorageAPI = {
     remove: removeItem('LOCAL'),
   },
 };
+
+export default StorageAPI;

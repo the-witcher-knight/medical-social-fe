@@ -1,26 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { styled } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { Box, CssBaseline } from '@mui/material';
 import TopBar, { DrawerHeader } from './top-bar';
 import SideBar from './side-bar';
 import Footer from './footer';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { AUTH_TOKEN_KEY } from 'src/shared/reducers/authentication';
-import { StorageAPI } from 'src/shared/util/storage-util';
+import { Outlet } from 'react-router-dom';
 
 const MainLayout = () => {
-  const navigate = useNavigate();
-
   const [openSideBar, setOpenSideBar] = useState(false);
-
-  const isAuthenticated =
-    StorageAPI.local.get(AUTH_TOKEN_KEY) || StorageAPI.session.get(AUTH_TOKEN_KEY);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/authorization/sign-in');
-    }
-  }, []);
 
   const toggleSideBar = () => {
     setOpenSideBar(!openSideBar);
@@ -36,7 +22,7 @@ const MainLayout = () => {
         <Outlet />
         <Footer
           title="Medical Social Application"
-          description="This is an application connect docter and user"
+          description="This is an application that connects doctors and patients"
         />
       </Box>
     </Box>
