@@ -83,19 +83,25 @@ const BookingFormModal = () => {
   const onSubmit = values => {
     const { date, startAt, endAt } = values; // not DayJS object
 
-    if (startAt >= endAt) {
+    const startTime = combineDateAndTime(date, startAt);
+    const endTime = combineDateAndTime(date, endAt);
+
+    const begin = new Date(startTime);
+    const end = new Date(endTime);
+
+    if (begin >= end) {
       toast.error("Start time can't be greater than end time");
       return;
     }
 
-    if (startAt <= Date.now()) {
+    if (begin <= Date.now()) {
       toast.error("Start time can't be equal or less than current time");
       return;
     }
 
     const schedule = {
-      startAt: combineDateAndTime(date, startAt),
-      endAt: combineDateAndTime(date, endAt),
+      startAt: startTime,
+      endAt: endTime,
       doctor: {
         id: doctorId,
       },
@@ -161,7 +167,7 @@ const BookingFormModal = () => {
                   label="Start time"
                   ampm={false}
                   openTo="hours"
-                  views={['hours', 'minutes', 'seconds']}
+                  views={['hours', 'minutes']}
                   inputFormat="HH:mm:ss"
                   mask="__:__:__"
                   value={value}
@@ -184,7 +190,7 @@ const BookingFormModal = () => {
                   label="End time"
                   ampm={false}
                   openTo="hours"
-                  views={['hours', 'minutes', 'seconds']}
+                  views={['hours', 'minutes']}
                   inputFormat="HH:mm:ss"
                   mask="__:__:__"
                   value={value}
