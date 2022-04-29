@@ -21,6 +21,11 @@ import {
   modalRouter as ScheduleManagerModalRouter,
 } from 'src/pages/ScheduleManagerModule';
 
+import {
+  router as MakeAppointmentRouter,
+  modalRouter as MakeAppointmentModalRouter,
+} from 'src/pages/MakeAppointmentModule';
+
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
 const Authorization = React.lazy(() => import('src/pages/AuthorizationPage'));
@@ -97,6 +102,7 @@ export const routes = [
         ],
       },
       ...ScheduleManagerRouter,
+      ...MakeAppointmentRouter,
       // Add more routes here
     ],
   },
@@ -125,6 +131,7 @@ export const modalRoutes = [
   ...BookingManagerModalRouter,
   ...MessageModalRouter,
   ...ScheduleManagerModalRouter,
+  ...MakeAppointmentModalRouter,
 ];
 
 // const BrowerRouterProvider = ({ location }) => {

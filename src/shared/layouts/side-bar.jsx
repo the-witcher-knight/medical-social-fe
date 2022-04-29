@@ -73,6 +73,16 @@ const SideBar = ({ open, handleClose }) => {
       path: '/doctor-booking',
       icon: 'calendar-plus',
     },
+    {
+      name: 'Schedule Manager',
+      path: '/schedule-manager',
+      icon: 'calendar-check',
+    },
+    {
+      name: 'Make Appointment',
+      path: '/make-appointment',
+      icon: 'calendar-plus',
+    },
   ];
 
   const doctorRoutes = [
@@ -80,11 +90,6 @@ const SideBar = ({ open, handleClose }) => {
       name: 'Booking Manager',
       path: '/booking-manager',
       icon: 'clipboard-user',
-    },
-    {
-      name: 'Schedule Manager',
-      path: '/schedule-manager',
-      icon: 'calendar-check',
     },
   ];
 
