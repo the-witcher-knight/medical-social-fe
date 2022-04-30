@@ -68,12 +68,7 @@ const SideBar = ({ open, handleClose }) => {
       path: '/',
       name: 'Home',
       icon: 'home',
-      role: [
-        AuthorityConstant.USER,
-        AuthorityConstant.ADMIN,
-        AuthorityConstant.DOCTOR,
-        AuthorityConstant.PHARMACY,
-      ],
+      role: AuthorityConstant.ALL,
     },
     {
       path: '/schedule-manager',
