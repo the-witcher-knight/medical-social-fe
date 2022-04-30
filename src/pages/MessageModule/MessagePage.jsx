@@ -11,7 +11,7 @@ import {
   Box,
   IconButton,
 } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { createRef, useCallback, useEffect, useMemo, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import {
@@ -21,11 +21,15 @@ import {
   setSelectedChatRoom,
 } from './message.reducer';
 import ChatArea from './ChatArea';
-import { getUserAuthentication } from 'src/shared/util/auth-util';
+import { getUserAuthentication, isAdmin, isDoctor, isUser } from 'src/shared/util/auth-util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ConnectionStatus } from './constant';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import {
+  getDoctorSchedules,
+  getPatientSchedules,
+} from '../ScheduleManagerModule/schedule-manager.reducer';
 
 const MessagePage = () => {
   const dispatch = useAppDispatch();
@@ -37,6 +41,11 @@ const MessagePage = () => {
 
   const rooms = useAppSelector(state => state.message.chatRoomList);
   const selectedRoom = useAppSelector(state => state.message.selectedChatRoom);
+
+  // Related to schedule reducer
+  const scheduleLoading = useAppSelector(state => state.scheduleManager.loading);
+  const scheduleList = useAppSelector(state => state.scheduleManager.scheduleList);
+  const [activeCallButton, setActiveCallButton] = useState(false);
 
   const [sendInfo, setSendInfo] = useState({
     from: null,
@@ -57,7 +66,43 @@ const MessagePage = () => {
 
   useEffect(() => {
     dispatch(getAllChatRoom());
+    if (isDoctor(userData)) {
+      dispatch(getDoctorSchedules(userData.sub));
+    } else if (isAdmin(userData) || isUser(userData)) {
+      dispatch(getPatientSchedules(userData.sub));
+    } else {
+      toast.error('You are not authorized to access this page');
+    }
   }, []);
+
+  const canVideoCall = () => {
+    const now = Date.now();
+    // ! Only two user on chat room
+    const callerLogin = selectedRoom.users
+      .filter(user => user.login !== userData.sub)
+      .map(user => user.login)[0];
+
+    for (const schedule of scheduleList) {
+      if (isDoctor(userData)) {
+        if (schedule.user.login === callerLogin) {
+          if (Date.parse(schedule.startAt) <= now && Date.parse(schedule.endAt) >= now) return true;
+        }
+      } else {
+        if (schedule.doctor.login === callerLogin) {
+          if (Date.parse(schedule.startAt) <= now && Date.parse(schedule.endAt) >= now) return true;
+        }
+      }
+    }
+
+    return false;
+  };
+
+  useEffect(() => {
+    if (selectedRoom && scheduleList && scheduleList.length > 0) {
+      const canCall = canVideoCall();
+      setActiveCallButton(canCall);
+    }
+  }, [selectedRoom, scheduleList, userData]);
 
   useEffect(() => {
     if (rooms && rooms.length > 0) {
@@ -131,7 +176,7 @@ const MessagePage = () => {
             justifyContent="left"
             justifyItems="left"
           >
-            <IconButton color="info" onClick={makeCall}>
+            <IconButton color="info" onClick={makeCall} disabled={!activeCallButton}>
               <FontAwesomeIcon icon="video" />
             </IconButton>
           </Box>
