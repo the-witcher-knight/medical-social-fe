@@ -9,20 +9,7 @@ import dayjs from 'dayjs';
 export const combineDateAndTime = (date, time) => {
   const datePart = dayjs(date).format('YYYY-MM-DD');
   const timePart = dayjs(time).format('HH:mm');
-  return `${datePart}T${timePart}:00Z`;
-};
-
-/**
- * Convert date to string.
- * @param {Date} date the js Date.
- * @returns string date.
- */
-export const dateToString = date => {
-  return dayjs(date).format('YYYY-MM-DDTHH:mm:ss[Z]');
-};
-
-export const dateToViewString = date => {
-  return dayjs(date).format('DD/MM/YYYY');
+  return `${datePart}T${timePart}:00+07:00`;
 };
 
 /**
