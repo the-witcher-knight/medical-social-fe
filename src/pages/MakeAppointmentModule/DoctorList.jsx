@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Divider, Tooltip, Button, Box } from '@mui/material';
+import { Divider, Tooltip, Button, Typography, Paper } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import UserTableManager from 'src/shared/components/UserTableManager';
 import { toast } from 'react-toastify';
-import {
-  getDoctors,
-  getAllChatRoom,
-  resetCreatedChatRoom,
-  createChatRoom,
-} from './make-appointment.reducer';
+import { getDoctors, getAllChatRoom, createChatRoom } from './make-appointment.reducer';
+import { lightBlue } from '@mui/material/colors';
 
 const DoctorList = () => {
   const dispatch = useAppDispatch();
@@ -21,6 +17,15 @@ const DoctorList = () => {
   const doctorList = useAppSelector(state => state.makeAppointment.doctorList);
   const chatRoomList = useAppSelector(state => state.makeAppointment.chatRoomList);
   const createdChatRoom = useAppSelector(state => state.makeAppointment.createdChatRoom);
+
+  const [rows, setRows] = useState([]);
+
+  useEffect(() => {
+    if (doctorList && doctorList.length > 0) {
+      const doctors = doctorList.filter(d => d.activated === true);
+      setRows(doctors);
+    }
+  }, [doctorList]);
 
   const [pagination, setPagination] = useState({
     page: 0,
@@ -76,6 +81,12 @@ const DoctorList = () => {
     }
   };
 
+  const onWatchSchedule = values => {
+    if (values) {
+      navigate('schedule/' + values.login);
+    }
+  };
+
   const columns = [
     { field: 'id', headerName: 'ID', width: 90 },
     {
@@ -97,6 +108,12 @@ const DoctorList = () => {
       valueGetter: params => `${params.row.firstName || ''} ${params.row.lastName || ''}`,
       width: 200,
     },
+    {
+      field: 'login',
+      headerName: 'Username',
+      editable: false,
+      width: 150,
+    },
   ];
 
   const DoctorListToolbarItems = ({ apiRef }) => (
@@ -105,7 +122,7 @@ const DoctorList = () => {
         orientation="vertical"
         sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
       />
-      <Tooltip title="Reviewer selected doctor">
+      <Tooltip title="Review Degree of selected doctor">
         <Button
           color="info"
           aria-label="active"
@@ -127,19 +144,37 @@ const DoctorList = () => {
           &nbsp; Inbox
         </Button>
       </Tooltip>
+      <Tooltip title="Watch schedule of seleted doctor">
+        <Button
+          color="info"
+          aria-label="active"
+          size="small"
+          onClick={() => onClickAction([...apiRef.getSelectedRows()], onWatchSchedule)}
+        >
+          <FontAwesomeIcon icon="calendar-day" />
+          &nbsp;Watch Schedule
+        </Button>
+      </Tooltip>
     </>
   );
 
   return (
-    <div style={{ height: 600, width: '90%' }}>
-      <UserTableManager
-        columns={columns}
-        rows={doctorList}
-        loading={isLoading}
-        nextPage={nextPage}
-        otherToolbarItems={DoctorListToolbarItems}
-      />
-    </div>
+    <Paper sx={{ padding: 2, flexGrow: 3 }}>
+      <Typography variant="h5" component="h3" color={lightBlue[800]}>
+        Activated Doctor
+      </Typography>
+      <Divider sx={{ marginTop: 2 }} />
+      <div style={{ height: 600, width: '100%' }}>
+        <UserTableManager
+          sx={{ border: 'none' }}
+          columns={columns}
+          rows={rows}
+          loading={isLoading}
+          nextPage={nextPage}
+          otherToolbarItems={DoctorListToolbarItems}
+        />
+      </div>
+    </Paper>
   );
 };
 export default DoctorList;

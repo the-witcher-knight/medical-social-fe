@@ -1,18 +1,10 @@
 import React from 'react';
-import { Box } from '@mui/system';
-import { Outlet } from 'react-router-dom';
 
-const MakeAppointmentPage = () => (
-  // Show toast here
-
-  <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
-    <Outlet />
-  </Box>
-);
-
+const MakeAppointmentPage = React.lazy(() => import('./MakeAppointmentPage'));
 const DoctorList = React.lazy(() => import('./DoctorList'));
-
+const DoctorSchedule = React.lazy(() => import('./DoctorSchedule'));
 const ReviewDegreeDialog = React.lazy(() => import('./ReviewDegreeDialog'));
+const MakeAppointmentForm = React.lazy(() => import('./MakeAppointmentForm'));
 
 export const router = [
   {
@@ -23,6 +15,10 @@ export const router = [
         index: true,
         element: <DoctorList />,
       },
+      {
+        path: 'schedule/:doctorLogin',
+        element: <DoctorSchedule />,
+      },
     ],
   },
 ];
@@ -31,5 +27,9 @@ export const modalRouter = [
   {
     path: '/make-appointment/degree/:doctorId',
     element: <ReviewDegreeDialog />,
+  },
+  {
+    path: '/make-appointment/:doctorLogin/set-appointment',
+    element: <MakeAppointmentForm />,
   },
 ];

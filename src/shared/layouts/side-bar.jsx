@@ -69,11 +69,6 @@ const SideBar = ({ open, handleClose }) => {
       icon: 'home',
     },
     {
-      name: 'Doctor Booking',
-      path: '/doctor-booking',
-      icon: 'calendar-plus',
-    },
-    {
       name: 'Schedule Manager',
       path: '/schedule-manager',
       icon: 'calendar-check',

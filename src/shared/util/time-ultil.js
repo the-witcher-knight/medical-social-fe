@@ -8,8 +8,8 @@ import dayjs from 'dayjs';
  */
 export const combineDateAndTime = (date, time) => {
   const datePart = dayjs(date).format('YYYY-MM-DD');
-  const timePart = dayjs(time).format('HH:mm:ss');
-  return `${datePart}T${timePart}Z`;
+  const timePart = dayjs(time).format('HH:mm');
+  return `${datePart}T${timePart}:00Z`;
 };
 
 /**

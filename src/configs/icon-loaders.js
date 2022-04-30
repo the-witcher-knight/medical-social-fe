@@ -8,6 +8,7 @@ import {
   faBars,
   faBell,
   faCalendarCheck,
+  faCalendarDay,
   faCalendarPlus,
   faCapsules,
   faCartShopping,
@@ -107,7 +108,8 @@ export const loadIcon = () => {
     faFileMedical,
     faVideo,
     faClock,
-    faCircle
+    faCircle,
+    faCalendarDay
     // Add more icons here
   );
 };

@@ -55,6 +55,17 @@ export const getDegreeDoctor = createAsyncThunk(
   }
 );
 
+export const getDoctorSchedules = createAsyncThunk(
+  'schedule_manager/fetch_schedule_by_doctor_login',
+  async login => {
+    const res = await axios.get(`${API_URL}/examination-schedules/doctor/${login}`);
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
 export const getAllChatRoom = createAsyncThunk(
   'make_appointment/fetch_all_chat_room',
   async () => {
@@ -85,46 +96,10 @@ export const createChatRoom = createAsyncThunk(
   }
 );
 
-/**
- * Get schedule of doctor at date
- * @param {number} doctorId
- * @param {string} date
- */
-export const getScheduleOfDoctorAtDate = createAsyncThunk(
-  'make_appointment/fetch_schedule_of_doctor_at_date',
-  // pass only one param here. Because of redux-thunk
-  async ({ doctorId, date }) => {
-    const res = await axios.get(`${API_URL}/examination-schedules/doctor/${doctorId}`, {
-      params: {
-        date,
-      },
-    });
-    return res.data;
-  },
-  {
-    serializeError: serializeAxiosError,
-  }
-);
-
 export const createDoctorSchedule = createAsyncThunk(
   'make_appointment/create_doctor_schedule',
   async schedule => {
     const res = await axios.post(`${API_URL}/examination-schedules`, schedule);
-    return res.data;
-  },
-  {
-    serializeError: serializeAxiosError,
-  }
-);
-
-export const getAllScheduleOfUser = createAsyncThunk(
-  'make_appointment/fetch_all_schedule_of_user',
-  async ({ userLogin, date }) => {
-    const res = await axios.get(`${API_URL}/examination-schedules/user/login/${userLogin}`, {
-      params: {
-        date,
-      },
-    });
     return res.data;
   },
   {
@@ -162,17 +137,19 @@ const makeAppointmentSlice = createSlice({
         state.loading = true;
         state.errorMessage = null;
       })
-      .addCase(getScheduleOfDoctorAtDate.fulfilled, (state, action) => {
+      .addCase(getDoctorSchedules.fulfilled, (state, action) => {
         state.scheduleList = action.payload;
         state.loading = false;
+        state.bookingCompleted = null;
       })
-      .addCase(getScheduleOfDoctorAtDate.rejected, (state, action) => {
-        state.errorMessage = action.error.message || 'Something went wrong';
-        state.loading = false;
-      })
-      .addCase(getScheduleOfDoctorAtDate.pending, state => {
+      .addCase(getDoctorSchedules.pending, state => {
         state.loading = true;
         state.errorMessage = null;
+      })
+      .addCase(getDoctorSchedules.rejected, (state, action) => {
+        state.errorMessage = action.error.message || 'Internal server error';
+        state.loading = false;
+        state.bookingCompleted = null;
       })
       .addCase(createDoctorSchedule.fulfilled, state => {
         state.loading = false;
@@ -209,18 +186,6 @@ const makeAppointmentSlice = createSlice({
         state.errorMessage = action.error.message || 'Internal server error';
       })
       .addCase(createChatRoom.pending, state => {
-        state.loading = true;
-        state.errorMessage = null;
-      })
-      .addCase(getAllScheduleOfUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.scheduleList = action.payload;
-      })
-      .addCase(getAllScheduleOfUser.rejected, (state, action) => {
-        state.loading = false;
-        state.errorMessage = action.error.message || 'Internal server error';
-      })
-      .addCase(getAllScheduleOfUser.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { LinearProgress, Divider } from '@mui/material';
+import { LinearProgress } from '@mui/material';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -9,7 +9,7 @@ import {
   useGridApiContext,
 } from '@mui/x-data-grid';
 
-const UserTableManager = ({ columns, rows, loading, nextPage, otherToolbarItems }) => {
+const UserTableManager = ({ columns, rows, loading, nextPage, otherToolbarItems, sx }) => {
   const [pageSize, setPageSize] = React.useState(10);
 
   const ToolBar = () => {
@@ -39,6 +39,7 @@ const UserTableManager = ({ columns, rows, loading, nextPage, otherToolbarItems 
       onPageSizeChange={newPageSize => setPageSize(newPageSize)}
       rowsPerPageOptions={[10, 20, 30]}
       pagination
+      sx={sx}
     />
   );
 };
