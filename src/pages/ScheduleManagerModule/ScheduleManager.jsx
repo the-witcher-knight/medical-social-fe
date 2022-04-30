@@ -17,7 +17,7 @@ import {
   TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import { getUserAuthentication, isDoctor, isUser } from 'src/shared/util/auth-util';
+import { getUserAuthentication, isAdmin, isDoctor, isUser } from 'src/shared/util/auth-util';
 import { getDoctorSchedules, getPatientSchedules } from './schedule-manager.reducer';
 import ScheduleTooltip from './ScheduleTooltip';
 import { connectProps } from '@devexpress/dx-react-core';
@@ -73,7 +73,7 @@ export default function ScheduleManager() {
   React.useEffect(() => {
     if (isDoctor(userData)) {
       dispatch(getDoctorSchedules(userData.sub));
-    } else if (isUser(userData)) {
+    } else if (isUser(userData) || isAdmin(userData)) {
       dispatch(getPatientSchedules(userData.sub));
     } else {
       toast.error('User not permission');
