@@ -2,16 +2,6 @@ import React from 'react';
 import { useRoutes, useLocation, Routes, Route } from 'react-router-dom';
 
 import {
-  router as DoctorBookingRouter,
-  modalRouter as DoctorBookingModalRouter,
-} from 'src/pages/DoctorBookingModule/router';
-
-import {
-  router as BookingManagerRouter,
-  modalRouter as BookingManagerModalRouter,
-} from 'src/pages/BookingManagerModule/router';
-
-import {
   router as MessageRouter,
   modalRouter as MessageModalRouter,
 } from 'src/pages/MessageModule/router';
@@ -76,9 +66,7 @@ export const routes = [
           },
         ],
       },
-      ...DoctorBookingRouter,
       ...MessageRouter,
-      ...BookingManagerRouter,
       {
         path: '/medicine-manager',
         element: <MedicineManager />,
@@ -127,8 +115,6 @@ export const routes = [
 ];
 
 export const modalRoutes = [
-  ...DoctorBookingModalRouter,
-  ...BookingManagerModalRouter,
   ...MessageModalRouter,
   ...ScheduleManagerModalRouter,
   ...MakeAppointmentModalRouter,
