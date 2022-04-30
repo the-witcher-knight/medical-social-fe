@@ -1,24 +1,22 @@
-import { Divider, Tooltip, Button, Typography } from '@mui/material';
+import { Divider, Tooltip, Button, Typography, Paper } from '@mui/material';
 import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import UserTableManager from 'src/shared/components/UserTableManager';
 import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useNavigate } from 'react-router-dom';
-import {
-  getAllMedicineOfPharmacy,
-  setSelectedMedicine,
-  openDeleteDialog,
-  resetUpdateSuccess,
-} from './pharmacy-medicine.reducer';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getAllMedicineOfPharmacy } from './pharmacy-medicine.reducer';
+import { lightBlue } from '@mui/material/colors';
 
 export default function MedicineList() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loading = useAppSelector(state => state.pharmacyMedicine.loading);
   const medicineList = useAppSelector(state => state.pharmacyMedicine.medicineList);
   const updateSuccess = useAppSelector(state => state.pharmacyMedicine.updateSuccess);
+  const errorMessage = useAppSelector(state => state.pharmacyMedicine.errorMessage);
 
   useEffect(() => {
     dispatch(getAllMedicineOfPharmacy());
@@ -26,11 +24,15 @@ export default function MedicineList() {
 
   useEffect(() => {
     if (updateSuccess) {
-      toast.success('Medicine updated successfully');
       dispatch(getAllMedicineOfPharmacy());
-      dispatch(resetUpdateSuccess());
     }
   }, [updateSuccess]);
+
+  useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, []);
 
   const withSelectedRow = (values, action) => {
     if (values && values.length > 0) {
@@ -41,11 +43,11 @@ export default function MedicineList() {
   };
 
   const addNewMedicine = () => {
-    navigate('new');
+    navigate('new', { state: { backgroundLocation: location } });
   };
 
   const editMedicine = values => {
-    navigate(`${values.id}/edit`);
+    navigate(`${values.id}/edit`, { state: { backgroundLocation: location } });
   };
 
   const viewMedicine = values => {
@@ -53,8 +55,7 @@ export default function MedicineList() {
   };
 
   const deleteMedicine = values => {
-    dispatch(setSelectedMedicine(values));
-    dispatch(openDeleteDialog());
+    navigate(`${values.id}/delete`, { state: { backgroundLocation: location } });
   };
 
   const nextPage = () => {
@@ -104,15 +105,9 @@ export default function MedicineList() {
         orientation="vertical"
         sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
       />
-      <Tooltip title="Add new medicine">
-        <Button color="primary" arial-label="Add new medicine" onClick={() => addNewMedicine()}>
-          <FontAwesomeIcon icon="plus" />
-          &nbsp; Add new medicine
-        </Button>
-      </Tooltip>
       <Tooltip title="View medicine">
         <Button
-          color="secondary"
+          color="primary"
           arial-label="View medicine"
           onClick={() => withSelectedRow([...apiRef.getSelectedRows()], viewMedicine)}
         >
@@ -120,9 +115,15 @@ export default function MedicineList() {
           &nbsp; View medicine
         </Button>
       </Tooltip>
+      <Tooltip title="Add new medicine">
+        <Button color="primary" arial-label="Add new medicine" onClick={() => addNewMedicine()}>
+          <FontAwesomeIcon icon="plus" />
+          &nbsp; Add new medicine
+        </Button>
+      </Tooltip>
       <Tooltip title="Update medicine">
         <Button
-          color="info"
+          color="primary"
           arial-label="update medicine"
           onClick={() => withSelectedRow([...apiRef.getSelectedRows()], editMedicine)}
         >
@@ -132,7 +133,7 @@ export default function MedicineList() {
       </Tooltip>
       <Tooltip title="Delete Medicine">
         <Button
-          color="error"
+          color="primary"
           arial-label="Delete medicine"
           onClick={() => withSelectedRow([...apiRef.getSelectedRows()], deleteMedicine)}
         >
@@ -144,17 +145,21 @@ export default function MedicineList() {
   );
 
   return (
-    <div style={{ height: 600, width: '90%' }}>
-      <Typography variant="h5" component="h1" align="center" gutterBottom>
-        Medicine List
+    <Paper sx={{ padding: 2, flexGrow: 3 }}>
+      <Typography variant="h5" component="h3" color={lightBlue[800]} gutterBottom>
+        Activated Doctor
       </Typography>
-      <UserTableManager
-        rows={medicineList}
-        columns={columns}
-        otherToolbarItems={toolbarItems}
-        nextPage={nextPage}
-        loading={loading}
-      />
-    </div>
+      <Divider />
+      <div style={{ height: 600, width: '100%' }}>
+        <UserTableManager
+          rows={medicineList}
+          columns={columns}
+          otherToolbarItems={toolbarItems}
+          nextPage={nextPage}
+          loading={loading}
+          sx={{ border: 'none' }}
+        />
+      </div>
+    </Paper>
   );
 }

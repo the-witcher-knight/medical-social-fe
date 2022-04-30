@@ -16,6 +16,11 @@ import {
   modalRouter as MakeAppointmentModalRouter,
 } from 'src/pages/MakeAppointmentModule';
 
+import {
+  router as MedicineManagerRouter,
+  modalRouter as MedicineManagerModalRouter,
+} from 'src/pages/MedicineModule';
+
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
 const Authorization = React.lazy(() => import('src/pages/AuthorizationPage'));
@@ -32,11 +37,6 @@ const AdminDefault = React.lazy(() => import('src/pages/AdminModule/Default'));
 const DoctorManager = React.lazy(() =>
   import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
 );
-
-const MedicineManager = React.lazy(() => import('src/pages/MedicineModule/MedicineManagerPage'));
-const MedicineList = React.lazy(() => import('src/pages/MedicineModule/MedicineList'));
-const MedicineUpdate = React.lazy(() => import('src/pages/MedicineModule/MedicineUpdate'));
-const MedicineDetail = React.lazy(() => import('src/pages/MedicineModule/MedicineDetail'));
 
 export const routes = [
   {
@@ -67,28 +67,29 @@ export const routes = [
         ],
       },
       ...MessageRouter,
-      {
-        path: '/medicine-manager',
-        element: <MedicineManager />,
-        children: [
-          {
-            index: true,
-            element: <MedicineList />,
-          },
-          {
-            path: 'new',
-            element: <MedicineUpdate />,
-          },
-          {
-            path: ':pharmacyMedicineId/edit',
-            element: <MedicineUpdate />,
-          },
-          {
-            path: ':pharmacyMedicineId/detail',
-            element: <MedicineDetail />,
-          },
-        ],
-      },
+      // {
+      //   path: '/medicine-manager',
+      //   element: <MedicineManager />,
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <MedicineList />,
+      //     },
+      //     {
+      //       path: 'new',
+      //       element: <MedicineUpdate />,
+      //     },
+      //     {
+      //       path: ':pharmacyMedicineId/edit',
+      //       element: <MedicineUpdate />,
+      //     },
+      //     {
+      //       path: ':pharmacyMedicineId/detail',
+      //       element: <MedicineDetail />,
+      //     },
+      //   ],
+      // },
+      ...MedicineManagerRouter,
       ...ScheduleManagerRouter,
       ...MakeAppointmentRouter,
       // Add more routes here
@@ -118,6 +119,7 @@ export const modalRoutes = [
   ...MessageModalRouter,
   ...ScheduleManagerModalRouter,
   ...MakeAppointmentModalRouter,
+  ...MedicineManagerModalRouter,
 ];
 
 // const BrowerRouterProvider = ({ location }) => {

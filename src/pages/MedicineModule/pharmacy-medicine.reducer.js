@@ -3,17 +3,12 @@ import axios from 'axios';
 import { serializeAxiosError } from 'src/shared/reducers/reducer.utils';
 import { getAuthToken } from 'src/shared/util/auth-util';
 
-/**
- * @return {{loading: boolean, updateSuccess: boolean | null, errorMessage: string | null, medicineList: Array<Medicine>, medicine: Medicine}}
- */
 const initialState = {
   loading: false,
   updateSuccess: null,
   errorMessage: null,
   medicineList: [],
   medicine: null,
-  openDeleteDialog: false,
-  selectedMedicine: null,
 };
 
 const apiUrl = process.env.API_URL;
@@ -91,28 +86,18 @@ const pharmacyMedicineSlice = createSlice({
     reset() {
       return initialState;
     },
-    resetUpdateSuccess(state) {
-      state.updateSuccess = null;
-    },
-    openDeleteDialog(state) {
-      state.openDeleteDialog = true;
-    },
-    closeDeleteDialog(state) {
-      state.openDeleteDialog = false;
-    },
-    setSelectedMedicine(state, action) {
-      state.selectedMedicine = action.payload;
-    },
   },
   extraReducers(builder) {
     builder
       .addCase(getAllMedicineOfPharmacy.fulfilled, (state, action) => {
         state.loading = false;
         state.medicineList = action.payload;
+        state.updateSuccess = null;
       })
       .addCase(getAllMedicineOfPharmacy.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
+        state.updateSuccess = null;
       })
       .addCase(getAllMedicineOfPharmacy.pending, state => {
         state.loading = true;
@@ -164,6 +149,7 @@ const pharmacyMedicineSlice = createSlice({
       .addCase(deleteMedicine.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
+        state.updateSuccess = false;
       })
       .addCase(deleteMedicine.pending, state => {
         state.loading = true;
@@ -172,12 +158,6 @@ const pharmacyMedicineSlice = createSlice({
   },
 });
 
-export const {
-  reset,
-  openDeleteDialog,
-  closeDeleteDialog,
-  setSelectedMedicine,
-  resetUpdateSuccess,
-} = pharmacyMedicineSlice.actions;
+export const { reset } = pharmacyMedicineSlice.actions;
 
 export default pharmacyMedicineSlice.reducer;

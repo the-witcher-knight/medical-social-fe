@@ -24,6 +24,7 @@ import {
   faHeart,
   faHouse,
   faHouseMedical,
+  faInfoCircle,
   faLanguage,
   faListCheck,
   faMinus,
@@ -45,6 +46,7 @@ import {
   faStore,
   faSync,
   faTasks,
+  faTimes,
   faTrash,
   faUser,
   faUserDoctor,
@@ -109,7 +111,9 @@ export const loadIcon = () => {
     faVideo,
     faClock,
     faCircle,
-    faCalendarDay
+    faCalendarDay,
+    faTimes,
+    faInfoCircle
     // Add more icons here
   );
 };
