@@ -17,8 +17,8 @@ import {
   TodayButton,
 } from '@devexpress/dx-react-scheduler-material-ui';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import { getUserAuthentication } from 'src/shared/util/auth-util';
-import { getDoctorSchedules } from './schedule-manager.reducer';
+import { getUserAuthentication, isDoctor, isUser } from 'src/shared/util/auth-util';
+import { getDoctorSchedules, getPatientSchedules } from './schedule-manager.reducer';
 import ScheduleTooltip from './ScheduleTooltip';
 import { connectProps } from '@devexpress/dx-react-core';
 import EditForm from './EditForm';
@@ -71,7 +71,13 @@ export default function ScheduleManager() {
   const userData = React.useMemo(() => getUserAuthentication(), []);
 
   React.useEffect(() => {
-    dispatch(getDoctorSchedules(userData.sub));
+    if (isDoctor(userData)) {
+      dispatch(getDoctorSchedules(userData.sub));
+    } else if (isUser(userData)) {
+      dispatch(getPatientSchedules(userData.sub));
+    } else {
+      toast.error('User not permission');
+    }
   }, []);
 
   React.useEffect(() => {
@@ -79,7 +85,7 @@ export default function ScheduleManager() {
       id: item.id,
       startDate: item.startAt,
       endDate: item.endAt,
-      title: `Schedule with ${item.user.firstName} ${item.user.lastName}`,
+      title: `Schedule of ${item.doctor.firstName} ${item.doctor.lastName} and ${item.user.firstName} ${item.user.lastName}`,
       status: item.status,
       patient: item.user,
       doctor: item.doctor,
@@ -101,6 +107,12 @@ export default function ScheduleManager() {
   const toggleFormVisibility = () => {
     setFormVisible(!formVisible);
   };
+
+  const appointmentTooltipContent = connectProps(ScheduleTooltip, () => {
+    return {
+      editable: isDoctor(userData),
+    };
+  });
 
   const appointmentForm = connectProps(EditForm, () => {
     return {
@@ -132,7 +144,7 @@ export default function ScheduleManager() {
           <DateNavigator />
           <TodayButton />
           <ViewSwitcher />
-          <AppointmentTooltip contentComponent={ScheduleTooltip} showCloseButton />
+          <AppointmentTooltip contentComponent={appointmentTooltipContent} showCloseButton />
           <AppointmentForm
             overlayComponent={appointmentForm}
             visible={formVisible}

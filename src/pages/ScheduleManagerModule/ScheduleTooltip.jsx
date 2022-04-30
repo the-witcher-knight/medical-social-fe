@@ -89,7 +89,7 @@ const StyledTooltipContent = styled('div')(
   })
 );
 
-export default function ScheduleTooltip({ appointmentData, formatDate }) {
+export default function ScheduleTooltip({ appointmentData, formatDate, editable }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -144,27 +144,29 @@ export default function ScheduleTooltip({ appointmentData, formatDate }) {
           <div className={classes.text}>{appointmentData.status}</div>
         </Grid>
       </Grid>
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'center',
-          paddingLeft: '20px',
-        }}
-        className={classes.contentContainer}
-      >
-        {appointmentData && appointmentData.status !== 'CONFIRMED' && (
-          <Button variant="outlined" size="small" color="primary" onClick={onConfirmSchedule}>
-            <FontAwesomeIcon icon="check" />
-            &nbsp;CONFIRM
+      {editable && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            paddingLeft: '20px',
+          }}
+          className={classes.contentContainer}
+        >
+          {appointmentData && appointmentData.status !== 'CONFIRMED' && (
+            <Button variant="outlined" size="small" color="primary" onClick={onConfirmSchedule}>
+              <FontAwesomeIcon icon="check" />
+              &nbsp;CONFIRM
+            </Button>
+          )}
+          &nbsp;
+          <Button variant="outlined" size="small" color="error" onClick={onDeleteSchedule}>
+            <FontAwesomeIcon icon="trash" />
+            &nbsp;DELETE
           </Button>
-        )}
-        &nbsp;
-        <Button variant="outlined" size="small" color="error" onClick={onDeleteSchedule}>
-          <FontAwesomeIcon icon="trash" />
-          &nbsp;DELETE
-        </Button>
-      </div>
+        </div>
+      )}
     </StyledTooltipContent>
   );
 }
