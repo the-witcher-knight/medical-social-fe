@@ -2,12 +2,11 @@ import React from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItemIcon, ListItemButton, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
-import { getUserAuthentication, isAdmin, isDoctor, isPharmacy } from 'src/shared/util/auth-util';
+import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { AuthorityConstant } from '../authority-constant';
 
 const drawerWidth = 240;
