@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Box from '@mui/material/Box';
 import { styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -22,6 +23,8 @@ import ScheduleTooltip from './ScheduleTooltip';
 import { connectProps } from '@devexpress/dx-react-core';
 import EditForm from './EditForm';
 import { toast } from 'react-toastify';
+import { Typography } from '@mui/material';
+import { lightBlue } from '@mui/material/colors';
 
 const classes = {
   toolbarRoot: `schedule-manager-toolbarRoot`,
@@ -109,30 +112,35 @@ export default function ScheduleManager() {
   });
 
   return (
-    <Paper>
-      <Scheduler data={data} height={660}>
-        <ViewState
-          currentDate={currentDate}
-          onCurrentDateChange={setCurrentDate}
-          currentViewName={currentViewName}
-          onCurrentViewNameChange={setCurrentViewName}
-        />
-        <EditingState onEditingAppointmentChange={onEditingAppointmentChange} />
-        <DayView startDayHour={7.5} endDayHour={17.5} />
-        <WeekView startDayHour={7.5} endDayHour={17.5} />
-        <Appointments />
-        <Toolbar {...(loading ? { rootComponent: ToolbarWithLoading } : null)} />
-        <DateNavigator />
-        <TodayButton />
-        <ViewSwitcher />
-        <AppointmentTooltip contentComponent={ScheduleTooltip} showCloseButton />
-        <AppointmentForm
-          overlayComponent={appointmentForm}
-          visible={formVisible}
-          onVisibilityChange={toggleFormVisibility}
-          readOnly
-        />
-      </Scheduler>
-    </Paper>
+    <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
+      <Paper sx={{ padding: 2 }}>
+        <Typography variant="h5" component="h3" color={lightBlue[800]}>
+          My Schedules
+        </Typography>
+        <Scheduler data={data} height={660}>
+          <ViewState
+            currentDate={currentDate}
+            onCurrentDateChange={setCurrentDate}
+            currentViewName={currentViewName}
+            onCurrentViewNameChange={setCurrentViewName}
+          />
+          <EditingState onEditingAppointmentChange={onEditingAppointmentChange} />
+          <DayView startDayHour={7.5} endDayHour={17.5} />
+          <WeekView startDayHour={7.5} endDayHour={17.5} />
+          <Appointments />
+          <Toolbar {...(loading ? { rootComponent: ToolbarWithLoading } : null)} />
+          <DateNavigator />
+          <TodayButton />
+          <ViewSwitcher />
+          <AppointmentTooltip contentComponent={ScheduleTooltip} showCloseButton />
+          <AppointmentForm
+            overlayComponent={appointmentForm}
+            visible={formVisible}
+            onVisibilityChange={toggleFormVisibility}
+            readOnly
+          />
+        </Scheduler>
+      </Paper>
+    </Box>
   );
 }
