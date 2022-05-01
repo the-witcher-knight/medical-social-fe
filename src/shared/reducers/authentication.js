@@ -11,8 +11,7 @@ const API_URL = process.env.API_URL;
 export const initialState = {
   loading: false,
   isAuthenticated: false,
-  loginSuccess: false,
-  loginError: false, // Errors returned from the server
+  loginSuccess: null,
   showModalLogin: false,
   account: {}, // User account
   updateSuccess: null,
@@ -160,8 +159,8 @@ export const AuthenticationSlice = createSlice({
         isAuthenticated: false,
       };
     },
-    resetUpdateSuccess(state) {
-      state.updateSuccess = null;
+    reset() {
+      return initialState;
     },
   },
   extraReducers(builder) {
@@ -169,29 +168,32 @@ export const AuthenticationSlice = createSlice({
       .addCase(authenticate.rejected, (state, action) => ({
         ...initialState,
         errorMessage: action.error.message,
+        loginSuccess: false,
         showModalLogin: true,
-        loginError: true,
       }))
       .addCase(authenticate.fulfilled, state => ({
         ...state,
         loading: false,
-        loginError: false,
         showModalLogin: false,
         loginSuccess: true,
       }))
       .addCase(authenticate.pending, state => {
         state.loading = true;
+        state.loginSuccess = null;
       })
       .addCase(signup.fulfilled, state => {
         state.loading = false;
+        state.updateSuccess = true;
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Could not register';
+        state.updateSuccess = false;
       })
       .addCase(signup.pending, state => {
         state.loading = true;
         state.errorMessage = '';
+        state.signup = null;
       })
       .addCase(getAccount.fulfilled, (state, action) => {
         state.loading = false;
@@ -215,6 +217,7 @@ export const AuthenticationSlice = createSlice({
       .addCase(editProfile.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
+        state.updateSuccess = false;
       })
       .addCase(editProfile.pending, state => {
         state.loading = true;
@@ -224,8 +227,7 @@ export const AuthenticationSlice = createSlice({
   },
 });
 
-export const { logoutSession, authError, clearAuth, resetUpdateSuccess } =
-  AuthenticationSlice.actions;
+export const { logoutSession, authError, clearAuth, reset } = AuthenticationSlice.actions;
 
 // Reducer
 export default AuthenticationSlice.reducer;

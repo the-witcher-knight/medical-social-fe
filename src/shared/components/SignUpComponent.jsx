@@ -23,7 +23,7 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { toast } from 'react-toastify';
-import { signup } from '../reducers/authentication';
+import { reset, signup } from '../reducers/authentication';
 
 const theme = createTheme();
 
@@ -31,6 +31,7 @@ const SignUpComponent = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const updateSuccess = useAppSelector(state => state.authentication.updateSuccess);
   const errorMessage = useAppSelector(state => state.authentication.errorMessage);
 
   const {
@@ -69,10 +70,23 @@ const SignUpComponent = () => {
   };
 
   useEffect(() => {
+    dispatch(reset());
+  }, []);
+
+  useEffect(() => {
     if (watchAuthority) {
       onChangeAuthority();
     }
   }, [watchAuthority]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      toast.success('Create account successfully');
+      navigate('/authorization/sign-in');
+    } else {
+      toast.error(errorMessage);
+    }
+  }, [updateSuccess]);
 
   const onSubmit = values => {
     if (values.password !== values.confirmPassword) {
@@ -84,15 +98,7 @@ const SignUpComponent = () => {
       k => (newUser[k] == null || newUser[k] === '' || k === 'authority') && delete newUser[k]
     );
     // TODO convert authority to ['authority']
-    console.log(newUser);
-    dispatch(signup(newUser)).then(() => {
-      if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.success('Sign up successfully');
-        navigate('/authorization/sign-in');
-      }
-    });
+    dispatch(signup(newUser));
   };
 
   return (

@@ -16,7 +16,7 @@ import DateTimePicker from '@mui/lab/DateTimePicker';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import { AppointmentForm } from '@devexpress/dx-react-scheduler-material-ui';
 import { useForm, Controller } from 'react-hook-form';
-import AdapterDayjs from '@mui/lab/AdapterDayJs';
+import AdapterDayjs from '@mui/lab/AdapterDayjs';
 
 const classes = {
   content: `appointment-form-content`,
@@ -95,7 +95,6 @@ export default function EditForm({
 
   const {
     handleSubmit,
-    watch,
     control,
     formState: { errors },
   } = useForm({
@@ -202,53 +201,3 @@ export default function EditForm({
     </AppointmentForm.Overlay>
   );
 }
-
-//  <StyledDiv>
-//         <div className={classes.header}>
-//           <IconButton className={classes.closeButton} onClick={cancelChanges} size="large">
-//             <FontAwesomeIcon icon="times" />
-//           </IconButton>
-//         </div>
-//         <div className={classes.content}>
-//           <div className={classes.wrapper}>
-//             <FontAwesomeIcon icon="pen" className={classes.icon} />
-//             <TextField />
-//           </div>
-//           <div className={classes.wrapper}>
-//             <LocalizationProvider dateAdapter={AdapterDayJs}>
-//               <DateTimePicker
-//                 label="Start Date"
-//                 renderInput={props => <TextField className={classes.picker} {...props} />}
-//               />
-//               <DateTimePicker
-//                 label="End Date"
-//                 renderInput={props => <TextField className={classes.picker} {...props} />}
-//               />
-//             </LocalizationProvider>
-//           </div>
-//           <div className={classes.wrapper}>
-//             <TextField />
-//           </div>
-//           <div className={classes.wrapper}>
-//             <TextField multiline rows="6" />
-//           </div>
-//         </div>
-//         <div className={classes.buttonGroup}>
-//           {!isNewAppointment && (
-//             <Button
-//               variant="outlined"
-//               color="secondary"
-//               className={classes.button}
-//               onClick={() => {
-//                 visibleChange();
-//                 this.commitAppointment('deleted');
-//               }}
-//             >
-//               Delete
-//             </Button>
-//           )}
-//           <Button variant="outlined" color="primary" className={classes.button}>
-//             {isNewAppointment ? 'Create' : 'Save'}
-//           </Button>
-//         </div>
-//       </StyledDiv>

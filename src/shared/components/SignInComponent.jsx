@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import { signin } from 'src/shared/reducers/authentication';
+import { signin, reset } from 'src/shared/reducers/authentication';
 
 const theme = createTheme();
 
@@ -26,7 +26,6 @@ const SignInComponent = () => {
   const dispatch = useAppDispatch();
 
   const loading = useAppSelector(state => state.authentication.loading);
-  const loginError = useAppSelector(state => state.authentication.loginError);
   const loginSuccess = useAppSelector(state => state.authentication.loginSuccess);
   const errorMessage = useAppSelector(state => state.authentication.errorMessage);
 
@@ -45,10 +44,14 @@ const SignInComponent = () => {
   });
 
   useEffect(() => {
+    dispatch(reset());
+  }, []);
+
+  useEffect(() => {
     if (loginSuccess) {
       navigate('/');
     }
-  }, [loading, loginSuccess]);
+  }, [loginSuccess]);
 
   const onSubmit = values => {
     dispatch(signin(values.username, values.password, values.rememberMe));
@@ -72,7 +75,7 @@ const SignInComponent = () => {
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          {loginError && <Alert severity="error">{errorMessage}</Alert>}
+          {errorMessage && <Alert severity="error">{errorMessage}</Alert>}
           <Box component="form" onSubmit={handleSubmit(onSubmit)} noValidate sx={{ mt: 1 }}>
             <Controller
               control={control}

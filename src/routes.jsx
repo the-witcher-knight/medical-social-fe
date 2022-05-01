@@ -67,28 +67,6 @@ export const routes = [
         ],
       },
       ...MessageRouter,
-      // {
-      //   path: '/medicine-manager',
-      //   element: <MedicineManager />,
-      //   children: [
-      //     {
-      //       index: true,
-      //       element: <MedicineList />,
-      //     },
-      //     {
-      //       path: 'new',
-      //       element: <MedicineUpdate />,
-      //     },
-      //     {
-      //       path: ':pharmacyMedicineId/edit',
-      //       element: <MedicineUpdate />,
-      //     },
-      //     {
-      //       path: ':pharmacyMedicineId/detail',
-      //       element: <MedicineDetail />,
-      //     },
-      //   ],
-      // },
       ...MedicineManagerRouter,
       ...ScheduleManagerRouter,
       ...MakeAppointmentRouter,
