@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Chip, Typography, Divider, Tooltip, Button } from '@mui/material';
+import { lightBlue } from '@mui/material/colors';
+import { Chip, Typography, Divider, Tooltip, Button, Paper } from '@mui/material';
 import UserTableManager from 'src/shared/components/UserTableManager';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { getDegreeDoctor, getDoctors, updateDoctor } from '../admin.reducer';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
+import dayjs from 'dayjs';
 
 const DoctorManagerPage = () => {
   const dispatch = useAppDispatch();
@@ -43,7 +45,7 @@ const DoctorManagerPage = () => {
     }));
   };
 
-  const onActivateOrInActivateDoctor = values => {
+  const onActiveOrDeActiveDoctor = values => {
     if (values) {
       const formData = new FormData();
       Object.keys(values)
@@ -51,20 +53,16 @@ const DoctorManagerPage = () => {
         .forEach(key => {
           if (key === 'files') {
             formData.append(key, values[key][0]);
-          }
-          if (key === 'activated') {
+          } else if (key === 'activated') {
             formData.append(key, !values[key]); // activated or inactivated
+          } else if (key === 'createdDate' || key === 'lastModifiedDate') {
+            formData.append(key, dayjs(Date.parse(values[key])).format('YYYY-MM-DDTHH:mm:ss[Z]'));
           } else {
             formData.append(key, values[key]);
           }
         });
-
       dispatch(updateDoctor(formData));
     }
-  };
-
-  const onDeleteDoctor = values => {
-    if (values) console.log('Delete ', values);
   };
 
   const onReviewDegree = values => {
@@ -119,7 +117,7 @@ const DoctorManagerPage = () => {
       />
       <Tooltip title="Reviewer selected doctor">
         <Button
-          color="secondary"
+          color="info"
           aria-label="active"
           size="small"
           onClick={() => onReviewDegree([...apiRef.getSelectedRows()][0][1])}
@@ -134,42 +132,46 @@ const DoctorManagerPage = () => {
       />
       <Tooltip title="Active selected row">
         <Button
-          color="primary"
+          color="info"
           aria-label="active"
           size="small"
-          onClick={() => onActivateOrInActivateDoctor([...apiRef.getSelectedRows()][0][1])} // coi chừng lỗi
+          onClick={() => onActiveOrDeActiveDoctor([...apiRef.getSelectedRows()][0][1])} // coi chừng lỗi
         >
-          <FontAwesomeIcon icon="pen" />
+          <FontAwesomeIcon icon="check" />
           &nbsp; Activate
         </Button>
       </Tooltip>
-      <Tooltip title="Delete selected row">
+      <Tooltip title="Deactive selected row">
         <Button
-          color="error"
-          aria-label="delete"
+          color="info"
+          aria-label="deactive"
           size="small"
-          onClick={() => onDeleteDoctor([...apiRef.getSelectedRows()][0][1])}
+          onClick={() => onActiveOrDeActiveDoctor([...apiRef.getSelectedRows()][0][1])} // coi chừng lỗi
         >
-          <FontAwesomeIcon icon="trash" />
-          &nbsp; Delete
+          <FontAwesomeIcon icon="times" />
+          &nbsp; Deactivate
         </Button>
       </Tooltip>
     </>
   );
 
   return (
-    <div style={{ height: 600, width: '90%' }}>
-      <Typography variant="h5" gutterBottom>
+    <Paper sx={{ padding: 3 }}>
+      <Typography variant="h5" component="h3" color={lightBlue[800]} gutterBottom>
         Doctor Manager
       </Typography>
-      <UserTableManager
-        columns={columns}
-        rows={rows}
-        loading={isLoading}
-        nextPage={nextPage}
-        otherToolbarItems={reviewDegreeToolbarItems}
-      />
-    </div>
+      <Divider />
+      <div style={{ height: 600, width: 800, marginTop: 2 }}>
+        <UserTableManager
+          sx={{ border: 'none' }}
+          columns={columns}
+          rows={rows}
+          loading={isLoading}
+          nextPage={nextPage}
+          otherToolbarItems={reviewDegreeToolbarItems}
+        />
+      </div>
+    </Paper>
   );
 };
 export default DoctorManagerPage;
