@@ -5,7 +5,6 @@ import { loadingBarMiddleware } from 'react-redux-loading-bar';
 import loggerMiddleware from './middlewares/logger-middleware';
 import notificationMiddleware from './middlewares/notification-middleware';
 import errorMiddleware from './middlewares/error-middleware';
-import { userApi } from 'src/pages/AdminModule/admin.reducer';
 
 const store = configureStore({
   reducer: rootReducers,

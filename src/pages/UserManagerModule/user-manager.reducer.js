@@ -11,45 +11,39 @@ const initialState = {
   loading: false,
   errorMessage: null,
   updateSuccess: null,
-  dataList: [],
-  data: null,
+  userList: [],
+  user: null,
+  degree: null,
   total: 0,
 };
 
 // Actions
-
-export const getDoctors = createAsyncThunk(
-  'admin/fetch_doctor_list',
-  async (page, size) => {
-    const res = await axios.get(`${API_URL}/authority/${AuthorityConstant.DOCTOR}`, {
-      params: {
-        page,
-        size,
-      },
-    });
-    return res;
+export const getUsers = createAsyncThunk(
+  'userManager/fetch_user_list',
+  async ({ userType, page, size }) => {
+    if (userType === AuthorityConstant.ALL) {
+      const res = await axios.get(API_URL, { params: { page, size } });
+      return res.data;
+    } else {
+      const res = await axios.get(`${API_URL}/authority/${userType}`, {
+        params: {
+          page,
+          size,
+        },
+      });
+      return res.data;
+    }
   },
   {
     serializeError: serializeAxiosError,
   }
 );
 
-export const updateDoctor = createAsyncThunk(
-  'admin/update_doctor',
-  async doctorFormData => {
-    const res = await axios.put(API_URL, doctorFormData);
-    return res;
-  },
-  {
-    serializeError: serializeAxiosError,
-  }
-);
-
-export const getAllUser = createAsyncThunk(
-  'admin/fetch_all_user_list',
-  async () => {
-    const res = await axios.get(API_URL);
-    return res;
+export const updateUser = createAsyncThunk(
+  'userManager/update_user',
+  async formData => {
+    const res = await axios.put(API_URL, formData);
+    return res.data;
   },
   {
     serializeError: serializeAxiosError,
@@ -60,7 +54,7 @@ export const getDegreeDoctor = createAsyncThunk(
   'admin/fetch_degree_doctor',
   async doctorId => {
     const res = await axios.get(`${API_URL}/degree/${doctorId}`);
-    return res;
+    return res.data;
   },
   {
     serializeError: serializeAxiosError,
@@ -69,8 +63,8 @@ export const getDegreeDoctor = createAsyncThunk(
 
 // Slice
 
-const adminSlice = createSlice({
-  name: 'admin',
+const userManagerSlice = createSlice({
+  name: 'userManager',
   initialState,
   reducers: {
     reset() {
@@ -79,37 +73,38 @@ const adminSlice = createSlice({
   },
   extraReducers(builder) {
     builder
-      .addCase(getDoctors.fulfilled, (state, action) => {
-        state.dataList = action.payload.data;
-        state.total = action.payload.total || action.payload.data.length;
+      .addCase(getUsers.fulfilled, (state, action) => {
+        state.userList = action.payload;
+        state.total = action.payload.total || action.payload.length;
         state.loading = false;
+        state.updateSuccess = null;
       })
-      .addCase(getDoctors.rejected, (state, action) => {
+      .addCase(getUsers.rejected, (state, action) => {
         state.errorMessage = action.error.message || 'Internal server error';
         state.loading = false;
       })
-      .addCase(getDoctors.pending, state => {
+      .addCase(getUsers.pending, state => {
         state.loading = true;
         state.errorMessage = null;
       })
-      .addCase(updateDoctor.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.user = action.payload;
         state.updateSuccess = true;
       })
-      .addCase(updateDoctor.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = false;
       })
-      .addCase(updateDoctor.pending, state => {
+      .addCase(updateUser.pending, state => {
         state.loading = true;
         state.updateSuccess = null;
         state.errorMessage = null;
       })
       .addCase(getDegreeDoctor.fulfilled, (state, action) => {
         state.loading = false;
-        state.data = action.payload.data;
+        state.degree = action.payload;
       })
       .addCase(getDegreeDoctor.rejected, (state, action) => {
         state.loading = false;
@@ -122,6 +117,6 @@ const adminSlice = createSlice({
   },
 });
 
-export const { reset } = adminSlice.actions;
+export const { reset } = userManagerSlice.actions;
 
-export default adminSlice.reducer;
+export default userManagerSlice.reducer;

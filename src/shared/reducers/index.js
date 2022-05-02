@@ -1,6 +1,6 @@
 import { loadingBarReducer as loadingBar } from 'react-redux-loading-bar';
 import authentication from './authentication';
-import admin from 'src/pages/AdminModule/admin.reducer';
+import userManager from 'src/pages/UserManagerModule/user-manager.reducer';
 import message from 'src/pages/MessageModule/message.reducer';
 import pharmacyMedicine from 'src/pages/MedicineModule/pharmacy-medicine.reducer';
 import scheduleManager from 'src/pages/ScheduleManagerModule/schedule-manager.reducer';
@@ -12,7 +12,7 @@ const rootReducer = {
   makeAppointment,
   pharmacyMedicine,
   authentication,
-  admin,
+  userManager,
   message,
 };
 

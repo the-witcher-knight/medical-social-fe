@@ -21,22 +21,16 @@ import {
   modalRouter as MedicineManagerModalRouter,
 } from 'src/pages/MedicineModule';
 
+import { router as AuthorizationRouter } from 'src/pages/AuthorizationModule';
+
+import { router as UserManagerRouter } from 'src/pages/UserManagerModule';
+
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
-const Authorization = React.lazy(() => import('src/pages/AuthorizationPage'));
-const SignIn = React.lazy(() => import('src/shared/components/SignInComponent'));
-const SignUp = React.lazy(() => import('src/shared/components/SignUpComponent'));
-const ProfileEdit = React.lazy(() => import('src/shared/components/ProfileEdit'));
 const Logout = React.lazy(() => import('src/shared/components/LogoutModal'));
 
 // Inner page
 const Welcome = React.lazy(() => import('src/pages/WelcomePage'));
-
-const Admin = React.lazy(() => import('src/pages/AdminModule/AdminPage'));
-const AdminDefault = React.lazy(() => import('src/pages/AdminModule/Default'));
-const DoctorManager = React.lazy(() =>
-  import('src/pages/AdminModule/DoctorManager/DoctorManagerPage')
-);
 
 export const routes = [
   {
@@ -51,21 +45,7 @@ export const routes = [
         path: '/logout',
         element: <Logout />,
       },
-      {
-        path: '/admin',
-        element: <Admin />,
-        children: [
-          {
-            path: '',
-            element: <AdminDefault />,
-            index: true,
-          },
-          {
-            path: 'doctor-manager',
-            element: <DoctorManager />,
-          },
-        ],
-      },
+      ...UserManagerRouter,
       ...MessageRouter,
       ...MedicineManagerRouter,
       ...ScheduleManagerRouter,
@@ -73,24 +53,7 @@ export const routes = [
       // Add more routes here
     ],
   },
-  {
-    path: '/authorization',
-    element: <Authorization />,
-    children: [
-      {
-        path: 'sign-in',
-        element: <SignIn />,
-      },
-      {
-        path: 'sign-up',
-        element: <SignUp />,
-      },
-      {
-        path: 'profile-edit',
-        element: <ProfileEdit />,
-      },
-    ],
-  },
+  ...AuthorizationRouter,
 ];
 
 export const modalRoutes = [
@@ -99,11 +62,6 @@ export const modalRoutes = [
   ...MakeAppointmentModalRouter,
   ...MedicineManagerModalRouter,
 ];
-
-// const BrowerRouterProvider = ({ location }) => {
-//   const routeElements = useRoutes(ROUTES, location);
-//   return routeElements;
-// };
 
 export default function RouterProvider() {
   const location = useLocation();
