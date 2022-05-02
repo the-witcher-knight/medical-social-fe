@@ -22,7 +22,7 @@ import { signin, reset } from 'src/shared/reducers/authentication';
 
 const theme = createTheme();
 
-const SignInComponent = () => {
+export default () => {
   const dispatch = useAppDispatch();
 
   const loading = useAppSelector(state => state.authentication.loading);
@@ -139,5 +139,3 @@ const SignInComponent = () => {
     </ThemeProvider>
   );
 };
-
-export default SignInComponent;

@@ -23,11 +23,11 @@ import { useForm, Controller, useWatch } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { toast } from 'react-toastify';
-import { reset, signup } from '../reducers/authentication';
+import { reset, signup } from 'src/shared/reducers/authentication';
 
 const theme = createTheme();
 
-const SignUpComponent = () => {
+export default () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -326,5 +326,3 @@ const SignUpComponent = () => {
     </ThemeProvider>
   );
 };
-
-export default SignUpComponent;
