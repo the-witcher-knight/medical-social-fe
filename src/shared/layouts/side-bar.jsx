@@ -3,9 +3,10 @@ import { styled, useTheme } from '@mui/material/styles';
 import MuiDrawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import IconButton from '@mui/material/IconButton';
+import { grey, lightBlue } from '@mui/material/colors';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { ListItemIcon, ListItemButton, ListItemText } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { AuthorityConstant } from '../authority-constant';
 
@@ -88,21 +89,9 @@ const SideBar = ({ open, handleClose }) => {
       role: [AuthorityConstant.PHARMACY],
     },
     {
-      path: '/admin/user-manager',
+      path: '/user-manager',
       name: 'User Manager',
       icon: 'users',
-      role: [AuthorityConstant.ADMIN],
-    },
-    {
-      path: '/admin/doctor-manager',
-      name: 'Doctor Manager',
-      icon: 'user-doctor',
-      role: [AuthorityConstant.ADMIN],
-    },
-    {
-      path: '/admin/pharmacy-manager',
-      name: 'Pharmacy Manager',
-      icon: 'house-medical',
       role: [AuthorityConstant.ADMIN],
     },
   ];
@@ -124,22 +113,35 @@ const SideBar = ({ open, handleClose }) => {
             r.role.includes(user.auth) && (
               <ListItemButton
                 key={idx}
-                component={Link}
+                component={NavLink}
                 to={r.path}
                 sx={{
                   minHeight: 48,
                   justifyContent: open ? 'initial' : 'center',
                   px: 2.5,
+                  m: 1,
+                  borderRadius: 2,
                 }}
+                style={({ isActive }) =>
+                  isActive
+                    ? {
+                        backgroundColor: lightBlue[300],
+                        color: 'white',
+                      }
+                    : {
+                        color: grey[700],
+                      }
+                }
               >
                 <ListItemIcon
                   sx={{
                     minWidth: 0,
                     mr: open ? 2 : 'auto',
                     justifyContent: 'center',
+                    color: 'inherit',
                   }}
                 >
-                  <FontAwesomeIcon icon={r.icon} />
+                  <FontAwesomeIcon icon={r.icon} color="inherit" />
                 </ListItemIcon>
                 <ListItemText primary={r.name} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
