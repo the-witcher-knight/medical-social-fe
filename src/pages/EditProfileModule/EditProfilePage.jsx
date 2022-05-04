@@ -22,10 +22,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   marginBottom: theme.spacing(2),
 }));
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  marginBottom: theme.spacing(2),
-}));
-
 export default function EditProfilePage() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -70,19 +66,32 @@ export default function EditProfilePage() {
       return;
     }
 
-    formData.append('id', account.id);
+    // Add old data
+    Object.keys(account)
+      .filter(key => account[key] !== null && account[key] !== undefined)
+      .forEach(key => {
+        if (key === 'files') {
+          formData.append(key, account[key][0]);
+        } else if (key === 'createdDate' || key === 'lastModifiedDate') {
+          return; // ignore createdDate and lastModifiedDate
+        } else {
+          formData.append(key, account[key]);
+        }
+      });
 
+    // Add current role
+    formData.append('authorities', Array.of(userData.auth));
+
+    // update new data
     Object.keys(values)
       .filter(key => values[key] !== null && values[key] !== undefined)
       .forEach(key => {
         if (key === 'files') {
-          formData.append(key, values[key][0]);
-        } else if (key === 'activated') {
-          formData.append(key, !values[key]); // activated or inactivated
+          formData.set(key, values[key][0]);
         } else if (key === 'createdDate' || key === 'lastModifiedDate') {
           return; // ignore createdDate and lastModifiedDate
         } else {
-          formData.append(key, values[key]);
+          formData.set(key, values[key]);
         }
       });
 
