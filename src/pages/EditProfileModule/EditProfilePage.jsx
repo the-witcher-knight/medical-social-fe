@@ -1,5 +1,14 @@
 import React from 'react';
-import { styled, Paper, Box, TextField, InputBase, Button, LinearProgress } from '@mui/material';
+import {
+  styled,
+  Paper,
+  Box,
+  TextField,
+  InputBase,
+  Button,
+  LinearProgress,
+  Typography,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useForm, Controller } from 'react-hook-form';
@@ -8,9 +17,13 @@ import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { AuthorityConstant } from 'src/shared/authority-constant';
 import { toast } from 'react-toastify';
+import { blue } from '@mui/material/colors';
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
-  margin: theme.spacing(3),
+  marginTop: theme.spacing(3),
+  marginLeft: theme.spacing(5),
+  marginRight: theme.spacing(5),
+  marginBottom: theme.spacing(3),
   padding: theme.spacing(3),
 }));
 
@@ -24,12 +37,12 @@ const StyledButton = styled(Button)(({ theme }) => ({
 
 export default function EditProfilePage() {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
-  const location = useLocation();
   const userData = getUserAuthentication();
 
   const loading = useAppSelector(state => state.authentication.loading);
   const account = useAppSelector(state => state.authentication.account);
+  const updateSuccess = useAppSelector(state => state.authentication.updateSuccess);
+  const errorMessage = useAppSelector(state => state.authentication.errorMessage);
 
   React.useEffect(() => {
     dispatch(getAccount());
@@ -39,7 +52,6 @@ export default function EditProfilePage() {
     control,
     handleSubmit,
     formState: { errors },
-    register,
     reset,
   } = useForm({
     defaultValues: {
@@ -57,6 +69,18 @@ export default function EditProfilePage() {
       reset(account);
     }
   }, [account]);
+
+  React.useEffect(() => {
+    if (updateSuccess) {
+      toast.success('Update profile success');
+    }
+  }, [updateSuccess]);
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
 
   const onSubmit = values => {
     const formData = new FormData();
@@ -100,8 +124,18 @@ export default function EditProfilePage() {
 
   return (
     <StyledPaper elevation={3}>
+      <Typography variant="h5" component="h3" color={blue[400]}>
+        Profile Manager
+      </Typography>
       {loading && <LinearProgress />}
-      <Box component="form" display="flex" flexDirection="column" onSubmit={handleSubmit(onSubmit)}>
+
+      <Box
+        component="form"
+        display="flex"
+        flexDirection="column"
+        mt={3}
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {userData.auth === 'ROLE_PHARMACY' ? (
           <>
             <Controller
