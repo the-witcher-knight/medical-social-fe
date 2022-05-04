@@ -50,6 +50,7 @@ import {
   faTrash,
   faUser,
   faUserDoctor,
+  faUserEdit,
   faUsers,
   faUserShield,
   faVideo,
@@ -113,7 +114,8 @@ export const loadIcon = () => {
     faCircle,
     faCalendarDay,
     faTimes,
-    faInfoCircle
+    faInfoCircle,
+    faUserEdit
     // Add more icons here
   );
 };

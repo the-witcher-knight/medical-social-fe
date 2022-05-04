@@ -5,7 +5,6 @@ import { getAuthToken } from '../util/auth-util';
 import { serializeAxiosError } from './reducer.utils';
 
 export const AUTH_TOKEN_KEY = 'authToken';
-// eslint-disable-next-line no-undef
 const API_URL = process.env.API_URL;
 
 export const initialState = {
@@ -31,6 +30,17 @@ export const getAccount = createAsyncThunk(
         Authorization: `Bearer ${getAuthToken()}`,
       },
     });
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  'userManager/update_user',
+  async formData => {
+    const res = await axios.put(API_URL + '/admin/users', formData);
     return res.data;
   },
   {
