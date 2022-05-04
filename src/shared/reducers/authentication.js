@@ -40,7 +40,9 @@ export const getAccount = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   'userManager/update_user',
   async formData => {
-    const res = await axios.put(API_URL + '/admin/users', formData);
+    const res = await axios.put(API_URL + '/admin/users', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
     return res.data;
   },
   {
@@ -94,26 +96,6 @@ export const signup = createAsyncThunk(
       k === 'files' ? formData.append(k, user[k][0]) : formData.append(k, user[k])
     );
     axios.post(API_URL + '/admin/users', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    });
-  },
-  {
-    serializeError: serializeAxiosError,
-  }
-);
-
-/**
- * Edit user profile.
- * @param {object} user data.
- */
-export const editProfile = createAsyncThunk(
-  'authentication/edit_profile',
-  async user => {
-    const formData = new FormData();
-    Object.keys(user).forEach(k =>
-      k === 'files' ? formData.append(k, user[k][0]) : formData.append(k, user[k])
-    );
-    axios.put(API_URL + '/admin/users', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
   },
@@ -219,17 +201,17 @@ export const AuthenticationSlice = createSlice({
         state.loading = true;
         state.errorMessage = '';
       })
-      .addCase(editProfile.fulfilled, (state, action) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.loading = false;
         state.account = action.payload;
         state.updateSuccess = true;
       })
-      .addCase(editProfile.rejected, (state, action) => {
+      .addCase(updateUser.rejected, (state, action) => {
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = false;
       })
-      .addCase(editProfile.pending, state => {
+      .addCase(updateUser.pending, state => {
         state.loading = true;
         state.errorMessage = '';
         state.updateSuccess = null;

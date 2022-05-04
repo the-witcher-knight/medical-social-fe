@@ -1,11 +1,23 @@
 import React from 'react';
-import { styled, Paper, Typography, LinearProgress, Box } from '@mui/material';
+import {
+  styled,
+  Paper,
+  Typography,
+  LinearProgress,
+  Box,
+  InputBase,
+  Button,
+  Divider,
+} from '@mui/material';
 import { blue } from '@mui/material/colors';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import { getAccount } from 'src/shared/reducers/authentication';
+import { getAccount, updateUser } from 'src/shared/reducers/authentication';
 import Zoom from 'react-img-zoom';
 import axios from 'axios';
+import { useForm } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { toast } from 'react-toastify';
 
 const API_URL = process.env.API_URL;
 
@@ -29,18 +41,82 @@ export default function DegreeManager() {
 
   const [degreeUrl, setDegreeUrl] = React.useState();
 
+  const {
+    handleSubmit,
+    register,
+    control,
+    formState: { errors },
+    resetField,
+  } = useForm({
+    defaultValues: {
+      files: '', // for doctor degree
+    },
+  });
+
+  const userData = getUserAuthentication();
+
   const loading = useAppSelector(state => state.authentication.loading);
   const doctorAccount = useAppSelector(state => state.authentication.account);
+  const updateSuccess = useAppSelector(state => state.authentication.updateSuccess);
+  const errorMessage = useAppSelector(state => state.authentication.errorMessage);
 
   React.useEffect(() => {
-    dispatch(getAccount());
+    dispatch(getAccount()).then(resAccount => {
+      const id = resAccount.payload.id;
+      getDegreeDoctor(id).then(res => {
+        setDegreeUrl(res);
+      });
+    });
   }, []);
 
   React.useEffect(() => {
-    if (doctorAccount) {
-      dispatch(getDegreeDoctor(doctorAccount.id)).then(res => setDegreeUrl(res.payload));
+    if (updateSuccess) {
+      toast.success('Update profile success');
+      dispatch(getAccount()).then(resAccount => {
+        const id = resAccount.payload.id;
+        getDegreeDoctor(id).then(res => {
+          setDegreeUrl(res);
+        });
+      });
     }
-  }, [doctorAccount]);
+  }, [updateSuccess]);
+
+  React.useEffect(() => {
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
+
+  const onSubmit = values => {
+    if (!doctorAccount || !userData) {
+      toast.warn('Something wrong, please login again');
+      return;
+    }
+    // eslint-disable-next-line no-debugger
+    debugger;
+
+    const formData = new FormData();
+
+    // Add old data
+    Object.keys(doctorAccount)
+      .filter(key => doctorAccount[key] !== null && doctorAccount[key] !== undefined)
+      .forEach(key => {
+        if (key === 'createdDate' || key === 'lastModifiedDate') {
+          return; // ignore createdDate and lastModifiedDate
+        } else {
+          formData.append(key, doctorAccount[key]);
+        }
+      });
+
+    // Add current role
+    formData.append('authorities', Array.of(userData.auth));
+
+    // formData.append('deletedFile');
+    // Add current doctor degree
+    formData.append('files', values.files[0]);
+
+    dispatch(updateUser(formData));
+  };
 
   return (
     <StyledPaper elevation={3}>
@@ -48,18 +124,44 @@ export default function DegreeManager() {
         Degree Manager
       </StyledTitle>
       {loading && <LinearProgress />}
-      <Box component="div">
-        {degreeUrl && degreeUrl !== '' ? (
-          <Zoom
-            img={'http://localhost:8080/files/' + degreeUrl}
-            zoomScale={3}
-            width={600}
-            height={600}
-            loading="lazy"
-          />
-        ) : (
-          <LinearProgress />
-        )}
+      <Box
+        component="div"
+        display="flex"
+        flexDirection={{ xs: 'column', md: 'row' }}
+        justifyContent="center"
+      >
+        <Box component="div" m={1} p={1}>
+          {degreeUrl ? (
+            <Zoom
+              img={'http://localhost:8080/files/' + degreeUrl}
+              zoomScale={3}
+              width={500}
+              height={500}
+              loading="lazy"
+            />
+          ) : (
+            <LinearProgress />
+          )}
+        </Box>
+        <Divider orientation="vertical" flexItem />
+        <Box
+          component="div"
+          m={1}
+          p={1}
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+        >
+          <Box component="form" onSubmit={handleSubmit(onSubmit)} mb={3}>
+            <InputBase fullWidth label="Degree" name="files" type="file" {...register('files')} />
+            <Box mt={2}>
+              <Button variant="contained" color="primary" type="submit" disabled={loading}>
+                <FontAwesomeIcon icon="save" />
+                &nbsp;Update
+              </Button>
+            </Box>
+          </Box>
+        </Box>
       </Box>
     </StyledPaper>
   );
