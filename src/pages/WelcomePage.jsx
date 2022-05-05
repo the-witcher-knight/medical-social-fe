@@ -1,4 +1,4 @@
-import { Box, Button, Paper, Typography, Link as MuiLink, styled } from '@mui/material';
+import { Box, Paper, Typography, Link as MuiLink, styled } from '@mui/material';
 import React from 'react';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { Link } from 'react-router-dom';
