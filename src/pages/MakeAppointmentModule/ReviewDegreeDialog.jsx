@@ -11,10 +11,10 @@ export default function ReviewDegreeDialog() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(true);
-  const [degreeUrl, setDegreeUrl] = useState('');
+  const [degree, setDegree] = useState();
 
   useEffect(() => {
-    dispatch(getDegreeDoctor(doctorId)).then(res => setDegreeUrl(res.payload.data));
+    dispatch(getDegreeDoctor(doctorId)).then(res => setDegree(res.payload.data));
   }, []);
 
   const handleClose = () => {
@@ -44,9 +44,9 @@ export default function ReviewDegreeDialog() {
           p: 4,
         }}
       >
-        {degreeUrl && degreeUrl !== '' ? (
+        {degree && degree.path !== '' ? (
           <Zoom
-            img={'http://localhost:8080/files/' + degreeUrl}
+            img={'http://localhost:8080/files/' + degree.path}
             zoomScale={3}
             width={600}
             height={600}
