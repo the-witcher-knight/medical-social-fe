@@ -39,7 +39,7 @@ const getDegreeDoctor = async doctorId => {
 export default function DegreeManager() {
   const dispatch = useAppDispatch();
 
-  const [degreeUrl, setDegreeUrl] = React.useState();
+  const [degree, setDegree] = React.useState();
 
   const {
     handleSubmit,
@@ -64,7 +64,7 @@ export default function DegreeManager() {
     dispatch(getAccount()).then(resAccount => {
       const id = resAccount.payload.id;
       getDegreeDoctor(id).then(res => {
-        setDegreeUrl(res);
+        setDegree(res);
       });
     });
   }, []);
@@ -75,7 +75,7 @@ export default function DegreeManager() {
       dispatch(getAccount()).then(resAccount => {
         const id = resAccount.payload.id;
         getDegreeDoctor(id).then(res => {
-          setDegreeUrl(res);
+          setDegree(res);
         });
       });
     }
@@ -111,7 +111,7 @@ export default function DegreeManager() {
     // Add current role
     formData.append('authorities', Array.of(userData.auth));
 
-    // formData.append('deletedFile');
+    formData.append('deletedFiles', degree);
     // Add current doctor degree
     formData.append('files', values.files[0]);
 
@@ -131,9 +131,9 @@ export default function DegreeManager() {
         justifyContent="center"
       >
         <Box component="div" m={1} p={1}>
-          {degreeUrl ? (
+          {degree ? (
             <Zoom
-              img={'http://localhost:8080/files/' + degreeUrl}
+              img={'http://localhost:8080/files/' + degree.path}
               zoomScale={3}
               width={500}
               height={500}
