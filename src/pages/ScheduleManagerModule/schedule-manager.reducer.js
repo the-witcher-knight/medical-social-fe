@@ -14,6 +14,7 @@ const initialState = {
   loading: false,
   scheduleList: [],
   schedule: null, // Or schedule data
+  patientData: null,
   errorMessage: null,
   updateSuccess: null,
 };
@@ -22,6 +23,17 @@ export const getPatientSchedules = createAsyncThunk(
   'scheduleManager/fetch_schedule_by_patient_login',
   async login => {
     const res = await axios.get(`${API_URL}/examination-schedules/user/${login}`);
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
+export const getPatientData = createAsyncThunk(
+  'scheduleManager/fetch_patient_data',
+  async patientId => {
+    const res = await axios.get(`${API_URL}/admin/users/id/${patientId}`);
     return res.data;
   },
   {
@@ -87,7 +99,6 @@ const scheduleManageSlice = createSlice({
   reducers: {},
   extraReducers(builder) {
     builder
-
       .addCase(getSchedule.fulfilled, (state, action) => {
         state.schedule = action.payload;
         state.loading = false;
@@ -113,6 +124,18 @@ const scheduleManageSlice = createSlice({
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = false;
+      })
+      .addCase(getPatientData.fulfilled, (state, action) => {
+        state.patientData = action.payload;
+        state.loading = false;
+      })
+      .addCase(getPatientData.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+      })
+      .addCase(getPatientData.rejected, (state, action) => {
+        state.errorMessage = action.error.message || 'Internal server error';
+        state.loading = false;
       })
       .addCase(deleteSchedule.fulfilled, (state, action) => {
         state.loading = false;

@@ -99,6 +99,12 @@ export default function ScheduleTooltip({ appointmentData, formatDate, editable 
     });
   };
 
+  const onReviewMedicalRecord = () => {
+    navigate(`/schedule-manager/review-medical-record/${appointmentData.patient.id}`, {
+      state: { backgroundLocation: location },
+    });
+  };
+
   const onDeleteSchedule = () => {
     navigate(`/schedule-manager/delete/${appointmentData.id}`, {
       state: { backgroundLocation: location },
@@ -160,6 +166,11 @@ export default function ScheduleTooltip({ appointmentData, formatDate, editable 
               &nbsp;CONFIRM
             </Button>
           )}
+          &nbsp;
+          <Button variant="outlined" size="small" color="secondary" onClick={onReviewMedicalRecord}>
+            <FontAwesomeIcon icon="eye" />
+            &nbsp;Review Medical Record
+          </Button>
           &nbsp;
           <Button variant="outlined" size="small" color="error" onClick={onDeleteSchedule}>
             <FontAwesomeIcon icon="trash" />
