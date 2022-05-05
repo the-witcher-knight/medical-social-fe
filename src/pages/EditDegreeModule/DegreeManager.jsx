@@ -111,7 +111,7 @@ export default function DegreeManager() {
     // Add current role
     formData.append('authorities', Array.of(userData.auth));
 
-    formData.append('deletedFiles', degree);
+    if (degree) formData.append('deletedFiles[0].id', degree.id);
     // Add current doctor degree
     formData.append('files', values.files[0]);
 
