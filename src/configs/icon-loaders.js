@@ -109,7 +109,6 @@ export const loadIcon = () => {
     faUsers,
     faWrench,
     faCapsules,
-    faFileMedical,
     faVideo,
     faClock,
     faCircle,
@@ -117,7 +116,8 @@ export const loadIcon = () => {
     faTimes,
     faInfoCircle,
     faUserEdit,
-    faGraduationCap
+    faGraduationCap,
+    faFileMedical
     // Add more icons here
   );
 };

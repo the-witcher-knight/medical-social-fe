@@ -95,16 +95,22 @@ const SideBar = ({ open, handleClose }) => {
       role: [AuthorityConstant.ADMIN],
     },
     {
-      path: '/edit-profile',
-      name: 'Edit Profile',
-      icon: 'user-edit',
-      role: AuthorityConstant.ALL,
-    },
-    {
       path: '/degree-manager',
       name: 'Degree Manager',
       icon: 'graduation-cap',
       role: [AuthorityConstant.DOCTOR],
+    },
+    {
+      path: '/medical-record-manager',
+      name: 'Medical Record Manager',
+      icon: 'file-medical',
+      role: [AuthorityConstant.USER, AuthorityConstant.ADMIN],
+    },
+    {
+      path: '/edit-profile',
+      name: 'Edit Profile',
+      icon: 'user-edit',
+      role: AuthorityConstant.ALL,
     },
   ];
 
