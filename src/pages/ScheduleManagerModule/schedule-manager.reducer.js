@@ -17,6 +17,7 @@ const initialState = {
   patientData: null,
   errorMessage: null,
   updateSuccess: null,
+  prescriptionSuccess: null,
 };
 
 export const getPatientSchedules = createAsyncThunk(
@@ -93,6 +94,17 @@ export const deleteSchedule = createAsyncThunk(
   }
 );
 
+export const createPrescription = createAsyncThunk(
+  'schedule_manager/create_prescription',
+  async prescription => {
+    const res = await axios.post(`${API_URL}/prescriptions`, prescription);
+    return res.data;
+  },
+  {
+    serializeError: serializeAxiosError,
+  }
+);
+
 const scheduleManageSlice = createSlice({
   name: 'schedule_manager',
   initialState,
@@ -151,10 +163,25 @@ const scheduleManageSlice = createSlice({
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = false;
       })
+      .addCase(createPrescription.fulfilled, (state, action) => {
+        state.loading = false;
+        state.prescriptionSuccess = true;
+      })
+      .addCase(createPrescription.pending, state => {
+        state.loading = true;
+        state.errorMessage = null;
+        state.prescriptionSuccess = null;
+      })
+      .addCase(createPrescription.rejected, (state, action) => {
+        state.loading = false;
+        state.errorMessage = action.error.message || 'Internal server error';
+        state.prescriptionSuccess = false;
+      })
       .addMatcher(isFulfilled(getDoctorSchedules, getPatientSchedules), (state, action) => {
         state.scheduleList = action.payload;
         state.loading = false;
         state.updateSuccess = null;
+        state.prescriptionSuccess = null;
       })
       .addMatcher(isPending(getDoctorSchedules, getPatientSchedules), state => {
         state.loading = true;
@@ -164,6 +191,7 @@ const scheduleManageSlice = createSlice({
         state.loading = false;
         state.errorMessage = action.error.message || 'Internal server error';
         state.updateSuccess = null;
+        state.prescriptionSuccess = null;
       });
   },
 });

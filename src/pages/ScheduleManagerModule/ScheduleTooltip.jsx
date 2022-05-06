@@ -111,6 +111,12 @@ export default function ScheduleTooltip({ appointmentData, formatDate, editable 
     });
   };
 
+  const onWritePrescription = () => {
+    navigate(`/schedule-manager/write-prescription/${appointmentData.id}`, {
+      state: { backgroundLocation: location },
+    });
+  };
+
   return (
     <StyledTooltipContent className={classes.content} color={lightBlue}>
       <Grid container alignItems="flex-start" className={classes.titleContainer}>
@@ -160,16 +166,21 @@ export default function ScheduleTooltip({ appointmentData, formatDate, editable 
           }}
           className={classes.contentContainer}
         >
+          <Button variant="outlined" size="small" color="primary" onClick={onReviewMedicalRecord}>
+            <FontAwesomeIcon icon="eye" />
+            &nbsp;View
+          </Button>
+          &nbsp;
           {appointmentData && appointmentData.status !== 'CONFIRMED' && (
-            <Button variant="outlined" size="small" color="primary" onClick={onConfirmSchedule}>
+            <Button variant="outlined" size="small" color="secondary" onClick={onConfirmSchedule}>
               <FontAwesomeIcon icon="check" />
               &nbsp;CONFIRM
             </Button>
           )}
           &nbsp;
-          <Button variant="outlined" size="small" color="secondary" onClick={onReviewMedicalRecord}>
-            <FontAwesomeIcon icon="eye" />
-            &nbsp;Review Medical Record
+          <Button variant="outlined" size="small" color="secondary" onClick={onWritePrescription}>
+            <FontAwesomeIcon icon="trash" />
+            &nbsp;Prescription
           </Button>
           &nbsp;
           <Button variant="outlined" size="small" color="error" onClick={onDeleteSchedule}>

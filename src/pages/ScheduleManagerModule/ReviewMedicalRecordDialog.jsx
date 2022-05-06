@@ -12,13 +12,14 @@ import { blue } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
+import { camelCaseToTitleCase } from 'src/shared/util/string-util';
 import { getPatientData } from './schedule-manager.reducer';
 
 const MedicalRecordDisplay = ({ medicalRecord }) => (
   <List>
     {Object.keys(medicalRecord).map(key => (
       <ListItem key={key}>
-        <ListItemText primary={key} secondary={medicalRecord[key]} />
+        <ListItemText primary={camelCaseToTitleCase(key)} secondary={medicalRecord[key]} />
       </ListItem>
     ))}
   </List>
