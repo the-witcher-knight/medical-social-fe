@@ -184,7 +184,7 @@ export const AuthenticationSlice = createSlice({
       })
       .addCase(signup.pending, state => {
         state.loading = true;
-        state.errorMessage = '';
+        state.errorMessage = null;
         state.signup = null;
       })
       .addCase(getAccount.fulfilled, (state, action) => {
