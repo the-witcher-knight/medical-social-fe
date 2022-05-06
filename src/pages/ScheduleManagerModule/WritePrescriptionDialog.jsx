@@ -51,12 +51,12 @@ export default function WritePrescriptionDialog() {
   });
 
   const onSubmit = values => {
+    const content = values.content;
     const prescription = {
-      content: JSON.stringify(values),
+      content: JSON.stringify(content),
       doctor: { id: schedule.doctor.id },
       patient: { id: schedule.user.id },
     };
-    console.log(prescription);
     dispatch(createPrescription(prescription));
   };
 

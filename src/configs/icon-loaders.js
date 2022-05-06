@@ -21,6 +21,7 @@ import {
   faEnvelope,
   faEye,
   faFileMedical,
+  faFilePrescription,
   faGraduationCap,
   faHeart,
   faHouse,
@@ -117,7 +118,8 @@ export const loadIcon = () => {
     faInfoCircle,
     faUserEdit,
     faGraduationCap,
-    faFileMedical
+    faFileMedical,
+    faFilePrescription
     // Add more icons here
   );
 };

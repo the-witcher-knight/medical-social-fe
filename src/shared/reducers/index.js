@@ -5,6 +5,7 @@ import message from 'src/pages/MessageModule/message.reducer';
 import pharmacyMedicine from 'src/pages/MedicineModule/pharmacy-medicine.reducer';
 import scheduleManager from 'src/pages/ScheduleManagerModule/schedule-manager.reducer';
 import makeAppointment from 'src/pages/MakeAppointmentModule/make-appointment.reducer';
+import prescriptionManager from 'src/pages/PrescriptionManagerModule/prescription-manager.reducer';
 
 const rootReducer = {
   loadingBar,
@@ -14,6 +15,7 @@ const rootReducer = {
   authentication,
   userManager,
   message,
+  prescriptionManager,
 };
 
 export default rootReducer;

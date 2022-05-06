@@ -107,6 +107,12 @@ const SideBar = ({ open, handleClose }) => {
       role: [AuthorityConstant.USER, AuthorityConstant.ADMIN],
     },
     {
+      path: '/prescription-manager',
+      name: 'Prescription Manager',
+      icon: 'file-prescription',
+      role: [AuthorityConstant.USER],
+    },
+    {
       path: '/edit-profile',
       name: 'Edit Profile',
       icon: 'user-edit',

@@ -31,6 +31,11 @@ import { router as DegreeManagerRouter } from 'src/pages/EditDegreeModule';
 
 import { router as MedicalRecordManagerRouter } from 'src/pages/MedicalRecordManageModule';
 
+import {
+  router as PrescriptionManagerRouter,
+  modalRouter as PrescriptionManagerModalRouter,
+} from 'src/pages/PrescriptionManagerModule';
+
 const Main = React.lazy(() => import('src/shared/layouts/main-layout'));
 
 const Logout = React.lazy(() => import('src/shared/components/LogoutModal'));
@@ -59,6 +64,7 @@ export const routes = [
       ...EditProfileRouter,
       ...DegreeManagerRouter,
       ...MedicalRecordManagerRouter,
+      ...PrescriptionManagerRouter,
       // Add more routes here
     ],
   },
@@ -70,6 +76,7 @@ export const modalRoutes = [
   ...ScheduleManagerModalRouter,
   ...MakeAppointmentModalRouter,
   ...MedicineManagerModalRouter,
+  ...PrescriptionManagerModalRouter,
 ];
 
 export default function RouterProvider() {
