@@ -125,7 +125,7 @@ export default function AdminPage() {
   const onReviewDegree = values => {
     if (values) {
       dispatch(getDegreeDoctor(values.id)).then(res => {
-        window.open('http://localhost:8080/files/' + res.payload.data, '_blank');
+        window.open('http://localhost:8080/files/' + res.payload.path, '_blank');
       });
     }
   };
