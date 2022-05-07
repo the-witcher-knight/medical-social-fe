@@ -91,7 +91,7 @@ export default function PrescriptionManager() {
   );
 
   return (
-    <Paper sx={{ padding: 2, flexGrow: 3 }}>
+    <Paper sx={{ marginTop: 5, padding: 2, flexGrow: 3 }}>
       <Typography variant="h5" component="h3" color={blue[400]}>
         My Prescriptions
       </Typography>

@@ -109,8 +109,8 @@ export default function DoctorSchedule() {
           onCurrentViewNameChange={setCurrentViewName}
         />
 
-        <DayView startDayHour={7.5} endDayHour={17.5} />
-        <WeekView startDayHour={7.5} endDayHour={17.5} />
+        <DayView startDayHour={7} endDayHour={19} />
+        <WeekView startDayHour={7} endDayHour={19} />
         <Appointments />
         <Toolbar {...(loading ? { rootComponent: ToolbarWithLoading } : null)} />
         <DateNavigator />
