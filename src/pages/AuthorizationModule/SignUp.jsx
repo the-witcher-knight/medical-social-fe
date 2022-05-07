@@ -24,6 +24,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { toast } from 'react-toastify';
 import { reset, signup } from 'src/shared/reducers/authentication';
+import { AuthorityConstant } from 'src/shared/authority-constant';
 
 const theme = createTheme();
 
@@ -47,7 +48,7 @@ export default () => {
       login: '',
       password: '',
       medicalRecord: '',
-      authority: '',
+      authority: AuthorityConstant.USER,
       confirmPassword: '',
       files: '', // for doctor degree
       pharmacyName: '',
@@ -139,9 +140,6 @@ export default () => {
                         label="Authority"
                         error={!!errors.authority}
                       >
-                        <MenuItem value="">
-                          <em>None</em>
-                        </MenuItem>
                         <MenuItem value={'ROLE_USER'}>User</MenuItem>
                         <MenuItem value={'ROLE_DOCTOR'}>Doctor</MenuItem>
                         <MenuItem value={'ROLE_PHARMACY'}>Pharmacy Manager</MenuItem>
@@ -235,26 +233,6 @@ export default () => {
                     name="files"
                     type="file"
                     {...register('files')}
-                  />
-                </Grid>
-              )}
-
-              {watchAuthority === 'ROLE_USER' && (
-                <Grid item xs={12}>
-                  <Controller
-                    control={control}
-                    name="medicalRecord"
-                    render={({ field }) => (
-                      <TextField
-                        fullWidth
-                        label="Medical Record"
-                        multiline
-                        maxRows={10}
-                        error={!!errors.medicalRecord}
-                        helperText={errors.medicalRecord && 'Please enter your medical record'}
-                        {...field}
-                      />
-                    )}
                   />
                 </Grid>
               )}
