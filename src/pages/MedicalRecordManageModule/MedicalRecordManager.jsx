@@ -119,7 +119,7 @@ export default function MedicalRecordManager() {
           <Controller
             control={control}
             name="testResults"
-            render={({ field }) => <StyledTextField fullWidth label="testResults" {...field} />}
+            render={({ field }) => <StyledTextField fullWidth label="Test Results" {...field} />}
           />
 
           <Controller
