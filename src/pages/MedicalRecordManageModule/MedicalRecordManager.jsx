@@ -40,15 +40,9 @@ export default function MedicalRecordManager() {
     }
   }, [errorMessage]);
 
-  const { handleSubmit, control, reset } = useForm({
-    defaultValues: {
-      diagnose: '', // Chuẩn đoán
-      pathologicalProcess: '', // Quá trình bệnh lý
-      treatments: '', // Phương pháp điều trị
-      testResults: '', // Kết quả xét nghiệm
-      note: '', // Ghi chú
-    },
-  });
+  useEffect(() => {
+    dispatch(getAccount());
+  }, []);
 
   useEffect(() => {
     if (account && account.medicalRecord) {
@@ -61,6 +55,16 @@ export default function MedicalRecordManager() {
       }
     }
   }, [account]);
+
+  const { handleSubmit, control, reset } = useForm({
+    defaultValues: {
+      diagnose: '', // Chuẩn đoán
+      pathologicalProcess: '', // Quá trình bệnh lý
+      treatments: '', // Phương pháp điều trị
+      testResults: '', // Kết quả xét nghiệm
+      note: '', // Ghi chú
+    },
+  });
 
   const onSubmit = values => {
     if (!account || !userData) {
