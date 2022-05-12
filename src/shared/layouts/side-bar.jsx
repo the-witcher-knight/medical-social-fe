@@ -83,6 +83,12 @@ const SideBar = ({ open, handleClose }) => {
       role: [AuthorityConstant.USER, AuthorityConstant.ADMIN],
     },
     {
+      path: '/pharmacy',
+      name: 'Pharmacy',
+      icon: 'pills',
+      role: [AuthorityConstant.USER, AuthorityConstant.ADMIN],
+    },
+    {
       path: '/medicine-manager',
       name: 'Medicine Manager',
       icon: 'capsules',
