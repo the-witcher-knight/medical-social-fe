@@ -18,8 +18,9 @@ import axios from 'axios';
 import { useForm } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { toast } from 'react-toastify';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
-const API_URL = process.env.API_URL;
+const API_URL = ApiSingleton.getInstance().instance.apiUrl;
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   margin: theme.spacing(3),

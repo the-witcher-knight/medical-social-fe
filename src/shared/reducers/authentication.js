@@ -1,11 +1,12 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import { ApiSingleton } from 'src/configs/singleton-api';
 import { StorageAPI } from 'src/shared/util/storage-util';
 import { getAuthToken } from '../util/auth-util';
 import { serializeAxiosError } from './reducer.utils';
 
 export const AUTH_TOKEN_KEY = 'authToken';
-const API_URL = process.env.API_URL;
+const API_URL = ApiSingleton.getInstance().instance.apiUrl;
 
 export const initialState = {
   loading: false,
