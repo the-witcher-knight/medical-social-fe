@@ -35,8 +35,10 @@ export default function MedicalRecordManager() {
   );
 
   useEffect(() => {
-    dispatch(getAccount());
-  }, []);
+    if (errorMessage) {
+      toast.error(errorMessage);
+    }
+  }, [errorMessage]);
 
   const { handleSubmit, control, reset } = useForm({
     defaultValues: {
@@ -50,7 +52,13 @@ export default function MedicalRecordManager() {
 
   useEffect(() => {
     if (account && account.medicalRecord) {
-      reset(JSON.parse(account.medicalRecord));
+      try {
+        const data = JSON.parse(account.medicalRecord);
+        reset(data);
+        return;
+      } catch (e) {
+        toast.error('Error: ', e);
+      }
     }
   }, [account]);
 
