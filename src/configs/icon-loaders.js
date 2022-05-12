@@ -34,6 +34,7 @@ import {
   faPaw,
   faPen,
   faPencilAlt,
+  faPills,
   faPlay,
   faPlus,
   faRightToBracket,
@@ -119,7 +120,8 @@ export const loadIcon = () => {
     faUserEdit,
     faGraduationCap,
     faFileMedical,
-    faFilePrescription
+    faFilePrescription,
+    faPills
     // Add more icons here
   );
 };

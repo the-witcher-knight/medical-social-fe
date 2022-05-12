@@ -31,6 +31,8 @@ import { router as DegreeManagerRouter } from 'src/pages/EditDegreeModule';
 
 import { router as MedicalRecordManagerRouter } from 'src/pages/MedicalRecordManageModule';
 
+import { router as PharmacyViewRouter } from 'src/pages/PharmacyViewModule';
+
 import {
   router as PrescriptionManagerRouter,
   modalRouter as PrescriptionManagerModalRouter,
@@ -65,6 +67,7 @@ export const routes = [
       ...DegreeManagerRouter,
       ...MedicalRecordManagerRouter,
       ...PrescriptionManagerRouter,
+      ...PharmacyViewRouter,
       // Add more routes here
     ],
   },
