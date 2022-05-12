@@ -13,19 +13,19 @@ const initialState = {
 
 const apiUrl = process.env.API_URL;
 
-const configs = {
+const getConfigs = () => ({
   headers: {
     'Content-Type': 'application/json',
     Authorization: `Bearer ${getAuthToken()}`,
   },
-};
+});
 
 // Actions
 
 export const getAllMedicineOfPharmacy = createAsyncThunk(
   'pharmacy_medicine/fetch_all_medicine_of_pharmacy',
   async () => {
-    const res = await axios.get(`${apiUrl}/pharmacy-medicines/`, configs);
+    const res = await axios.get(`${apiUrl}/pharmacy-medicines/`, getConfigs());
     return res.data;
   },
   {
@@ -36,7 +36,7 @@ export const getAllMedicineOfPharmacy = createAsyncThunk(
 export const getMedicine = createAsyncThunk(
   'pharmacy_medicine/fetch_medicine',
   async medicineId => {
-    const res = await axios.get(`${apiUrl}/pharmacy-medicines/${medicineId}`, configs);
+    const res = await axios.get(`${apiUrl}/pharmacy-medicines/${medicineId}`, getConfigs());
     return res.data;
   },
   {
@@ -47,7 +47,7 @@ export const getMedicine = createAsyncThunk(
 export const createMedicine = createAsyncThunk(
   'pharmacy_medicine/create_medicine',
   async medicine => {
-    const res = await axios.post(`${apiUrl}/pharmacy-medicines`, medicine, configs);
+    const res = await axios.post(`${apiUrl}/pharmacy-medicines`, medicine, getConfigs());
     return res.data;
   },
   {
@@ -58,7 +58,11 @@ export const createMedicine = createAsyncThunk(
 export const updateMedicine = createAsyncThunk(
   'pharmacy_medicine/update_medicine',
   async medicine => {
-    const res = await axios.put(`${apiUrl}/pharmacy-medicines/${medicine.id}`, medicine, configs);
+    const res = await axios.put(
+      `${apiUrl}/pharmacy-medicines/${medicine.id}`,
+      medicine,
+      getConfigs()
+    );
     return res.data;
   },
   {
@@ -69,7 +73,7 @@ export const updateMedicine = createAsyncThunk(
 export const deleteMedicine = createAsyncThunk(
   'pharmacy_medicine/delete_medicine',
   async medicineId => {
-    const res = await axios.delete(`${apiUrl}/pharmacy-medicines/${medicineId}`, configs);
+    const res = await axios.delete(`${apiUrl}/pharmacy-medicines/${medicineId}`, getConfigs());
     return res.data;
   },
   {

@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllMedicineOfPharmacy } from './pharmacy-medicine.reducer';
-import { lightBlue } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 
 export default function MedicineList() {
   const dispatch = useAppDispatch();
@@ -146,8 +146,8 @@ export default function MedicineList() {
 
   return (
     <Paper sx={{ padding: 2, flexGrow: 3 }}>
-      <Typography variant="h5" component="h3" color={lightBlue[800]} gutterBottom>
-        Activated Doctor
+      <Typography variant="h5" component="h3" color={blue[400]} gutterBottom>
+        Medicine List
       </Typography>
       <Divider />
       <div style={{ height: 600, width: '100%' }}>
