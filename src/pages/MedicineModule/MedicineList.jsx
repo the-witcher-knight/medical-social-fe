@@ -7,11 +7,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getAllMedicineOfPharmacy } from './pharmacy-medicine.reducer';
 import { blue } from '@mui/material/colors';
+import { DataGridBuilder } from 'src/shared/components/DataGridBuilder';
 
 export default function MedicineList() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const medicineDataGridBuilder = new DataGridBuilder();
 
   const loading = useAppSelector(state => state.pharmacyMedicine.loading);
   const medicineList = useAppSelector(state => state.pharmacyMedicine.medicineList);
@@ -101,10 +104,6 @@ export default function MedicineList() {
 
   const toolbarItems = ({ apiRef }) => (
     <>
-      <Divider
-        orientation="vertical"
-        sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
-      />
       <Tooltip title="View medicine">
         <Button
           color="primary"
@@ -151,14 +150,11 @@ export default function MedicineList() {
       </Typography>
       <Divider />
       <div style={{ height: 600, width: '100%' }}>
-        <UserTableManager
-          rows={medicineList}
-          columns={columns}
-          otherToolbarItems={toolbarItems}
-          nextPage={nextPage}
-          loading={loading}
-          sx={{ border: 'none' }}
-        />
+        {medicineDataGridBuilder
+          .withBasic(columns, medicineList, loading, { border: 'none' })
+          .withLoadingOverlay()
+          .withToolbar(true, toolbarItems)
+          .getComponent()}
       </div>
     </Paper>
   );

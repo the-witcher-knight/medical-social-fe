@@ -7,13 +7,16 @@ import UserTableManager from 'src/shared/components/UserTableManager';
 import { toast } from 'react-toastify';
 import { getDoctors, getAllChatRoom, createChatRoom } from './make-appointment.reducer';
 import { lightBlue } from '@mui/material/colors';
+import { DataGridBuilder } from 'src/shared/components/DataGridBuilder';
 
 const DoctorList = () => {
   const dispatch = useAppDispatch();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isLoading = useAppSelector(state => state.makeAppointment.loading);
+  const doctorDataGridBuilder = new DataGridBuilder();
+
+  const loading = useAppSelector(state => state.makeAppointment.loading);
   const doctorList = useAppSelector(state => state.makeAppointment.doctorList);
   const chatRoomList = useAppSelector(state => state.makeAppointment.chatRoomList);
   const createdChatRoom = useAppSelector(state => state.makeAppointment.createdChatRoom);
@@ -118,10 +121,6 @@ const DoctorList = () => {
 
   const DoctorListToolbarItems = ({ apiRef }) => (
     <>
-      <Divider
-        orientation="vertical"
-        sx={{ margin: 1, borderColor: 'text.secondary', minHeight: '10px' }}
-      />
       <Tooltip title="Review Degree of selected doctor">
         <Button
           color="info"
@@ -165,14 +164,11 @@ const DoctorList = () => {
       </Typography>
       <Divider sx={{ marginTop: 2 }} />
       <div style={{ height: 600, width: '100%' }}>
-        <UserTableManager
-          sx={{ border: 'none' }}
-          columns={columns}
-          rows={rows}
-          loading={isLoading}
-          nextPage={nextPage}
-          otherToolbarItems={DoctorListToolbarItems}
-        />
+        {doctorDataGridBuilder
+          .withBasic(columns, rows, loading, { border: 'none' })
+          .withLoadingOverlay()
+          .withToolbar(false, DoctorListToolbarItems)
+          .getComponent()}
       </div>
     </Paper>
   );
