@@ -47,7 +47,7 @@ export default function ReviewDegreeDialog() {
       >
         {degree && degree.path !== '' ? (
           <Zoom
-            img={`${ApiSingleton.getInstance().instance.hostUrl}/files/${degree.path}`}
+            img={`${ApiSingleton.getInstance().instance.baseUrl}/files/${degree.path}`}
             zoomScale={3}
             width={600}
             height={600}
