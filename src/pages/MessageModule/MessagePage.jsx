@@ -61,7 +61,7 @@ const MessagePage = () => {
     if (sendInfo && sendInfo.from) {
       // return new WebSocket('ws://localhost:8080/videochat/' + sendInfo.from);
       return new WebSocket(
-        `ws://${ApiSingleton.getInstance().instance.host}/videochat/${sendInfo.from}`
+        `wss://${ApiSingleton.getInstance().instance.host}/videochat/${sendInfo.from}`
       );
     } else {
       return null;
@@ -180,7 +180,7 @@ const MessagePage = () => {
             justifyContent="left"
             justifyItems="left"
           >
-            <IconButton color="info" onClick={makeCall} disabled={!activeCallButton}>
+            <IconButton color="info" onClick={makeCall}>
               <FontAwesomeIcon icon="video" />
             </IconButton>
           </Box>

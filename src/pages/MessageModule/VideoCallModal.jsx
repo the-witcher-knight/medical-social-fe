@@ -21,7 +21,7 @@ export default function VideoCall() {
 
   // const socket = new WebSocket('ws://localhost:8080/videochat/' + from);
   const socket = new WebSocket(
-    `ws://${ApiSingleton.getInstance().instance.host}/videochat/${from}`
+    `wss://${ApiSingleton.getInstance().instance.host}/videochat/${from}`
   );
 
   const videoSelf = useRef(null);
