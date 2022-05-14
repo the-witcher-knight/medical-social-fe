@@ -134,7 +134,7 @@ export default function DegreeManager() {
         <Box component="div" m={1} p={1}>
           {degree ? (
             <Zoom
-              img={'http://localhost:8080/files/' + degree.path}
+              img={`${ApiSingleton.getInstance().instance.baseUrl}/files/${degree.path}`}
               zoomScale={3}
               width={500}
               height={500}

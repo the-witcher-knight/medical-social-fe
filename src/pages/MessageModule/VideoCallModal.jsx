@@ -5,6 +5,7 @@ import SimplePeer from 'simple-peer';
 import { ConnectionStatus } from './constant';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { setConnectionStatus } from './message.reducer';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
 export default function VideoCall() {
   const dispatch = useAppDispatch();
@@ -18,7 +19,10 @@ export default function VideoCall() {
 
   const { from, to } = useParams();
 
-  const socket = new WebSocket('ws://localhost:8080/videochat/' + from);
+  // const socket = new WebSocket('ws://localhost:8080/videochat/' + from);
+  const socket = new WebSocket(
+    `ws://${ApiSingleton.getInstance().instance.host}/videochat/${from}`
+  );
 
   const videoSelf = useRef(null);
   const videoCaller = useRef(null);

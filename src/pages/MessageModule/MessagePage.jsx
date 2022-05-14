@@ -30,6 +30,7 @@ import {
   getDoctorSchedules,
   getPatientSchedules,
 } from '../ScheduleManagerModule/schedule-manager.reducer';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
 const MessagePage = () => {
   const dispatch = useAppDispatch();
@@ -58,7 +59,10 @@ const MessagePage = () => {
    */
   const videoCallSocket = useMemo(() => {
     if (sendInfo && sendInfo.from) {
-      return new WebSocket('ws://localhost:8080/videochat/' + sendInfo.from);
+      // return new WebSocket('ws://localhost:8080/videochat/' + sendInfo.from);
+      return new WebSocket(
+        `ws://${ApiSingleton.getInstance().instance.host}/videochat/${sendInfo.from}`
+      );
     } else {
       return null;
     }

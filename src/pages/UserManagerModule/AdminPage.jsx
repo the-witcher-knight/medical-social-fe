@@ -20,6 +20,7 @@ import { toast } from 'react-toastify';
 import { AuthorityConstant } from 'src/shared/authority-constant';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getUsers, updateUser, getDegreeDoctor } from './user-manager.reducer';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
 const columns = [
   { field: 'id', headerName: 'ID', width: 90 },
@@ -125,7 +126,11 @@ export default function AdminPage() {
   const onReviewDegree = values => {
     if (values) {
       dispatch(getDegreeDoctor(values.id)).then(res => {
-        window.open('http://localhost:8080/files/' + res.payload.path, '_blank');
+        // window.open('http://localhost:8080/files/' + res.payload.path, '_blank');
+        window.open(
+          `${ApiSingleton.getInstance().instance.baseUrl}/files/${res.payload.path}`,
+          '_blank'
+        );
       });
     }
   };

@@ -5,7 +5,11 @@ export class ApiSingleton {
 
   static getInstance() {
     if (!ApiSingleton.instance) {
-      ApiSingleton.instance = new ApiSingleton({ apiUrl: process.env.API_URL });
+      ApiSingleton.instance = new ApiSingleton({
+        apiUrl: process.env.API_URL,
+        host: process.env.HOST,
+        baseUrl: process.env.BASE_URL,
+      });
     }
     return ApiSingleton.instance;
   }

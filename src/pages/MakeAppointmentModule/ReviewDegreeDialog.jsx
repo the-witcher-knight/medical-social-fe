@@ -4,6 +4,7 @@ import { useAppDispatch } from 'src/configs/store';
 import { getDegreeDoctor } from './make-appointment.reducer';
 import { Modal, Box, Typography, LinearProgress, Button } from '@mui/material';
 import Zoom from 'react-img-zoom';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
 export default function ReviewDegreeDialog() {
   const { doctorId } = useParams();
@@ -46,7 +47,7 @@ export default function ReviewDegreeDialog() {
       >
         {degree && degree.path !== '' ? (
           <Zoom
-            img={'http://localhost:8080/files/' + degree.path}
+            img={`${ApiSingleton.getInstance().instance.hostUrl}/files/${degree.path}`}
             zoomScale={3}
             width={600}
             height={600}

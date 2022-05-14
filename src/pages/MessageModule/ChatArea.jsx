@@ -20,6 +20,7 @@ import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { getAccount } from 'src/shared/reducers/authentication';
 import { toast } from 'react-toastify';
 import { getMessageList } from './message.reducer';
+import { ApiSingleton } from 'src/configs/singleton-api';
 
 const ChatArea = () => {
   const dispatch = useAppDispatch();
@@ -64,7 +65,8 @@ const ChatArea = () => {
   }, [selectedChatRoom, stompClient]);
 
   const connect = () => {
-    const socket = new SockJS(`http://localhost:8080/ws`);
+    // const socket = new SockJS(`http://localhost:8080/ws`);
+    const socket = new SockJS(`${ApiSingleton.getInstance().instance.baseUrl}/ws`);
     const stompClient = over(socket);
     stompClient.connect({}, frame => {
       console.log('Connected: ' + frame);
