@@ -5,6 +5,7 @@ const ConfirmDialog = React.lazy(() => import('./ConfirmDialog'));
 const DeleteDialog = React.lazy(() => import('./DeleteDialog'));
 const ReviewMedicalRecordDialog = React.lazy(() => import('./ReviewMedicalRecordDialog'));
 const WritePrescriptionDialog = React.lazy(() => import('./WritePrescriptionDialog'));
+const VideoCallModal = React.lazy(() => import('./VideoCallModal'));
 
 export const router = [
   {
@@ -29,5 +30,9 @@ export const modalRouter = [
   {
     path: '/schedule-manager/write-prescription/:scheduleId',
     element: <WritePrescriptionDialog />,
+  },
+  {
+    path: '/schedule-manager/video-call/from/:from/to/:to',
+    element: <VideoCallModal />,
   },
 ];
