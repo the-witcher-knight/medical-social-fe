@@ -206,7 +206,7 @@ export default function AdminPage() {
     <Box component="div" mt={5} sx={{ display: 'flex', justifyContent: 'center' }}>
       <Paper sx={{ padding: 2, flexGrow: 3 }}>
         <Typography variant="h5" component="h3" color={lightBlue[800]} gutterBottom>
-          Doctor Manager
+          User Manager
         </Typography>
         <Divider />
         <div style={{ height: 600, width: '100%', marginTop: 2 }}>

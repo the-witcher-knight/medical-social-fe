@@ -180,7 +180,7 @@ const MessagePage = () => {
             justifyContent="left"
             justifyItems="left"
           >
-            <IconButton color="info" onClick={makeCall}>
+            <IconButton color="info" onClick={makeCall} disabled={!activeCallButton}>
               <FontAwesomeIcon icon="video" />
             </IconButton>
           </Box>

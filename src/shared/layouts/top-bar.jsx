@@ -94,7 +94,6 @@ const TopBar = ({ open, toggleSideBar }) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleClickProfile}>Profile</MenuItem>
       <MenuItem onClick={handleClickLogout}>Logout</MenuItem>
     </Menu>
   );
