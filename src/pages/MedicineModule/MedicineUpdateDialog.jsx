@@ -113,14 +113,14 @@ export default function MedicineUpdate() {
           <ValidatedField
             name="amount"
             label="Amount"
-            rules={{ required: true }}
+            rules={{ required: true, min: 1 }}
             helperText="Please enter amount"
             type="number"
           />
           <ValidatedField
             name="medicine.price"
             label="Price"
-            rules={{ required: true }}
+            rules={{ required: true, min: 1 }}
             type="number"
             helperText="Please enter price"
           />
