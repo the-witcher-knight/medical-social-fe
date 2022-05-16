@@ -19,12 +19,13 @@ import {
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { getUserAuthentication, isAdmin, isDoctor, isUser } from 'src/shared/util/auth-util';
 import { getDoctorSchedules, getPatientSchedules } from './schedule-manager.reducer';
-import ScheduleTooltip from './ScheduleTooltip';
+import ScheduleTooltip from './ScheduleAppointmentTooltip';
 import { connectProps } from '@devexpress/dx-react-core';
 import EditForm from './EditForm';
 import { toast } from 'react-toastify';
 import { Typography } from '@mui/material';
 import { lightBlue } from '@mui/material/colors';
+import ScheduleAppointmentHeader from './ScheduleAppointmentHeader';
 
 const classes = {
   toolbarRoot: `schedule-manager-toolbarRoot`,
@@ -144,7 +145,11 @@ export default function ScheduleManager() {
           <DateNavigator />
           <TodayButton />
           <ViewSwitcher />
-          <AppointmentTooltip contentComponent={appointmentTooltipContent} showCloseButton />
+          <AppointmentTooltip
+            headerComponent={ScheduleAppointmentHeader}
+            contentComponent={appointmentTooltipContent}
+            showCloseButton
+          />
           <AppointmentForm
             overlayComponent={appointmentForm}
             visible={formVisible}
