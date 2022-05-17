@@ -26,6 +26,10 @@ import { toast } from 'react-toastify';
 import { Typography } from '@mui/material';
 import { lightBlue } from '@mui/material/colors';
 import ScheduleAppointmentHeader from './ScheduleAppointmentHeader';
+import { ApiSingleton } from 'src/configs/singleton-api';
+import { getAccount } from 'src/shared/reducers/authentication';
+import { setConnectionStatus, setOfferSignal } from '../MessageModule/message.reducer';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const classes = {
   toolbarRoot: `schedule-manager-toolbarRoot`,
@@ -56,10 +60,13 @@ const ToolbarWithLoading = ({ children, ...restProps }) => (
 
 export default function ScheduleManager() {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const loading = useAppSelector(state => state.scheduleManager.loading);
   const scheduleList = useAppSelector(state => state.scheduleManager.scheduleList);
   const updateSuccess = useAppSelector(state => state.scheduleManager.updateSuccess);
+  const userAccount = useAppSelector(state => state.authentication.account);
   const [data, setData] = React.useState([]);
 
   const today = React.useMemo(() => Date.now(), []);
@@ -70,6 +77,33 @@ export default function ScheduleManager() {
   const [selectedSchedule, setSelectedSchedule] = React.useState(null);
 
   const userData = React.useMemo(() => getUserAuthentication(), []);
+
+  const ConnectionStatus = {
+    OFFERING: 'OFFERING',
+    RECEIVING: 'RECEIVING',
+    CONNECTED: 'CONNECTED',
+  };
+
+  React.useEffect(() => {
+    dispatch(getAccount());
+  }, []);
+
+  React.useEffect(() => {
+    const ws = new WebSocket(
+      `ws://${ApiSingleton.getInstance().instance.host}/videochat/${userAccount.id}`
+    );
+
+    ws.onmessage = message => {
+      const data = JSON.parse(message.data);
+      if (data?.type === 'offer') {
+        dispatch(setConnectionStatus(ConnectionStatus.RECEIVING));
+        dispatch(setOfferSignal(data));
+        navigate(`/schedule-manager/video-call/from/${data.to}/to/${data.from}`, {
+          state: { backgroundLocation: location },
+        });
+      }
+    };
+  }, [userAccount]);
 
   React.useEffect(() => {
     if (isDoctor(userData)) {

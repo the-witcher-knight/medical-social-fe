@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import SimplePeer from 'simple-peer';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
 import { ApiSingleton } from 'src/configs/singleton-api';
+import { setConnectionStatus } from '../MessageModule/message.reducer';
 
 export const ConnectionStatus = {
   OFFERING: 'OFFERING',
@@ -19,8 +20,8 @@ export default function VideoCall() {
 
   const [open, setOpen] = useState(true);
   const [mediaStream, setMediaStream] = useState(null);
-  const [connectionStatus, setConnectionStatus] = useState(null);
-  const [offerSignal, setOfferSignal] = useState(null);
+  const connectionStatus = useAppSelector(state => state.message.connectionStatus);
+  const offerSignal = useAppSelector(state => state.message.offerSignal);
   const [simplePeer, setSimplePeer] = useState(null);
 
   // const socket = new WebSocket('ws://localhost:8080/videochat/' + from);
@@ -76,7 +77,7 @@ export default function VideoCall() {
       });
 
       if (isInitiator) {
-        setConnectionStatus(ConnectionStatus.OFFERING);
+        dispatch(setConnectionStatus(ConnectionStatus.OFFERING));
       } else {
         offer && sp.signal(offer);
       }
@@ -84,7 +85,7 @@ export default function VideoCall() {
       sp.on('signal', data => {
         socket.send(JSON.stringify({ ...data, from, to }));
       });
-      sp.on('connect', () => setConnectionStatus(ConnectionStatus.CONNECTED));
+      sp.on('connect', () => dispatch(setConnectionStatus(ConnectionStatus.CONNECTED)));
       sp.on('stream', stream => {
         const video = videoCaller.current;
         if (video) {
@@ -103,7 +104,7 @@ export default function VideoCall() {
   const handUp = () => {
     // TODO: remove stream
     simplePeer?.destroy();
-    setConnectionStatus(null);
+    dispatch(setConnectionStatus(null));
     handleClose();
   };
 

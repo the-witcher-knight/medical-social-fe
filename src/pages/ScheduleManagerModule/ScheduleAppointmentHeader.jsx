@@ -6,7 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 
 export default function ScheduleAppointmentHeader({ children, appointmentData, ...rest }) {
-  const { startAt, endAt, patient, doctor } = appointmentData;
+  const { startDate, endDate, patient, doctor } = appointmentData;
 
   const [disabledVideoCall, setDisabledVideoCall] = React.useState(true);
   const userData = getUserAuthentication();
@@ -16,7 +16,9 @@ export default function ScheduleAppointmentHeader({ children, appointmentData, .
 
   const enableCallVideoButton = () => {
     const now = Date.now();
-    if (Date.parse(startAt) <= now && Date.parse(endAt) > now) {
+    // eslint-disable-next-line no-debugger
+    debugger;
+    if (Date.parse(startDate) <= now && Date.parse(endDate) > now) {
       return true;
     }
     return false;
