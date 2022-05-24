@@ -52,6 +52,10 @@ module.exports = {
           from: resolve(PUBLIC, 'logo512.png'),
           to: DIST,
         },
+        {
+          from: resolve(PUBLIC, 'medical-robot.jpg'),
+          to: DIST,
+        },
       ],
       options: {
         concurrency: 100,

@@ -7,3 +7,4 @@ exports.FAVICON = resolve(__dirname, '../public', 'favicon.ico');
 exports.MANIFEST = resolve(__dirname, '../public', 'manifest.json');
 exports.LOGO192 = resolve(__dirname, '../public', 'logo192.png');
 exports.LOGO512 = resolve(__dirname, '../public', 'logo512.png');
+exports.MEDICAL_ROBOT = resolve(__dirname, '../public', 'medical-robot.jpg');
