@@ -1,13 +1,6 @@
-import {
-  Box,
-  LinearProgress,
-  List,
-  Modal,
-  ListItem,
-  ListItemText,
-  Typography,
-  Button,
-} from '@mui/material';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, LinearProgress, Modal, Typography, Button } from '@mui/material';
+import { TreeView, TreeItem } from '@mui/lab';
 import { blue } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -16,13 +9,24 @@ import { camelCaseToTitleCase } from 'src/shared/util/string-util';
 import { getPatientData } from './schedule-manager.reducer';
 
 const MedicalRecordDisplay = ({ medicalRecord }) => (
-  <List>
-    {Object.keys(medicalRecord).map(key => (
-      <ListItem key={key}>
-        <ListItemText primary={camelCaseToTitleCase(key)} secondary={medicalRecord[key]} />
-      </ListItem>
+  <TreeView
+    aria-label="file system navigator"
+    defaultCollapseIcon={<FontAwesomeIcon icon="arrow-left" />}
+    defaultExpandIcon={<FontAwesomeIcon icon="arrow-right" />}
+    sx={{ height: 250, flexGrow: 1, maxWidth: 600, overflowY: 'auto' }}
+  >
+    {medicalRecord.map((record, index) => (
+      <TreeItem key={index} nodeId={index} label={camelCaseToTitleCase(record.diagnose)}>
+        {Object.keys(record).map((key, idx) => (
+          <TreeItem
+            key={index + '_' + idx}
+            nodeId={key}
+            label={camelCaseToTitleCase(key) + ': ' + record[key]}
+          />
+        ))}
+      </TreeItem>
     ))}
-  </List>
+  </TreeView>
 );
 
 export default function ReviewMedicalRecordDialog() {
@@ -50,7 +54,7 @@ export default function ReviewMedicalRecordDialog() {
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: 400,
+          width: 600,
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,

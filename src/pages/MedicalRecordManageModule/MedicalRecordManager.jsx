@@ -1,5 +1,6 @@
 import {
   styled,
+  Grid,
   Divider,
   Paper,
   Typography,
@@ -8,11 +9,11 @@ import {
   Button,
   LinearProgress,
 } from '@mui/material';
-import { blue } from '@mui/material/colors';
+import { blue, teal } from '@mui/material/colors';
 import React, { useEffect } from 'react';
 import { getUserAuthentication } from 'src/shared/util/auth-util';
 import { useAppDispatch, useAppSelector } from 'src/configs/store';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, useFieldArray } from 'react-hook-form';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { getAccount, updateUser } from 'src/shared/reducers/authentication';
 import { toast } from 'react-toastify';
@@ -44,27 +45,36 @@ export default function MedicalRecordManager() {
     dispatch(getAccount());
   }, []);
 
+  const { handleSubmit, control, reset, watch } = useForm({
+    defaultValues: {
+      medicalRecord: [
+        {
+          diagnose: '', // Chuẩn đoán
+          pathologicalProcess: '', // Quá trình bệnh lý
+          treatments: '', // Phương pháp điều trị
+          testResults: '', // Kết quả xét nghiệm
+          note: '', // Ghi chú
+        },
+      ],
+    },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'medicalRecord',
+  });
+
   useEffect(() => {
     if (account && account.medicalRecord) {
       try {
-        const data = JSON.parse(account.medicalRecord);
-        reset(data);
+        const medicalRecord = JSON.parse(account.medicalRecord);
+        reset({ medicalRecord });
         return;
       } catch (e) {
         toast.error('Error: ', e);
       }
     }
   }, [account]);
-
-  const { handleSubmit, control, reset } = useForm({
-    defaultValues: {
-      diagnose: '', // Chuẩn đoán
-      pathologicalProcess: '', // Quá trình bệnh lý
-      treatments: '', // Phương pháp điều trị
-      testResults: '', // Kết quả xét nghiệm
-      note: '', // Ghi chú
-    },
-  });
 
   const onSubmit = values => {
     if (!account || !userData) {
@@ -89,7 +99,7 @@ export default function MedicalRecordManager() {
     formData.append('authorities', Array.of(userData.auth));
 
     // Add current medical record
-    formData.set('medicalRecord', JSON.stringify(values));
+    formData.set('medicalRecord', JSON.stringify(values.medicalRecord));
 
     dispatch(updateUser(formData));
   };
@@ -108,42 +118,95 @@ export default function MedicalRecordManager() {
           flexDirection="column"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Controller
-            control={control}
-            name="diagnose"
-            render={({ field }) => <StyledTextField fullWidth label="Diagnose" {...field} />}
-          />
+          {fields.map((item, idx) => (
+            <Box sx={{ marginBottom: 2 }} key={idx}>
+              <Divider sx={{ marginBottm: 2 }}>
+                <Typography variant="h6" component="h6" fontWeight="bold" color={teal[300]}>
+                  {`Medical Record ${idx + 1}`}
+                </Typography>
+              </Divider>
 
-          <Controller
-            control={control}
-            name="pathologicalProcess"
-            render={({ field }) => (
-              <StyledTextField fullWidth label="Pathological Process" {...field} />
-            )}
-          />
+              <Grid container spacing={2}>
+                <Grid item xs={3}>
+                  <Controller
+                    control={control}
+                    name={`medicalRecord.${idx}.diagnose`}
+                    render={({ field }) => (
+                      <StyledTextField fullWidth label="Diagnose" {...field} />
+                    )}
+                  />
+                </Grid>
 
-          <Controller
-            control={control}
-            name="treatments"
-            render={({ field }) => <StyledTextField fullWidth label="Treatments" {...field} />}
-          />
+                <Grid item xs={9}>
+                  <Controller
+                    control={control}
+                    name={`medicalRecord.${idx}.pathologicalProcess`}
+                    render={({ field }) => (
+                      <StyledTextField fullWidth label="Pathological Process" {...field} />
+                    )}
+                  />
+                </Grid>
 
-          <Controller
-            control={control}
-            name="testResults"
-            render={({ field }) => <StyledTextField fullWidth label="Test Results" {...field} />}
-          />
+                <Grid item xs={6}>
+                  <Controller
+                    control={control}
+                    name={`medicalRecord.${idx}.treatments`}
+                    render={({ field }) => (
+                      <StyledTextField fullWidth label="Treatments" {...field} />
+                    )}
+                  />
+                </Grid>
 
-          <Controller
-            control={control}
-            name="note"
-            render={({ field }) => <StyledTextField fullWidth label="Note" {...field} />}
-          />
+                <Grid item xs={6}>
+                  <Controller
+                    control={control}
+                    name={`medicalRecord.${idx}.testResults`}
+                    render={({ field }) => (
+                      <StyledTextField fullWidth label="Test Results" {...field} />
+                    )}
+                  />
+                </Grid>
 
-          <Box mt={2}>
+                <Grid item xs={11}>
+                  <Controller
+                    control={control}
+                    name={`medicalRecord.${idx}.note`}
+                    render={({ field }) => <StyledTextField fullWidth label="Note" {...field} />}
+                  />
+                </Grid>
+
+                <Grid item xs={1}>
+                  <Button variant="contained" color="error" onClick={() => remove(idx)}>
+                    <FontAwesomeIcon icon="trash" />
+                    &nbsp; Remove
+                  </Button>
+                </Grid>
+              </Grid>
+            </Box>
+          ))}
+
+          <Box mt={2} display="flex">
             <Button type="submit" variant="contained" color="primary" disabled={loading}>
               <FontAwesomeIcon icon="save" />
               &nbsp;Save
+            </Button>
+            &nbsp;
+            <Button
+              type="button"
+              variant="outlined"
+              color="info"
+              onClick={() =>
+                append({
+                  diagnose: '',
+                  pathologicalProcess: '',
+                  treatments: '',
+                  testResults: '',
+                  note: '',
+                })
+              }
+            >
+              <FontAwesomeIcon icon="plus" />
+              &nbsp;Add More
             </Button>
           </Box>
         </Box>
